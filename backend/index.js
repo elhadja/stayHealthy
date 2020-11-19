@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const cors = require('cors');
 
 const usersRoutes = require('./routes/users');
 const db = require('./db');
@@ -10,6 +11,7 @@ const port = 3000
 db.init().then( () => {
   app.use(bodyParser.urlencoded({ extended: false }));
   app.use(bodyParser.json());
+  app.use(cors());
 
   app.use('/user', usersRoutes)
 
