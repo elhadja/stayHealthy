@@ -7,27 +7,27 @@ const baseUrl = 'http://localhost:3000';
 @Injectable({
   providedIn: 'root'
 })
-export class PatientService {
+export class DoctorService {
+
   constructor(private http: HttpClient) { }
 
   create(data: object): Observable<any> {
-    return this.http.post(`${baseUrl}/patient`, data);
+    return this.http.post(`${baseUrl}/doctor`, data);
   }
 
   login(data: object): Observable<any> {
-    return this.http.post(`${baseUrl}/patient/login`, data);
+    return this.http.post(`${baseUrl}/doctor/login`, data);
   }
 
   get(id: object): Observable<any> {
-    return this.http.get(`${baseUrl}/patient/${id}`);
+    return this.http.get(`${baseUrl}/doctor/${id}`);
   }
 
   update(id: object, data: object): Observable<any> {
-    return this.http.put(`${baseUrl}/patient/${id}`, data);
+    return this.http.put(`${baseUrl}/doctor/${id}`, data);
   }
 
   delete(id: object): Observable<any> {
-    return this.http.delete(`${baseUrl}/patient/${id}`);
+    return this.http.delete(`${baseUrl}/doctor/${id}`);
   }
-
 }

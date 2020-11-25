@@ -10,7 +10,7 @@ export class SignUpComponent implements OnInit {
 
   constructor(private patientService: PatientService) {}
   onSubmit(data: object): void {
-    this.patientService.addPatient(data)
+    this.patientService.create(data)
       .subscribe(response => {
           alert(response);
           console.log(response);

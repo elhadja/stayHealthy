@@ -10,7 +10,7 @@ export class LogInComponent implements OnInit {
 
   constructor(private patientService: PatientService) {}
   onSubmit(data: object): void {
-    this.patientService.loginPatient(data)
+    this.patientService.login(data)
       .subscribe(response => {
           alert(response);
           console.log(response);
