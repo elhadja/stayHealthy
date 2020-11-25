@@ -1,0 +1,28 @@
+<h1>Connectez-vous</h1>
+<h3>Afin de gérer vos rendez-vous médicaux avec StayHealthy</h3>
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
+  <mat-form-field appearance="fill">
+    <mat-label>Email</mat-label>
+    <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Mot de Passe</mat-label>
+    <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
+  </mat-form-field>
+  <br>
+
+  <mat-form-field appearance="fill">
+    <mat-label>Profil</mat-label>
+    <mat-select name="profile" ngModel>
+      <mat-option value="patient">Patient</mat-option>
+      <mat-option value="doctor">Médecin</mat-option>
+    </mat-select>
+  </mat-form-field>
+  <br>
+
+  <mat-card-actions>
+    <button mat-raised-button color="primary" type="submit">Connection</button>
+  </mat-card-actions>
+</form>

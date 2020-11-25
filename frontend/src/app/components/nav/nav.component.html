@@ -1,0 +1,34 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav #drawer class="sidenav" fixedInViewport
+      [attr.role]="(isHandset$ | async) ? 'dialog' : 'navigation'"
+      [mode]="(isHandset$ | async) ? 'over' : 'side'"
+      [opened]="(isHandset$ | async) === false">
+    <mat-toolbar>Menu</mat-toolbar>
+    <mat-nav-list>
+      <a mat-list-item routerLink="/">Accueil</a>
+      <a mat-list-item routerLink="/signup">Inscritpion</a>
+      <a mat-list-item href="/login">Connection</a>
+      <a mat-list-item href="#">Déconnection</a>
+    </mat-nav-list>
+  </mat-sidenav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button
+        type="button"
+        aria-label="Toggle sidenav"
+        mat-icon-button
+        (click)="drawer.toggle()"
+        *ngIf="isHandset$ | async">
+        <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
+      </button>
+      <span>StayHealthy</span>
+    </mat-toolbar>
+    <div class="landing-page">
+      <h1>Trouvez un Professionnel de santé et gérez vos rendez-vous facilement</h1>
+      <button routerLink="/signup">S'enregistrer</button>
+      <button routerLink="/login">Se connecter</button>
+    </div>
+    <router-outlet></router-outlet>
+
+  </mat-sidenav-content>
+</mat-sidenav-container>
