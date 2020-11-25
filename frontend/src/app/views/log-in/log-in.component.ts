@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import {PatientService} from '../../services/patient.service';
+import { DoctorService } from '../../services/doctor.service';
+import { PatientService } from '../../services/patient.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-log-in',
@@ -8,16 +10,29 @@ import {PatientService} from '../../services/patient.service';
 })
 export class LogInComponent implements OnInit {
 
-  constructor(private patientService: PatientService) {}
-  onSubmit(data: object): void {
-    this.patientService.login(data)
-      .subscribe(response => {
-          alert(response);
-          console.log(response);
-        },
-        error => {
-          console.error(error);
-        });
+  constructor(private patient: PatientService, private doctor: DoctorService, private router: Router) {}
+  onSubmit(data: object, profile: string): void {
+    if (profile === 'patient') {
+      this.patient.login(data)
+        .subscribe(response => {
+            console.log(response);
+            this.router.navigate(['/patient']);
+          },
+          error => {
+            console.error(error);
+          });
+    } else if (profile === 'doctor') {
+      this.doctor.login(data)
+        .subscribe(response => {
+            console.log(response);
+            this.router.navigate(['/doctor']);
+          },
+          error => {
+            console.error(error);
+          });
+    } else {
+      console.error('user unspecified from login form!!');
+    }
   }
 
   ngOnInit(): void {

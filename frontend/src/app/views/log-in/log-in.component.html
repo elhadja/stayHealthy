@@ -1,6 +1,6 @@
 <h1>Connectez-vous</h1>
 <h3>Afin de gérer vos rendez-vous médicaux avec StayHealthy</h3>
-<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value)">
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value, loginForm.value.profile)">
   <mat-form-field appearance="fill">
     <mat-label>Email</mat-label>
     <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>

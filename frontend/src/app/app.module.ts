@@ -21,13 +21,21 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import { LogInComponent } from './views/log-in/log-in.component';
 import { SignUpComponent } from './views/sign-up/sign-up.component';
 import { HttpClientModule} from '@angular/common/http';
+import { PatientComponent } from './views/patient/patient.component';
+import { DoctorComponent } from './views/doctor/doctor.component';
+import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
+import { HomepageComponent } from './views/homepage/homepage.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     SignUpComponent,
-    LogInComponent
+    LogInComponent,
+    PatientComponent,
+    DoctorComponent,
+    PageNotFoundComponent,
+    HomepageComponent
   ],
   imports: [
     BrowserModule,

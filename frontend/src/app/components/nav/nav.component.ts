@@ -18,4 +18,7 @@ export class NavComponent {
 
   constructor(private breakpointObserver: BreakpointObserver) {}
 
+  disconnect(): void {
+    alert('disconnected');
+  }
 }

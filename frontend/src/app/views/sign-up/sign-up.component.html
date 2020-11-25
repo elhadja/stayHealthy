@@ -1,11 +1,10 @@
 <h1>Créer votre compte</h1>
 <h3>gérer vos rendez-vous médicaux avec StayHealthy</h3>
-<form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value)">
+<form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value, signinForm.value.profile)">
   <mat-form-field appearance="fill">
     <mat-label>Nom</mat-label>
     <input matInput name="firstName" placeholder="Entrer votre nom" ngModel required>
   </mat-form-field>
-  <br>
 
   <mat-form-field appearance="fill">
     <mat-label>Prenom</mat-label>
@@ -19,11 +18,10 @@
   </mat-form-field>
   <br>
 
-  <mat-form-field appearance="fill">
+  <mat-form-field appearance="fill" class="mx-2">
     <mat-label>Mot de Passe</mat-label>
     <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
   </mat-form-field>
-  <br>
 
   <mat-form-field appearance="fill">
     <mat-label>Retaper Mot de Passe</mat-label>
@@ -45,7 +43,7 @@
 
   <mat-form-field appearance="fill">
     <mat-label>Profil</mat-label>
-    <mat-select name="profile" ngModel>
+    <mat-select name="profile" ngModel required>
       <mat-option value="patient">Patient</mat-option>
       <mat-option value="doctor">Médecin</mat-option>
     </mat-select>
