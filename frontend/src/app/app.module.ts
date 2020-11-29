@@ -17,7 +17,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatRadioModule } from '@angular/material/radio';
-import {FormsModule, ReactiveFormsModule} from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogInComponent } from './views/log-in/log-in.component';
 import { SignUpComponent } from './views/sign-up/sign-up.component';
 import { HttpClientModule} from '@angular/common/http';

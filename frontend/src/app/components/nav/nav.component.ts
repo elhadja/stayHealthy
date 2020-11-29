@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
 import { Observable } from 'rxjs';
 import { map, shareReplay } from 'rxjs/operators';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-nav',
@@ -16,9 +17,10 @@ export class NavComponent {
       shareReplay()
     );
 
-  constructor(private breakpointObserver: BreakpointObserver) {}
+  constructor(private breakpointObserver: BreakpointObserver, private tools: InteractionsService) {}
 
   disconnect(): void {
-    alert('disconnected');
+    this.tools.setAuthorization('');
+    console.log('disconnected');
   }
 }

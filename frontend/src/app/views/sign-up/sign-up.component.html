@@ -1,56 +1,59 @@
-<h1>Créer votre compte</h1>
-<h3>gérer vos rendez-vous médicaux avec StayHealthy</h3>
-<form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value, signinForm.value.profile)">
-  <mat-form-field appearance="fill">
-    <mat-label>Nom</mat-label>
-    <input matInput name="firstName" placeholder="Entrer votre nom" ngModel required>
-  </mat-form-field>
+<div class="container">
+  <h1>Créer votre compte</h1>
+  <h3>gérer vos rendez-vous médicaux avec StayHealthy</h3>
+  <form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value, signinForm.value.profile)">
+    <mat-form-field appearance="fill">
+      <mat-label>Nom</mat-label>
+      <input matInput name="firstName" placeholder="Entrer votre nom" ngModel required>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Prenom</mat-label>
-    <input matInput name="lastName" placeholder="Entrer votre prenom" ngModel required>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill" class="ml-2">
+      <mat-label>Prenom</mat-label>
+      <input matInput name="lastName" placeholder="Entrer votre prenom" ngModel required>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Email</mat-label>
-    <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Email</mat-label>
+      <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="fill" class="mx-2">
-    <mat-label>Mot de Passe</mat-label>
-    <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
-  </mat-form-field>
+    <mat-form-field appearance="fill">
+      <mat-label>Mot de Passe</mat-label>
+      <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
+    </mat-form-field>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Retaper Mot de Passe</mat-label>
-    <input matInput name="password2" placeholder="Retaper votre mot de passe" type="password" ngModel required>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill" class="ml-2">
+      <mat-label>Retaper Mot de Passe</mat-label>
+      <input matInput name="password2" placeholder="Retaper votre mot de passe" type="password" ngModel required>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Télephone</mat-label>
-    <input matInput name="tel" placeholder="Entrer votre numero de télephone" ngModel required>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Télephone</mat-label>
+      <input matInput name="tel" placeholder="Entrer votre numero de télephone" ngModel required>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Adresse</mat-label>
-    <textarea matInput name="address" placeholder="Entrer votre Adresse" ngModel required></textarea>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Adresse</mat-label>
+      <textarea matInput name="address" placeholder="Entrer votre Adresse" ngModel required></textarea>
+    </mat-form-field>
+    <br>
 
-  <mat-form-field appearance="fill">
-    <mat-label>Profil</mat-label>
-    <mat-select name="profile" ngModel required>
-      <mat-option value="patient">Patient</mat-option>
-      <mat-option value="doctor">Médecin</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <br>
+    <mat-form-field appearance="fill">
+      <mat-label>Profil</mat-label>
+      <mat-select name="profile" ngModel required>
+        <mat-option value="patient">Patient</mat-option>
+        <mat-option value="doctor">Médecin</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <br>
 
-  <mat-card-actions>
-    <button mat-raised-button color="primary" type="submit">Enregistrer</button>
-  </mat-card-actions>
-</form>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+    </mat-card-actions>
+  </form>
+
+</div>

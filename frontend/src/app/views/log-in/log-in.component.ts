@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DoctorService } from '../../services/doctor.service';
 import { PatientService } from '../../services/patient.service';
-import {Router} from '@angular/router';
+import { Router } from '@angular/router';
+import { InteractionsService } from '../../services/interactions.service';
 
 @Component({
   selector: 'app-log-in',
@@ -9,13 +10,13 @@ import {Router} from '@angular/router';
   styleUrls: ['./log-in.component.css']
 })
 export class LogInComponent implements OnInit {
-
-  constructor(private patient: PatientService, private doctor: DoctorService, private router: Router) {}
+  constructor(private tools: InteractionsService, private patient: PatientService, private doctor: DoctorService, private router: Router) {}
   onSubmit(data: object, profile: string): void {
     if (profile === 'patient') {
       this.patient.login(data)
         .subscribe(response => {
-            console.log(response);
+            console.log('connected');
+            this.tools.setAuthorization(response.token);
             this.router.navigate(['/patient']);
           },
           error => {
@@ -24,7 +25,8 @@ export class LogInComponent implements OnInit {
     } else if (profile === 'doctor') {
       this.doctor.login(data)
         .subscribe(response => {
-            console.log(response);
+            console.log('connected');
+            this.tools.setAuthorization(response.token);
             this.router.navigate(['/doctor']);
           },
           error => {
