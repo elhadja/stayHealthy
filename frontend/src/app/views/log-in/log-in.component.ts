@@ -12,10 +12,10 @@ import { InteractionsService } from '../../services/interactions.service';
 export class LogInComponent implements OnInit {
   constructor(private tools: InteractionsService, private patient: PatientService, private doctor: DoctorService, private router: Router) {}
   onSubmit(data: object, profile: string): void {
-    if (profile === 'patient') {
-      this.loginUser(this.patient, data, profile);
-    } else if (profile === 'doctor') {
+    if (profile === this.tools.DOCTOR) {
       this.loginUser(this.doctor, data, profile);
+    } else if (profile === this.tools.PATIENT) {
+      this.loginUser(this.patient, data, profile);
     } else {
       console.error('user unspecified from login form!!');
     }
@@ -26,9 +26,11 @@ export class LogInComponent implements OnInit {
       .subscribe(response => {
           console.log('connected');
           this.tools.setAuthorization(response.token);
-          if (profile === 'doctor') {
+          if (profile === this.tools.DOCTOR) {
+            this.tools.setProfile(profile);
             this.router.navigate(['/doctor']);
-          } else if (profile === 'patient') {
+          } else if (profile === this.tools.PATIENT) {
+            this.tools.setProfile(profile);
             this.router.navigate(['/patient']);
           } else {
             this.router.navigate(['/unknown']);

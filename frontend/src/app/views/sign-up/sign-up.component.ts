@@ -19,7 +19,7 @@ export class SignUpComponent implements OnInit {
     } else if (profile === 'doctor') {
       this.createUser(this.doctor, data);
     } else {
-      console.error('user unspecified from sign-in form!!');
+      console.error('user unspecified from sign-up form!!');
     }
   }
 

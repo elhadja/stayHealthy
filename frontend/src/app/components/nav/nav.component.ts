@@ -20,7 +20,22 @@ export class NavComponent {
   constructor(private breakpointObserver: BreakpointObserver, private tools: InteractionsService) {}
 
   disconnect(): void {
-    this.tools.setAuthorization('');
+    // clear authorization and profile
+    this.tools.reset();
     console.log('disconnected');
+  }
+
+  isLogin(): boolean {
+    return this.tools.isDoctorConnected() || this.tools.isPatientConnected();
+  }
+
+  getHomePage(): string {
+    if (this.tools.isDoctorConnected()) {
+      return '/doctor';
+    } else if (this.tools.isPatientConnected()) {
+      return '/patient';
+    } else {
+      return '/';
+    }
   }
 }

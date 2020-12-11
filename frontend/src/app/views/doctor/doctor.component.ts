@@ -9,15 +9,16 @@ import { Router } from '@angular/router';
 })
 export class DoctorComponent implements OnInit {
 
-  private authorization: string | null | undefined;
-  constructor(private interactions: InteractionsService, private router: Router) {  }
+  private profile: string | undefined;
+  constructor(private tools: InteractionsService, private router: Router) {  }
 
   ngOnInit(): void {
-    this.interactions.token.subscribe(token => this.authorization = token);
+    this.tools.profile.subscribe(profile => this.profile = profile);
+    console.log(this.profile);
 
-    if (this.authorization === 'Bearer' || this.authorization === null || this.authorization === undefined) {
+    if (this.profile !== 'doctor') {
       this.router.navigate(['/']);
-      console.log('you don\'t have authorization to access to this page');
+      console.log('you don\'t have profile to access to this page');
     }
   }
 }

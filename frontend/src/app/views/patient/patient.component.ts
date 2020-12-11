@@ -8,9 +8,9 @@ import { Router } from '@angular/router';
   styleUrls: ['./patient.component.css']
 })
 export class PatientComponent implements OnInit {
-  private authorization: string | null | undefined;
+  private profile: string | undefined;
 
-  constructor(private interactions: InteractionsService, private router: Router) {  }
+  constructor(private tools: InteractionsService, private router: Router) {  }
 
   private initMap(): void {
     const center = [48.8641, 2.333]; // Paris 1er Arr Coord.
@@ -31,11 +31,11 @@ export class PatientComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.interactions.token.subscribe(token => this.authorization = token);
-
-    if (this.authorization === 'Bearer' || this.authorization === null || this.authorization === undefined) {
+    this.tools.profile.subscribe(profile => this.profile = profile);
+    console.log(this.profile);
+    if (this.profile !== 'patient') {
       this.router.navigate(['/']);
-      console.log('you don\'t have authorization to access to this page');
+      console.log('you don\'t have profile to access to this page');
     }
     this.initMap();
   }

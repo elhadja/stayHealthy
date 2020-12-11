@@ -7,7 +7,7 @@
       <a mat-list-item routerLink="/">
         Accueil
       </a>
-      <a mat-list-item routerLink="/"
+      <a mat-list-item *ngIf="isLogin()" routerLink="/"
          (click)="disconnect()">
         Déconnection
       </a>
@@ -22,7 +22,7 @@
         (click)="drawer.toggle()">
         <mat-icon aria-label="Side nav toggle icon">menu</mat-icon>
       </button>
-      <a class="ml-4 text-white text-decoration-none" routerLink="/">
+      <a class="ml-4 text-white text-decoration-none" routerLink="{{getHomePage()}}">
         StayHealthy
       </a>
     </mat-toolbar>
