@@ -1,59 +1,66 @@
-<div class="container">
-  <h1>Créer votre compte</h1>
-  <h3>gérer vos rendez-vous médicaux avec StayHealthy</h3>
-  <form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value, signinForm.value.profile)">
-    <mat-form-field appearance="fill">
-      <mat-label>Nom</mat-label>
-      <input matInput name="firstName" placeholder="Entrer votre nom" ngModel required>
-    </mat-form-field>
+<div class="container mt-4">
+  <div class="sign-up">
+    <h1 class="text-center"><b>Créer votre compte</b></h1>
+    <h3 class="text-center">Gérer vos rendez-vous médicaux avec StayHealthy</h3>
+    <form #signinForm="ngForm" (ngSubmit)="onSubmit(signinForm.value, signinForm.value.profile)">
+      <mat-form-field appearance="outline">
+        <mat-label>Nom</mat-label>
+        <input matInput name="firstName" placeholder="Entrer votre nom" ngModel required>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" class="ml-2">
-      <mat-label>Prenom</mat-label>
-      <input matInput name="lastName" placeholder="Entrer votre prenom" ngModel required>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline" class="ml-2">
+        <mat-label>Prénom</mat-label>
+        <input matInput name="lastName" placeholder="Entrer votre prénom" ngModel required>
+      </mat-form-field>
+      <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Email</mat-label>
-      <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline">
+        <mat-label>Email</mat-label>
+        <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
+      </mat-form-field>
+      <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Mot de Passe</mat-label>
-      <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
-    </mat-form-field>
+      <mat-form-field appearance="outline">
+        <mat-label>Mot de Passe</mat-label>
+        <input matInput [type]="hide ? 'password' : 'text'"matInput name="password" placeholder="Entrer votre mot de passe" ngModel required>
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
 
-    <mat-form-field appearance="fill" class="ml-2">
-      <mat-label>Retaper Mot de Passe</mat-label>
-      <input matInput name="password2" placeholder="Retaper votre mot de passe" type="password" ngModel required>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline" class="ml-2">
+        <mat-label>Retaper Mot de Passe</mat-label>
+        <input matInput [type]="hide ? 'password2' : 'text'"matInput name="password2" placeholder="Retaper votre mot de passe" ngModel required>
+        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+      </mat-form-field>
+      <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Télephone</mat-label>
-      <input matInput name="tel" placeholder="Entrer votre numero de télephone" ngModel required>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline">
+        <mat-label>Téléphone</mat-label>
+        <input matInput name="tel" placeholder="Entrer votre numéro de téléphone" ngModel required>
+      </mat-form-field>
+      <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Adresse</mat-label>
-      <textarea matInput name="address" placeholder="Entrer votre Adresse" ngModel required></textarea>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline">
+        <mat-label>Adresse</mat-label>
+        <textarea matInput name="address" placeholder="Entrer votre Adresse" ngModel required></textarea>
+      </mat-form-field>
+      <br>
 
-    <mat-form-field appearance="fill">
-      <mat-label>Profil</mat-label>
-      <mat-select name="profile" ngModel required>
-        <mat-option value="patient">Patient</mat-option>
-        <mat-option value="doctor">Médecin</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <br>
+      <mat-form-field appearance="outline">
+        <mat-label>Profil</mat-label>
+        <mat-select name="profile" ngModel required>
+          <mat-option value="patient">Patient</mat-option>
+          <mat-option value="doctor">Médecin</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <br>
 
-    <div class="m-2">
-      <button mat-raised-button color="primary" type="submit">Enregistrer</button>
-    </div>
-  </form>
-
+      <div class="m-2 text-center">
+        <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+      </div>
+    </form>
+  </div>
 </div>

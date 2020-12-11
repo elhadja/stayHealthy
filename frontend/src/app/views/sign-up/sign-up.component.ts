@@ -8,7 +8,7 @@ import {DoctorService} from '../../services/doctor.service';
   styleUrls: ['./sign-up.component.css']
 })
 export class SignUpComponent implements OnInit {
-
+  hide = true;
   constructor(private patient: PatientService, private doctor: DoctorService) {}
   onSubmit(data: object, profile: string): void {
     if (profile === 'patient') {

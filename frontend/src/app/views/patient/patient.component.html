@@ -1,8 +1,8 @@
 <div id="map"></div>
-<div class="search-form px-2 pt-3">
+<div class="search-form px-2 pt-3 mat-elevation-z6">
   <h2 class="ml-4">Recherchez un praticien</h2>
   <form #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm.value)" class="m-3">
-    <mat-form-field appearance="fill" class="mx-2">
+    <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Spécialité</mat-label>
       <mat-select name="speciality" ngModel required>
         <mat-option value="cardiologue">cardiologue</mat-option>
@@ -19,12 +19,12 @@
       </mat-select>
     </mat-form-field>
 
-    <mat-form-field class="mx-2">
+    <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Nom du médecin, Établissement</mat-label>
       <input matInput name="search" placeholder="Dupont, clinique ..." ngModel required>
     </mat-form-field>
 
-    <mat-form-field class="mx-2">
+    <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Localité</mat-label>
       <input matInput name="region" placeholder="Bordeaux, Talence, ..." ngModel required>
     </mat-form-field>
