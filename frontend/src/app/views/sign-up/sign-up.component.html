@@ -22,17 +22,17 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Mot de Passe</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'"matInput name="password" placeholder="Entrer votre mot de passe" ngModel required>
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input matInput [type]="hide1 ? 'password' : 'text'"matInput name="password" placeholder="Entrer votre mot de passe" ngModel required>
+        <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide1">
+          <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="ml-2">
         <mat-label>Retaper Mot de Passe</mat-label>
-        <input matInput [type]="hide ? 'password2' : 'text'"matInput name="password2" placeholder="Retaper votre mot de passe" ngModel required>
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+        <input matInput [type]="hide2 ? 'password2' : 'text'"matInput name="password2" placeholder="Retaper votre mot de passe" ngModel required>
+        <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide2">
+          <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-form-field>
       <br>
