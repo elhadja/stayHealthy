@@ -23,16 +23,16 @@ exports.logsUser = (req, res) => {
     Doctor.findOne({email: req.body.email})
     .then(patient=> {
         if (!patient)
-            res.status(400).json({ message: 'user not found' });
+            res.status(400).json({ message: 'doctor not found' });
         bcrypt.compare(req.body.password, patient.password)
             .then(valid => {
                 if (!valid)
                     res.json({ message: 'incorrect password' });
                 res.json({
-                    id: res._id,
+                    id: patient._id,
                     token: jwt.sign(
                         { userId: patient._id },
-                        'RANOM_TOKEN_SECRET',
+                        'RANDOM_TOKEN_SECRET',
                         { expiresIn: '24h' }
                     )
                 });

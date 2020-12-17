@@ -42,7 +42,7 @@ exports.logsUser = (email, password) => {
 
         Patient.findOne({email: email}).then(res => {
             if (!res)
-                reject('user not found !');
+                reject('patient not found !');
             bcrypt.compare(password, res.password)
                 .then(valid => {
                     if (!valid)
@@ -51,7 +51,7 @@ exports.logsUser = (email, password) => {
                         id: res._id,
                         token: jwt.sign(
                             { userId: res._id },
-                            'RANOM_TOKEN_SECRET',
+                            'RANDOM_TOKEN_SECRET',
                             { expiresIn: '24h' }
                         )
                     });

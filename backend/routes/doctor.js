@@ -6,6 +6,9 @@ const router = express.Router();
 
 router.post('/', usersControllers.addNewUser);
 router.post('/login', usersControllers.logsUser); 
-router.delete('/:id', usersControllers.deleteUser);
+router.delete('/:id', auth, usersControllers.deleteUser);
+router.get('/test', auth, (req, res) => {
+    res.json({message: 'test ok'})
+});
 
 module.exports = router;
