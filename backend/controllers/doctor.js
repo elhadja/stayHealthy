@@ -4,19 +4,25 @@ const jwt = require('jsonwebtoken');
 const Doctor = require('../models/doctor');
 
 exports.addNewUser = (req, res) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            req.body.password = hash;
-            const doctor = new Doctor({...req.body});
-            doctor.save()
-                .then(() => res.status(201).json({message: 'doctor created !'}))
-                .catch(error => {
-                   res.json({error});
-                });
-        })
-        .catch(error => {
-            res.json(error);
-        });
+    if (!req.body.password)
+        res.status(400).json({error: "password field is required"});
+    else {
+        bcrypt.hash(req.body.password, 10)
+            .then(hash => {
+                req.body.password = hash;
+                const doctor = new Doctor({...req.body});
+                console.log(doctor);
+                doctor.save()
+                    .then((doctor) => res.status(201).json({ message: "doctor created", id: doctor._id}))
+                    .catch(error => {
+                    console.log(error);
+                    res.status(400).json({error: error});
+                    });
+            })
+            .catch(error => {
+                res.status(400).json(error);
+            });
+    }
 }
 
 exports.logsUser = (req, res) => {
@@ -45,5 +51,9 @@ exports.logsUser = (req, res) => {
 }
 
 exports.deleteUser = (req, res) => {
-    res.send('delete new');
+    Doctor.deleteOne({ _id: req.params.id })
+    .then(() => {
+        res.status(200).json({ message: "user deleted !"});
+    })
+    .catch(error => res.status(404).json({ error: error.message }));
 }

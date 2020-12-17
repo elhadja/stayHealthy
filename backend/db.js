@@ -22,7 +22,7 @@ exports.addUser = (user) => {
                 user.password = hash;
                 const patient = new Patient({...user});
                 patient.save()
-                    .then(() => resolve({message: 'patient created !'}))
+                    .then((mongoRes) => resolve({message: 'patient created !', id: mongoRes._id }))
                     .catch(error => {
                         console.log(error)
                         reject(error)
