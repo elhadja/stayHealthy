@@ -15,7 +15,7 @@ exports.logsUser = (req, res) => {
         .then(response => {
             res.json(response);
         })
-        .catch(error => res.json(error));
+        .catch(error => res.status(400).json(error));
 }
 
 exports.deleteUser = (req, res) => {

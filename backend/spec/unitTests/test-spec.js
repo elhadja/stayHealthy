@@ -1,5 +1,6 @@
 const axios = require("axios");
 
+const urlBase = "http://localhost:3000";
 
 describe("register doctor tests: ", () => {
     const urlBase = "http://localhost:3000";
@@ -101,6 +102,101 @@ async function emailShouldBeUnique(userType) {
             expect(error.response.status).toBe(400);
             await axios.delete(urlBase + "/" + userType + "/" + response1.data.id);
         }
+    } catch(error) {
+        fail(error.response.data);
+    }   
+}
+
+describe("doctor login tests: ", () => {
+    const urlBase = "http://localhost:3000";
+    it("user should be logged", async () => {
+        await userShouldBeLogged("doctor")
+   });
+
+    it("if the user is not registered, the request should fail", async () => {
+        try {
+            const responseLogin = await axios.post(urlBase + "/doctor/login", {
+                email: "unknownxyqmldkfjfqlskdfjq@gmail.com",
+                password: "toto"
+            });
+            expect(true).toBe(false);
+        } catch(error) {
+            expect(error.response.status).toBe(400);
+            expect(error.response.data.message).toBe("doctor not found");
+        }   
+    });
+
+    it("if the password is not correct, the request should fail", async () => {
+        await incorrectPassword("doctor");
+    });
+});
+
+describe("patient login tests: ", () => {
+    const urlBase = "http://localhost:3000";
+    it("user should be logged", async () => {
+        await userShouldBeLogged("patient")
+   });
+
+    it("if the user is not registered, the request should fail", async () => {
+        try {
+            const responseLogin = await axios.post(urlBase + "/patient/login", {
+                email: "unknownxyqmldkfjfqlskdfjq@gmail.com",
+                password: "toto"
+            });
+            expect(true).toBe(false);
+        } catch(error) {
+            expect(error.response.status).toBe(400);
+        }   
+    });
+
+    it("if the password is not correct, the request should fail", async () => {
+        await incorrectPassword("patient");
+    });
+});
+
+
+async function incorrectPassword(userType) {
+    let addUserResponse;
+    try {
+        const userBody = {
+            firstName: "Elhadj Amadou",
+            lastName: "Bah",
+            adress: "avenue de collégno",
+            email: "testRegister@gmail.com",
+            password: "toto"
+        }
+         addUserResponse = await axios.post(urlBase + "/" + userType, userBody);
+        await axios.post(urlBase + "/" + userType + "/login", {
+            email: "testRegister@gmail.com",
+            password: "qmlkdfmqkdjfmqldjfmqlkdjfmq"
+        });
+       expect(true).toBe(false);
+    } catch(error) {
+        expect(error.response.status).toBe(400);
+    } finally {
+        await axios.delete(urlBase + "/" + userType + "/" + addUserResponse.data.id);
+    }  
+}
+
+async function userShouldBeLogged(userType) {
+    try {
+        const userBody = {
+            firstName: "Elhadj Amadou",
+            lastName: "Bah",
+            adress: "avenue de collégno",
+            email: "testRegister@gmail.com",
+            password: "toto"
+        }
+        const addUserResponse = await axios.post(urlBase + "/" + userType, userBody);
+        const responseLogin = await axios.post(urlBase + "/" + userType + "/login", {
+            email: "testRegister@gmail.com",
+            password: "toto"
+        });
+        expect(responseLogin.status).toBe(200);
+        expect(responseLogin.data.id).toBe(addUserResponse.data.id);
+        if (!responseLogin.data.token)
+            fail("token should be returned after login")
+        await axios.delete(urlBase + "/" + userType + "/" + addUserResponse.data.id);
     } catch(error) {
         fail(error.response.data);
     }   

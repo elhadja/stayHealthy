@@ -33,8 +33,8 @@ exports.logsUser = (req, res) => {
         bcrypt.compare(req.body.password, patient.password)
             .then(valid => {
                 if (!valid)
-                    res.json({ message: 'incorrect password' });
-                res.json({
+                    res.status(400).json({ message: 'incorrect password' });
+                res.status(200).json({
                     id: patient._id,
                     token: jwt.sign(
                         { userId: patient._id },
