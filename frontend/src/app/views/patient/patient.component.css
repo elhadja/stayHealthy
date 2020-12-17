@@ -1,0 +1,20 @@
+
+#map {
+  height: 91%;
+  z-index: 0;
+}
+
+.search-form {
+  position: absolute;
+  top: 30%;
+  margin: 0 12%;
+  background-color: white;
+
+  border-radius: 25px;
+  border: 2px greenyellow;
+}
+
+button {
+  bottom: 8px;
+  margin-top: 8px;
+}

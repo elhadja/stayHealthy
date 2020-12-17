@@ -1,1 +1,28 @@
 /* You can add global styles to this file, and also import other style files */
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+button {
+  width: 260px;
+  height: 50px;
+  border: 4px !important;
+  border-radius: 25px !important;
+}
+
+.mat-form-field-outline-start {
+  width: 25px !important;
+  min-width: 25px !important;
+  border-radius: 25px 0 0 25px !important;
+}
+.mat-form-field {
+  width: 250px !important;
+}
+
+.mat-form-field-outline-end {
+  min-width: 25px !important;
+  border-radius: 0 25px 25px 0 !important;
+}
+
+.mat-form-field-label-wrapper {
+  left: 15px !important;
+}
