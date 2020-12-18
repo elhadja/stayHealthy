@@ -11,7 +11,7 @@ describe("register doctor tests: ", () => {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "testRegister@gmail.com",
+                email: "newDoctorSuccess@gmail.com",
                 password: "toto"
             };
             const response = await axios.post(urlBase + "/doctor", body);
@@ -51,7 +51,7 @@ describe("register patient tests: ", () => {
             firstName: "Elhadj Amadou",
             lastName: "Bah",
             adress: "avenue de collégno",
-            email: "testRegister@gmail.com",
+            email: "newPatientSucess@gmail.com",
             password: "toto"
         };
         try {
@@ -91,7 +91,7 @@ async function emailShouldBeUnique(userType) {
             firstName: "Elhadj Amadou",
             lastName: "Bah",
             adress: "avenue de collégno",
-            email: "testRegister@gmail.com",
+            email: userType + "EmailShouldBeUnique@gmail.com",
             password: "toto"
         };
         const response1 = await axios.post(urlBase + "/" + userType, body);
@@ -122,7 +122,7 @@ describe("doctor login tests: ", () => {
             expect(true).toBe(false);
         } catch(error) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data.message).toBe("doctor not found");
+            expect(error.response.data.message).toBe("user not found");
         }   
     });
 
@@ -146,7 +146,7 @@ describe("patient login tests: ", () => {
             expect(true).toBe(false);
         } catch(error) {
             expect(error.response.status).toBe(400);
-            expect(error.response.data.message).toBe("doctor not found");
+            expect(error.response.data.message).toBe("user not found");
         }   
  
     });
@@ -164,12 +164,12 @@ async function incorrectPassword(userType) {
             firstName: "Elhadj Amadou",
             lastName: "Bah",
             adress: "avenue de collégno",
-            email: "testRegister@gmail.com",
+            email: userType + "incorrectPassword@gmail.com",
             password: "toto"
         };
         addUserResponse = await axios.post(urlBase + "/" + userType, userBody);
         await axios.post(urlBase + "/" + userType + "/login", {
-            email: "testRegister@gmail.com",
+            email: userBody.email,
             password: "qmlkdfmqkdjfmqldjfmqlkdjfmq"
         });
         expect(true).toBe(false);
@@ -186,12 +186,12 @@ async function userShouldBeLogged(userType) {
             firstName: "Elhadj Amadou",
             lastName: "Bah",
             adress: "avenue de collégno",
-            email: "testRegister@gmail.com",
+            email: userType +"ShouldBeLoged@gmail.com",
             password: "toto"
         };
         const addUserResponse = await axios.post(urlBase + "/" + userType, userBody);
         const responseLogin = await axios.post(urlBase + "/" + userType + "/login", {
-            email: "testRegister@gmail.com",
+            email: userBody.email,
             password: "toto"
         });
         expect(responseLogin.status).toBe(200);

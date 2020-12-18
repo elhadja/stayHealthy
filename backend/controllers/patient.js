@@ -1,27 +1,14 @@
-const db = require("../db");
-const patient = require("../models/patient");
+const Patient = require("../models/patient");
+const user = require("./user");
 
 exports.addNewUser = (req, res) => {
-    db.addUser(req.body).then((response) => {
-        res.status(201).json(response);
-    }).catch(error => {
-        res.status(400).json({error: error});
-    });
+    user.signup(req, res, Patient);
 };
 
 exports.logsUser = (req, res) => {
-    db.logsUser(req.body.email, req.body.password)
-        .then(response => {
-            res.json(response);
-        })
-        .catch(error => res.status(400).json(error));
+    user.signin(req, res, Patient);
 };
 
 exports.deleteUser = (req, res) => {
-    patient.deleteOne({ _id: req.params.id })
-        .then(() => {
-            res.status(200).json({ message: "user deleted !"});
-        })
-        .catch(error => res.status(404).json({ error: error.message }));
-
+    user.deleteUser(req, res, Patient);
 };
