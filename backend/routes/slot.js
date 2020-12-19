@@ -7,5 +7,6 @@ router.post("/", slotController.addSlot);
 router.put("/:id", slotController.updateSlot);
 router.delete("/:id", slotController.deleteSlot);
 router.get("/:id", slotController.getSlotById);
+router.get("/", slotController.getSlotsBy);
 
 module.exports = router;

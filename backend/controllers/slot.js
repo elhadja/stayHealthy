@@ -1,4 +1,3 @@
-const { exists } = require("../models/slot");
 const Slot = require("../models/slot");
 exports.addSlot = (req, res) => {
     const slot = new Slot(req.body);
@@ -49,4 +48,14 @@ exports.getSlotById = (req, res) => {
         })
         .catch(error => res.status(500).json(error));
 
+};
+
+exports.getSlotsBy = (req, res) => {
+    let idFilter = req.query.id ? req.query.id : "";
+    
+    Slot.find({ doctorId: idFilter })
+        .then(slots => {
+            res.status(200).json(slots);
+        })
+        .catch(error => res.status(500).json(error));
 };
