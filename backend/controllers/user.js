@@ -4,8 +4,11 @@ const { ObjectId } = require("mongodb");
 
 exports.deleteUser = (req, res, UserModel) => {
     UserModel.deleteOne({ _id: req.params.id })
-        .then(() => {
-            res.status(200).json({ message: "user deleted !"});
+        .then((response) => {
+            if (response.deletedCount === 1) 
+                res.status(200).json({ message: "user deleted !", response: response});
+            else
+                res.status(404).json({ error: "user not found", response: response });
         })
         .catch(error => res.status(404).json({ error: error.message }));
 };

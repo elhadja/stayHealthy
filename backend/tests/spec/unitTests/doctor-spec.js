@@ -82,7 +82,6 @@ describe("getting doctor by Id tests: ", () => {
             expect(postResponse.data.id).toBe(getResponse.data._id);
             expect(body.firstName).toBe(getResponse.data.firstName);
             expect(body.lastName).toBe(getResponse.data.lastName);
-            await axios.delete(urlBase + "/doctor/" + postResponse.data.id);
         } catch(error) {
             fail(error.response);
         } finally {
@@ -117,7 +116,126 @@ describe("delete doctor tests: ", () => {
             let deleteResponse = await axios.delete(urlBase + "/doctor/" + postResponse.data.id);
             expect(deleteResponse.status).toBe(200);
         } catch(error) {
+            fail(error);
+        }
+    });
+
+    it("if the user not exists the request should fail", async () => {
+        try {
+            const id = new ObjectId("eeeeeeeeeeeeeeeeeeeeeeee");
+            await axios.delete(urlBase + "/doctor/" + id);
+            expect(true).toBe(false);
+        } catch (error) {
+            expect(error.response.status).toBe(404);
+        }
+    });
+});
+
+describe("update doctor tests: ", () => {
+    it("the user should be updated", async () => {
+        let postResponse;
+        try {
+            const body = {
+                firstName: "Elhadj Amadou",
+                lastName: "Bah",
+                adress: "avenue de collégno",
+                email: "updateDoctorSuccess@gmail.com",
+                password: "toto"
+            };
+            postResponse = await axios.post(urlBase + "/doctor", body);
+            const updateBody = {
+                firstName: "newFirstName",
+            };
+            const PutResponse = await axios.put(urlBase + "/doctor/" + postResponse.data.id, updateBody);
+            expect(PutResponse.status).toBe(200);
+            expect(PutResponse.data.user.firstName).toBe(updateBody.firstName);
+        } catch(error) {
+            fail(error);
+        } finally {
+            if (postResponse)
+                await axios.delete(urlBase + "/doctor/" + postResponse.data.id);
+        }
+    });
+
+    it("if the user not exists the request should fail", async () => {
+        try {
+            const id = new ObjectId("eeeeeeeeeeeeeeeeeeeeeeee");
+            const body = {};
+            await axios.put(urlBase + "/doctor/" + id, body);
+            expect(true).toBe(false);
+        } catch (error) {
+            expect(error.response.status).toBe(404);
+            expect(error.response.data.error).toBe("user not found");
+        }
+    });
+});
+
+describe("get severals doctors tests: ", () => {
+    it("if no filter is specified, should return an empty array", async () => {
+        try {
+            const getResponse = await axios.get(urlBase + "/doctors");
+            expect(getResponse.status).toBe(200);
+            expect(getResponse.data.length).toBe(0);
+        } catch(error) {
+            fail(error);
+        } 
+    });
+
+    it("if doctors exist, request should return an array whitch contents matched doctors", async () => {
+        let postResponse1;
+        let postResponse2;
+        let postResponse3;
+        let postResponse4;
+        try {
+            const body = {
+                firstName: "Elhadj Amadou",
+                lastName: "testGetByName",
+                adress: "avenue de collégno",
+                email: "getDoctorsSuccess@gmail.com",
+                password: "toto",
+                speciality: "a speciality for test",
+                address: {
+                    road: "avenue de l'espoire",
+                    postalCode: 33400,
+                    city: "talence"
+                }
+            };
+            postResponse1 = await axios.post(urlBase + "/doctor", body);
+            postResponse2 = await axios.post(urlBase + "/doctor", {
+                ...body,
+                email: body.email + "1",
+                speciality: "aSpeciality"
+            });
+            postResponse3 = await axios.post(urlBase + "/doctor", {
+                ...body,
+                email: body.email + "2",
+                lastName: "aLastName"
+            });
+            postResponse4 = await axios.post(urlBase + "/doctor", {
+                ...body,
+                email: body.email + "3",
+                address: {
+                    postalCode: "99990"
+                }
+            });
+            const getResponse = await axios.get(urlBase + "/doctors?name=aLastName"
+                                                        + "&speciality=aSpeciality"
+                                                        + "&postalCode=99990");
+            expect(getResponse.status).toBe(200);
+            expect(getResponse.data.length).toBe(3);
+ 
+        } catch (error) {
             fail();
+        } finally {
+            if (postResponse1)
+                await axios.delete(urlBase + "/doctor/" + postResponse1.data.id);
+            if (postResponse2)
+                await axios.delete(urlBase + "/doctor/" + postResponse2.data.id);
+            if (postResponse3)
+                await axios.delete(urlBase + "/doctor/" + postResponse3.data.id);
+            if (postResponse4)
+                await axios.delete(urlBase + "/doctor/" + postResponse4.data.id);
+ 
         }
     });
 });
