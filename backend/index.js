@@ -4,6 +4,7 @@ const cors = require("cors");
 
 const patientRoutes = require("./routes/patient");
 const doctorRoutes = require("./routes/doctor");
+const slotRoutes = require("./routes/slot");
 const db = require("./db");
 
 const app = express();
@@ -18,6 +19,7 @@ app.use(cors());
 app.use("/patient", patientRoutes);
 app.use("/doctor", doctorRoutes);
 app.use("/doctors", doctorRoutes);
+app.use("/slot", slotRoutes);
 
 app.listen(port, () => {
     console.log(`app listening at http://localhost:${port}`);
