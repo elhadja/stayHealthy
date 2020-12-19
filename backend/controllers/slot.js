@@ -1,3 +1,4 @@
+const { exists } = require("../models/slot");
 const Slot = require("../models/slot");
 exports.addSlot = (req, res) => {
     const slot = new Slot(req.body);
@@ -34,5 +35,18 @@ exports.deleteSlot = (req, res) => {
                 res.status(404).json({ error: "slot not found", response: response });
         })
         .catch(error => res.status(404).json({ error: error.message }));
+
+};
+
+exports.getSlotById = (req, res) => {
+    Slot.findOne({ _id: req.params.id })
+        .then(slot => {
+            if (slot) {
+                res.status(200).json(slot);
+            } else {
+                res.status(404).json({error: "user not found"});
+            }
+        })
+        .catch(error => res.status(500).json(error));
 
 };
