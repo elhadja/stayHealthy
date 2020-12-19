@@ -1,5 +1,6 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { ObjectId } = require("mongodb");
 
 exports.deleteUser = (req, res, UserModel) => {
     UserModel.deleteOne({ _id: req.params.id })
@@ -38,24 +39,52 @@ exports.signin = (req, res, UserModel) => {
         .catch(err => res.json({err}));
 };
 
-exports.signup = (req, res, UserModel) => {
-    if (!req.body.password)
-        res.status(400).json({error: "password field is required"});
-    else {
-        bcrypt.hash(req.body.password, 10)
-            .then(hash => {
-                req.body.password = hash;
-                const user = new UserModel({...req.body});
-                user.save()
-                    .then((savedUser) => res.status(201).json({
-                        message: "user created", id: savedUser._id
-                    }))
-                    .catch(error => {
-                        res.status(400).json({error: error});
-                    });
-            })
+exports.signup = async (req, res, UserModel) => {
+    try {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+        const user = new UserModel({...req.body});
+        user.save()
+            .then((savedUser) => res.status(201).json({
+                message: "user created", id: savedUser._id
+            }))
             .catch(error => {
-                res.status(400).json(error);
+                res.status(400).json({error: error});
             });
+    } catch (error) {
+        res.status(400).json({error: "password field is required"});
     }
+};
+
+exports.getUserById = (req, res, UserModel) => {
+    UserModel.findOne({ _id: new ObjectId(req.params.id) })
+        .then(user => {
+            if (user) {
+                res.status(200).json(user);
+            } else {
+                res.status(404).json({error: "user not found"});
+            }
+        })
+        .catch(error => res.status(500).json(error));
+};
+
+exports.updateUser = async (req, res, UserModel) => {
+    if (req.body.password) {
+        req.body.password = await bcrypt.hash(req.body.password, 10);
+    }
+    UserModel.findOneAndUpdate(
+        { _id: req.params.id },
+        {...req.body, _id: req.params.id}, 
+        {useFindAndModify: false, new: true})
+        .then((mongoRes) => {
+            if(mongoRes)
+                res.status(200).json({message: "user modified", user: mongoRes});
+            else
+                res.status(404).json({error: "user not found"});
+        })
+        .catch(error => {
+            if (error.codeName === "DuplicateKey") {
+                res.status(400).json({error: "duplicate key", keys: error.keyValue});
+            }
+            res.status(500).json(error);
+        });
 };

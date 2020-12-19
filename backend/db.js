@@ -6,6 +6,6 @@ const uri = "mongodb+srv://elhadjium:270795mongo@cluster0.u6wuq.mongodb.net/" + 
 exports.init = () => {
     mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
         .then(() => console.log("mongodb reached !"))
-        .catch(() => console.log("error when attempting to connect to mongodb"));
+        .catch((error) => console.log("error when attempting to connect to mongodb: ", error));
 
 };

@@ -12,3 +12,30 @@ exports.logsUser = (req, res) => {
 exports.deleteUser = (req, res) => {
     user.deleteUser(req, res, Doctor);
 };
+
+exports.getDoctorById = (req, res) => {
+    user.getUserById(req, res, Doctor);
+};
+
+exports.updateDoctor = (req, res) => {
+    user.updateUser(req, res, Doctor);
+};
+
+exports.getDoctorsBy = (req, res) => {
+    let nameFilter = req.query.name ? req.query.name : "";
+    let specialityFilter = req.query.speciality ? req.query.speciality : "";
+    let postalCodeFilter = req.query.postalCode ? req.query.postalCode : "";
+    
+    Doctor.find({ $or: 
+        [
+            { firstName: nameFilter }, 
+            { lastName: nameFilter },
+            { speciality: specialityFilter}, 
+            { postalCode: postalCodeFilter } 
+        ]})
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(error => res.status(500).json(error));
+
+};

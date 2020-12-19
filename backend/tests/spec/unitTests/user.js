@@ -25,7 +25,7 @@ exports.emailShouldBeUnique = async (userType) => {
 };
 
 exports.incorrectPassword = async (userType) => {
-    let addUserResponse;
+    let addUserResponse = undefined;
     try {
         const userBody = {
             firstName: "Elhadj Amadou",
@@ -43,7 +43,8 @@ exports.incorrectPassword = async (userType) => {
     } catch(error) {
         expect(error.response.status).toBe(400);
     } finally {
-        await axios.delete(urlBase + "/" + userType + "/" + addUserResponse.data.id);
+        if (addUserResponse)
+            await axios.delete(urlBase + "/" + userType + "/" + addUserResponse.data.id);
     }  
 };
 

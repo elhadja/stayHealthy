@@ -12,3 +12,12 @@ exports.logsUser = (req, res) => {
 exports.deleteUser = (req, res) => {
     user.deleteUser(req, res, Patient);
 };
+
+//To Test
+exports.getPatientById = (req, res) => {
+    user.getUserById(req, res, Patient);
+};
+
+exports.updatePatient = (req, res) => {
+    user.updateUser(req, res, Patient);
+};
