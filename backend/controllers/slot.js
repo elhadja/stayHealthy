@@ -24,3 +24,15 @@ exports.updateSlot = (req, res) => {
             res.status(500).json(error);
         });
 };
+
+exports.deleteSlot = (req, res) => {
+    Slot.deleteOne({ _id: req.params.id })
+        .then((response) => {
+            if (response.deletedCount === 1) 
+                res.status(200).json({ message: "slot deleted !", response: response});
+            else
+                res.status(404).json({ error: "slot not found", response: response });
+        })
+        .catch(error => res.status(404).json({ error: error.message }));
+
+};
