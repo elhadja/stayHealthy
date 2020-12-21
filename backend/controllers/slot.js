@@ -1,16 +1,31 @@
 const Slot = require("../models/slot");
+const Doctor = require("../models/doctor");
+
 exports.addSlot = (req, res) => {
-    const slot = new Slot(req.body);
-    slot.save()
-        .then(savedSlot => {
-            res.status(201).json({message: "slot added", slot: savedSlot});
+
+    Doctor.findById(req.body.doctorId)
+        .then((doctor) => {
+            if (doctor) {
+                const slot = new Slot(req.body);
+                slot.save()
+                    .then(savedSlot => {
+                        res.status(201).json({message: "slot added", slot: savedSlot});
+                    })
+                    .catch(error => {
+                        res.status(400).json(error);
+                    });
+            } else
+                res.status(400).json({error: "doctorId must be valid"});
         })
-        .catch(error => res.status(400).json(error));
+        .catch(error => {
+            res.status(400).json({error: error, message: "heh"});
+        });
+
 };
 
 exports.updateSlot = (req, res) => {
     Slot.findOneAndUpdate(
-        { _id: req.params.id },
+        { _id: req.params.id, patientId: {$exists: false }},
         {...req.body, _id: req.params.id },
         {useFindAndModify: false, new: true}
     )
@@ -18,7 +33,7 @@ exports.updateSlot = (req, res) => {
             if (mongoRes)
                 res.status(200).json({message: "slot modified", slot: mongoRes});
             else
-                res.status(400).json({error: "slot not found"});
+                res.status(400).json({error: "slot not found or occupied by à patient"});
         })
         .catch(error => {
             res.status(500).json(error);
@@ -26,12 +41,12 @@ exports.updateSlot = (req, res) => {
 };
 
 exports.deleteSlot = (req, res) => {
-    Slot.deleteOne({ _id: req.params.id })
+    Slot.deleteOne({ _id: req.params.id, patientId: {$exists: false }})
         .then((response) => {
             if (response.deletedCount === 1) 
                 res.status(200).json({ message: "slot deleted !", response: response});
             else
-                res.status(404).json({ error: "slot not found", response: response });
+                res.status(404).json({ error: "slot not found or occupied by a patient", response: response });
         })
         .catch(error => res.status(404).json({ error: error.message }));
 
@@ -43,7 +58,7 @@ exports.getSlotById = (req, res) => {
             if (slot) {
                 res.status(200).json(slot);
             } else {
-                res.status(404).json({error: "user not found"});
+                res.status(404).json({error: "slot not found"});
             }
         })
         .catch(error => res.status(500).json(error));
