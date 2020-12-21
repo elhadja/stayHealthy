@@ -1,8 +1,12 @@
 const express = require("express");
-const usersControllers = require("../controllers/users");
+const slotController = require("../controllers/slot");
 
 const router = express.Router();
 
-router.get("/", usersControllers.addNewUser);
+router.get("/:id", slotController.getAppointmentById);
+router.post("/:patientId/:slotId", slotController.addAppointment);
+router.put("/:id", slotController.cancelAppointment);
+router.get("/patient/:idPatient", slotController.getPatientAppointment);
+router.get("/doctor/:idDoctor", slotController.getDoctorAppointments);
 
 module.exports = router;

@@ -74,3 +74,25 @@ exports.getSlotsBy = (req, res) => {
         })
         .catch(error => res.status(500).json(error));
 };
+
+
+exports.getAppointmentById = (req, res) => {
+    res.send("get by id");
+};
+
+exports.addAppointment = (req, res) => {
+    res.send("add");
+};
+
+exports.cancelAppointment = (req, res) => {
+    res.send("cancel");
+};
+
+exports.getDoctorAppointments = (req, res) => {
+    res.send("doctors appoitnements");
+};
+
+
+exports.getPatientAppointment = (req, res) => {
+    res.send("patient appoitnements");
+};
