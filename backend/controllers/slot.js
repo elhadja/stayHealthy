@@ -1,5 +1,6 @@
 const Slot = require("../models/slot");
 const Doctor = require("../models/doctor");
+const Patient = require("../models/patient");
 
 exports.addSlot = (req, res) => {
 
@@ -80,21 +81,30 @@ exports.getAppointmentById = (req, res) => {
     res.send("get by id");
 };
 
-exports.addAppointment = (req, res) => {
-    Slot.findOneAndUpdate(
-        { _id: req.params.slotId, patientId: { $exists: false }},
-        { patientId: req.params.patientId },
-        {useFindAndModify: false, new: true}
-    )
-        .then(mongoRes => {
-            if (mongoRes)
-                res.status(200).json({message: "appointment created", slot: mongoRes});
-            else
-                res.status(400).json({error: "slot not found or occupied by à patient"});
-        })
-        .catch(error => {
-            res.status(500).json(error);
-        });
+exports.addAppointment = async (req, res) => {
+    try {
+        const patient = await Patient.findById(req.params.patientId);
+        if (patient) {
+            Slot.findOneAndUpdate(
+                { _id: req.params.slotId, patientId: { $exists: false }},
+                { patientId: req.params.patientId },
+                {useFindAndModify: false, new: true}
+            )
+                .then(mongoRes => {
+                    if (mongoRes)
+                        res.status(200).json({message: "appointment created", slot: mongoRes});
+                    else
+                        res.status(400).json({error: "slot not found or occupied by à patient"});
+                })
+                .catch(error => {
+                    res.status(500).json(error);
+                });
+        } else {
+            res.status(400).json({error: "patientId must be valid"});
+        }
+    } catch (error) {
+        res.status(500).json({error: error});
+    } 
 };
 
 exports.cancelAppointment = (req, res) => {
