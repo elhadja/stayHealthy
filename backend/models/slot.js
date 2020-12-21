@@ -17,7 +17,7 @@ const slotSchema = mongoose.Schema({
     date: {type: dateSchema, required: true},
     startHour: { type: hourSchema, required: true},
     doctorId: { type: ObjectId, required: true },
-    patientId: ObjectId
+    patientId: { type: ObjectId}
 });
 
 slotSchema.plugin(uniqueValidator);
