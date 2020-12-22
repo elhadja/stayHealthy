@@ -1,12 +1,14 @@
 const axios = require("axios");
-const { ObjectId } = require("mongodb").ObjectID;
 
+const urlBase = "http://localhost:3000";
 
 
 describe("add slot tests: ", () => {
-    const urlBase = "http://localhost:3000";
 
     let beforeAllPost;
+    let doctorLoginResponse;
+    let addSlotHeader = {};
+
     beforeAll(async () => {
         try {
             const body = {
@@ -17,15 +19,19 @@ describe("add slot tests: ", () => {
                 password: "toto"
             };
             beforeAllPost = await axios.post(urlBase + "/doctor", body);
+            doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+                email: body.email,
+                password: body.password
+            });
+            addSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
         } catch(error) {
-            fail(error);
+            fail("error in before All: ", error);
         }
  
     });
 
     afterAll(async () => {
-        if (beforeAllPost)
-            await axios.delete(urlBase + "/doctor/" + beforeAllPost.data.id);
+        await deleteDoctor(beforeAllPost);
     });
 
     it("slot should be added", async () => {
@@ -43,27 +49,25 @@ describe("add slot tests: ", () => {
         };
         let postResponse;
         try {
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await addSlot(body, addSlotHeader);
             expect(postResponse.status).toBe(201);
             expect(postResponse.data.message).toBe("slot added");
         } catch (error) {
             fail(error);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, addSlotHeader);
         }
     });
 
     it("if required elements not exists, then request should fail", async () => {
         let postResponse;
         try {
-            postResponse = await axios.post(urlBase + "/slot", {});
+            postResponse = await addSlot({}, addSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, addSlotHeader);
         }
         
     });
@@ -80,16 +84,14 @@ describe("add slot tests: ", () => {
                 },
                 doctorId: beforeAllPost.data.id
             };
- 
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await addSlot(body, addSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
             const requiredItemNumber = 4;
             expect(Object.keys(error.response.data.errors).length).toBe(requiredItemNumber);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, addSlotHeader);
         }
         
     });
@@ -107,21 +109,19 @@ describe("add slot tests: ", () => {
                 },
                 doctorId: beforeAllPost.data.id
             };
- 
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await addSlot(body, addSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
             const requiredItemNumber = 3;
             expect(Object.keys(error.response.data.errors).length).toBe(requiredItemNumber);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, addSlotHeader);
         }
  
     });
 
-    it("if the doctor don't exists, then request should fail", async () => {
+    it("if the doctor is not identified, the request should fail", async () => {
         let postResponse;
         try {
             const body = {
@@ -134,16 +134,16 @@ describe("add slot tests: ", () => {
                     hh: 12,
                     mn: 5
                 },
-                doctorId: ObjectId("aaaaaaaaaaaaaaaaaaaaaaaa")
             };
  
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await axios.post(urlBase + "/slot", body, {
+                headers: { Authorization: `Bearer ${doctorLoginResponse.data.token + "x"}`}
+            });
             fail();
         } catch (error) {
-            expect(error.response.status).toBe(400);
+            expect(error.response.status).toBe(401);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, addSlotHeader);
         }
     });
 });
@@ -152,25 +152,31 @@ describe(("update slot tests: "), () => {
     const urlBase = "http://localhost:3000";
 
     let beforeAllPost;
+    let doctorLoginResponse;
+    let updateSlotHeader = {};
     beforeAll(async () => {
         try {
             const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "addSlotBeforAll@gmail.com",
+                email: "updateSlotBeforAll@gmail.com",
                 password: "toto"
             };
             beforeAllPost = await axios.post(urlBase + "/doctor", body);
+            doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+                email: body.email,
+                password: body.password
+            });
+            updateSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
+ 
         } catch(error) {
             fail(error);
         }
- 
     });
 
     afterAll(async () => {
-        if (beforeAllPost)
-            await axios.delete(urlBase + "/doctor/" + beforeAllPost.data.id);
+        deleteDoctor(beforeAllPost);
     });
 
     it("slot should be updated", async () => {
@@ -189,36 +195,33 @@ describe(("update slot tests: "), () => {
                 doctorId: beforeAllPost.data.id
             };
  
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await axios.post(urlBase + "/slot", body, updateSlotHeader);
             const putResponse = await axios.put(urlBase + "/slot/" + postResponse.data.slot._id, {
                 ...body,
                 startHour: {
                     hh: 13,
                     mn: 3
                 }               
-            });
+            }, updateSlotHeader);
             expect(putResponse.status).toBe(200);
             expect(putResponse.data.slot.startHour.hh).toBe(13);
             expect(putResponse.data.slot.startHour.mn).toBe(3);
         } catch (error) {
             fail(error);
         } finally {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            await deleteSlot(postResponse, updateSlotHeader);
         }
- 
     });
 
     it("if the slot not exists, request should fail", async () => {
         try {
-            await axios.put(urlBase + "/slot/eeeeeeeeeeeeeeeeeeeeeeee", {});
+            await axios.put(urlBase + "/slot/eeeeeeeeeeeeeeeeeeeeeeee", {}, updateSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
         }  
     });
 
-    /*
     it("if the slot is taken, request should fail", async () => {
         let postResponse;
         try {
@@ -232,41 +235,47 @@ describe(("update slot tests: "), () => {
                     hh: 12,
                     mn: 5
                 },
-                doctorId: beforeAllPost.data.id,
-                patientId: ObjectId("aaaaaaaaaaaaaaaaaaaaeeee")
+                patientId: "aaaaaaaaaaaaaaaaaaaaeeee"
             };
  
-            postResponse = await axios.post(urlBase + "/slot", body);
+            postResponse = await axios.post(urlBase + "/slot", body, updateSlotHeader);
             await axios.put(urlBase + "/slot/" + postResponse.data.slot._id, {
                 ...body,
                 startHour: {
                     hh: 13,
                     mn: 3
                 }               
-            });
+            }, updateSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
-        } 
-        //TODO supprimer l'élémeent ajouté
+        } finally {
+            await deleteSlot(postResponse, updateSlotHeader);
+        }
     });
-    */
 });
 
 describe("delete slot tests: ", () => {
     const urlBase = "http://localhost:3000";
 
     let beforeAllPost;
+    let delteSlotHeader = {};
     beforeAll(async () => {
         try {
             const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "addSlotBeforAll@gmail.com",
+                email: "deleteSlotBeforAll@gmail.com",
                 password: "toto"
             };
             beforeAllPost = await axios.post(urlBase + "/doctor", body);
+            const doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+                email: body.email,
+                password: body.password
+            });
+            delteSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
+
         } catch(error) {
             fail(error);
         }
@@ -274,8 +283,7 @@ describe("delete slot tests: ", () => {
     });
 
     afterAll(async () => {
-        if (beforeAllPost)
-            await axios.delete(urlBase + "/doctor/" + beforeAllPost.data.id);
+        await deleteDoctor(beforeAllPost);
     });
 
 
@@ -294,28 +302,25 @@ describe("delete slot tests: ", () => {
                 },
                 doctorId: beforeAllPost.data.id,
             };
- 
-            postResponse = await axios.post(urlBase + "/slot", body);
-            const deleteResponse = await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            postResponse = await addSlot(body, delteSlotHeader);
+            const deleteResponse = await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id, delteSlotHeader);
             expect(deleteResponse.status).toBe(200);
             postResponse = undefined;
         } catch (error) {
-            if (postResponse)
-                await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
             fail();
-        } 
+        } finally {
+            await deleteSlot(postResponse);
+        }
         
     });
-
     it("if the slot not exists, the request should fail", async () => {
         try {
-            await axios.delete(urlBase + "/slot/" + "eeeeeeeeeeeeeeeeeeeeaeae");
+            await axios.delete(urlBase + "/slot/" + "eeeeeeeeeeeeeeeeeeeeaeae", delteSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(404);
             expect(error.response.data.error).toBe("slot not found or occupied by a patient");
         } 
- 
     });
 
     it("if the sltot is occupied by a patient the request should fail", async () => {
@@ -332,34 +337,55 @@ describe("delete slot tests: ", () => {
                     mn: 5
                 },
                 doctorId: beforeAllPost.data.id,
-                patientId: ObjectId("eeeeeeeeeeeeeeeeeeeeeeee")
+                patientId: "eeeeeeeeeeeeeeeeeeeeeeee"
             };
- 
-            postResponse = await axios.post(urlBase + "/slot", body);
-            await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id);
+            postResponse = await addSlot(body, delteSlotHeader);
+            await axios.delete(urlBase + "/slot/" + postResponse.data.slot._id, delteSlotHeader);
+            postResponse = undefined;
             fail();
         } catch (error) {
             expect(error.response.status).toBe(404);
             expect(error.response.data.error).toBe("slot not found or occupied by a patient");
-        } 
+        } finally {
+            await deleteSlot(postResponse, delteSlotHeader);
+        }
     });
 });
 
 describe("get slot tests: ", () => {
-    const urlBase = "http://localhost:3000";
-    it("if the slot exists, the request should success", async () => {
-        let postDoctorResponse;
-        let postSlotResponse;
+    let beforeAllPost;
+    let getSlotHeader = {};
+    beforeAll(async () => {
         try {
-            const doctorBody = {
+            const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "getSlotById@gmail.com",
+                email: "getSlotBeforAll@gmail.com",
                 password: "toto"
             };
-            postDoctorResponse = await axios.post(urlBase + "/doctor", doctorBody);
+            beforeAllPost = await axios.post(urlBase + "/doctor", body);
+            const doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+                email: body.email,
+                password: body.password
+            });
+            getSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
 
+        } catch(error) {
+            fail(error);
+        }
+ 
+    });
+
+    afterAll(async () => {
+        await deleteDoctor(beforeAllPost);
+    });
+
+
+    const urlBase = "http://localhost:3000";
+    it("if the slot exists, the request should success", async () => {
+        let postSlotResponse;
+        try {
             const body = {
                 date: {
                     jj: 25,
@@ -370,26 +396,21 @@ describe("get slot tests: ", () => {
                     hh: 12,
                     mn: 5
                 },
-                doctorId: postDoctorResponse.data.id,
             };
-            postSlotResponse = await axios.post(urlBase + "/slot", body);
-            const getResponse = await axios.get(urlBase + "/slot/" + postSlotResponse.data.slot._id);
+            postSlotResponse = await addSlot(body, getSlotHeader);
+            const getResponse = await axios.get(urlBase + "/slot/" + postSlotResponse.data.slot._id, getSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data._id).toBe(postSlotResponse.data.slot._id);
         } catch (error) {
             fail(error);
         } finally {
-            if (postDoctorResponse)
-                await axios.delete(urlBase + "/doctor/" + postDoctorResponse.data.id);
-
-            if (postSlotResponse)
-                await axios.delete(urlBase + "/slot/" + postSlotResponse.data.slot._id);
+            await deleteSlot(postSlotResponse, getSlotHeader);
         }
     });
 
     it("if the slot not exists, the request should fail", async () => {
         try {
-            await axios.get(urlBase + "/slot/" + "eeeeeeeeeeeeeeeeeeeeaeae");
+            await axios.get(urlBase + "/slot/" + "eeeeeeeeeeeeeeeeeeeeaeae", getSlotHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(404);
@@ -399,23 +420,40 @@ describe("get slot tests: ", () => {
     });
 });
 
-
 describe("get several slots tests: ", () => {
     const urlBase = "http://localhost:3000";
 
-    it("if the slots exists, the request should return an array whitch contents found slots", async () => {
-        let postDoctorResponse;
-        let postSlotResponse1, postSlotResponse2;
+    let beforeAllPost;
+    let getSeveralSlotHeader = {};
+    beforeAll(async () => {
         try {
-            const doctorBody = {
+            const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "getSeveralSlots@gmail.com",
+                email: "getSeveralSlotBeforAll@gmail.com",
                 password: "toto"
             };
-            postDoctorResponse = await axios.post(urlBase + "/doctor", doctorBody);
+            beforeAllPost = await axios.post(urlBase + "/doctor", body);
+            const doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+                email: body.email,
+                password: body.password
+            });
+            getSeveralSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
 
+        } catch(error) {
+            fail(error);
+        }
+ 
+    });
+
+    afterAll(async () => {
+        await deleteDoctor(beforeAllPost);
+    });
+
+    it("if the slots exists, the request should return an array whitch contents found slots", async () => {
+        let postSlotResponse1, postSlotResponse2;
+        try {
             const body = {
                 date: {
                     jj: 25,
@@ -426,31 +464,24 @@ describe("get several slots tests: ", () => {
                     hh: 12,
                     mn: 5
                 },
-                doctorId: postDoctorResponse.data.id,
             };
-            postSlotResponse1 = await axios.post(urlBase + "/slot", body);
-            postSlotResponse2 = await axios.post(urlBase + "/slot", body);
-            const getResponse = await axios.get(urlBase + "/slots?id=" + postDoctorResponse.data.id);
+            postSlotResponse1 = await axios.post(urlBase + "/slot", body, getSeveralSlotHeader);
+            postSlotResponse2 = await axios.post(urlBase + "/slot", body, getSeveralSlotHeader);
+            const getResponse = await axios.get(urlBase + "/slots?id=" + beforeAllPost.data.id, getSeveralSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data.length).toBe(2);
         } catch(error) {
             fail(error);
         } finally {
-            if (postDoctorResponse)
-                await axios.delete(urlBase + "/doctor/" + postDoctorResponse.data.id);
-
-            if (postSlotResponse1)
-                await axios.delete(urlBase + "/slot/" + postSlotResponse1.data.slot._id);
-
-            if (postSlotResponse2)
-                await axios.delete(urlBase + "/slot/" + postSlotResponse2.data.slot._id);
+            await deleteSlot(postSlotResponse1, getSeveralSlotHeader);
+            await deleteSlot(postSlotResponse2, getSeveralSlotHeader);
         }
   
     });
 
     it("if the slot not exists, the request should send an empty array", async () => {
         try {
-            const getResponse = await axios.get(urlBase + "/slots?id=eeeeeeeeeeeeeeeeeeeeaeae");
+            const getResponse = await axios.get(urlBase + "/slots?id=eeeeeeeeeeeeeeeeeeeeaeae", getSeveralSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data.length).toBe(0);
         } catch (error) {
@@ -459,3 +490,23 @@ describe("get several slots tests: ", () => {
         
     });
 });
+
+async function deleteSlot(axiosResponse, header) {
+    try {
+        if (axiosResponse)
+            await axios.delete(urlBase + "/slot/" + axiosResponse.data.slot._id, header);
+    } catch (error) {
+        await axios.put(urlBase + "/appointment" + "/" + axiosResponse.data.slot._id, header);
+        await axios.delete(urlBase + "/slot/" + axiosResponse.data.slot._id, header);
+    }
+}
+
+async function deleteDoctor(axiosResponse, header={}) {
+    if (axiosResponse)
+        await axios.delete(urlBase + "/doctor/" + axiosResponse.data.id, header);
+}
+
+async function addSlot(requestBody, requestHeader) {
+    const postResponse = await axios.post(urlBase + "/slot", requestBody, requestHeader);
+    return postResponse;
+}

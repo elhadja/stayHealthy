@@ -1,32 +1,20 @@
 const Slot = require("../models/slot");
-const Doctor = require("../models/doctor");
 const Patient = require("../models/patient");
 
 exports.addSlot = (req, res) => {
-
-    Doctor.findById(req.body.doctorId)
-        .then((doctor) => {
-            if (doctor) {
-                const slot = new Slot(req.body);
-                slot.save()
-                    .then(savedSlot => {
-                        res.status(201).json({message: "slot added", slot: savedSlot});
-                    })
-                    .catch(error => {
-                        res.status(400).json(error);
-                    });
-            } else
-                res.status(400).json({error: "doctorId must be valid"});
+    const slot = new Slot({...req.body, doctorId: req.userId});
+    slot.save()
+        .then(savedSlot => {
+            res.status(201).json({message: "slot added", slot: savedSlot});
         })
         .catch(error => {
-            res.status(400).json({error: error, message: "heh"});
+            res.status(400).json(error);
         });
-
 };
 
 exports.updateSlot = (req, res) => {
     Slot.findOneAndUpdate(
-        { _id: req.params.id, patientId: {$exists: false }},
+        { _id: req.params.id, patientId: {$exists: false }, doctorId: req.userId},
         {...req.body, _id: req.params.id },
         {useFindAndModify: false, new: true}
     )
@@ -42,7 +30,7 @@ exports.updateSlot = (req, res) => {
 };
 
 exports.deleteSlot = (req, res) => {
-    Slot.deleteOne({ _id: req.params.id, patientId: {$exists: false }})
+    Slot.deleteOne({ _id: req.params.id, patientId: {$exists: false }, doctorId: req.userId})
         .then((response) => {
             if (response.deletedCount === 1) 
                 res.status(200).json({ message: "slot deleted !", response: response});
@@ -54,7 +42,7 @@ exports.deleteSlot = (req, res) => {
 };
 
 exports.getSlotById = (req, res) => {
-    Slot.findOne({ _id: req.params.id })
+    Slot.findOne({ _id: req.params.id, doctorId: req.userId })
         .then(slot => {
             if (slot) {
                 res.status(200).json(slot);
@@ -66,10 +54,9 @@ exports.getSlotById = (req, res) => {
 
 };
 
+// todo to rename
 exports.getSlotsBy = (req, res) => {
-    let idFilter = req.query.id ? req.query.id : "";
-    
-    Slot.find({ doctorId: idFilter })
+    Slot.find({ doctorId: req.userId })
         .then(slots => {
             res.status(200).json(slots);
         })

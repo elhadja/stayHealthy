@@ -1,19 +1,17 @@
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
-module.exports = (req, res, next) => {
-  try {
-    console.log(req.headers);
-    const token = req.headers.authorization.split(' ')[1];
-    const decodedToken = jwt.verify(token, 'RANDOM_TOKEN_SECRET');
-    const userId = decodedToken.userId;
-    if (req.body.userId && req.body.userId !== userId) {
-      throw 'Invalid user ID';
-    } else {
-        console.log("next");
-      next();
+exports.doctorAuth = (req, res, next) => {
+    try {
+        const token = req.headers.authorization.split(" ")[1];
+        const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
+        if (decodedToken.scope !== "doctors") {
+            throw "access allowed for doctors only";
+        } else {
+            req.userId = decodedToken.userId;
+            next();
+        }
+    } catch (err) {
+        console.log("JWT error: ", err);
+        res.status(401).json({err: err});
     }
-  } catch (err) {
-    console.log(err)
-    res.status(401).send(err)
-  }
 };

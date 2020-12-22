@@ -27,7 +27,7 @@ exports.signin = (req, res, UserModel) => {
                             res.status(200).json({
                                 id: user._id,
                                 token: jwt.sign(
-                                    { userId: user._id },
+                                    { userId: user._id, scope: UserModel.collection.collectionName},
                                     "RANDOM_TOKEN_SECRET",
                                     { expiresIn: "24h" }
                                 )
