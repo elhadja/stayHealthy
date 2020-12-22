@@ -1,11 +1,22 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { DoctorComponent } from './views/doctor/doctor.component';
+import { HomepageComponent } from './views/homepage/homepage.component';
+import { LogInComponent } from './views/log-in/log-in.component';
 import { NavComponent } from './components/nav/nav.component';
+import { PatientComponent } from './views/patient/patient.component';
+import { SignUpComponent } from './views/sign-up/sign-up.component';
+import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
+
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+import { AppRoutingModule } from './app-routing.module';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule} from '@angular/common/http';
+
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { MatSidenavModule } from '@angular/material/sidenav';
@@ -16,15 +27,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { LogInComponent } from './views/log-in/log-in.component';
-import { SignUpComponent } from './views/sign-up/sign-up.component';
-import { HttpClientModule} from '@angular/common/http';
-import { PatientComponent } from './views/patient/patient.component';
-import { DoctorComponent } from './views/doctor/doctor.component';
-import { PageNotFoundComponent } from './views/page-not-found/page-not-found.component';
-import { HomepageComponent } from './views/homepage/homepage.component';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 @NgModule({
   declarations: [
@@ -42,6 +45,7 @@ import { HomepageComponent } from './views/homepage/homepage.component';
     AppRoutingModule,
     BrowserAnimationsModule,
     LayoutModule,
+    MatAutocompleteModule,
     MatToolbarModule,
     MatButtonModule,
     MatSidenavModule,
