@@ -3,31 +3,38 @@
     <h1>Bienvenue</h1>
     <img src="assets/files/undraw_welcome_3gvl.png">
     <h3>Afin de gérer vos rendez-vous médicaux avec StayHealthy</h3>
-    <form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm.value, loginForm.value.profile)">
+
+    <form [formGroup]="loginForm" (ngSubmit)="loginForm.valid && onSubmit()">
+
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input matInput name="email" placeholder="Entrer votre email" type="email" ngModel required>
+        <input matInput type="email" placeholder="Entrer votre email"  formControlName="email" required>
+        <mat-error *ngIf="loginForm.invalid">{{getEmailErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="outline">
         <mat-label>Mot de Passe</mat-label>
-        <input matInput name="password" placeholder="Entrer votre mot de passe" type="password" ngModel required>
+        <input matInput type="password" placeholder="Entrer votre mot de passe"  formControlName="password" required>
+        <mat-error *ngIf="loginForm.invalid">{{getPasswordErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="outline">
         <mat-label>Profil</mat-label>
-        <mat-select name="profile" ngModel>
+        <mat-select name="profile"  formControlName="profile" required>
           <mat-option value="patient">Patient</mat-option>
           <mat-option value="doctor">Médecin</mat-option>
         </mat-select>
+        <mat-error *ngIf="loginForm.invalid">{{getProfileErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
-      <div class="ml-2">
+      <div class="ml-2 mt-4">
         <button mat-raised-button color="primary" type="submit">Connection</button>
+        <mat-error *ngIf="loginFailed !== ''">{{loginFailed}}</mat-error>
       </div>
+
     </form>
   </div>
 </div>
