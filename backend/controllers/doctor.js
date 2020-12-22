@@ -1,49 +1,41 @@
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-
-const Doctor = require('../models/doctor');
+const Doctor = require("../models/doctor");
+const user = require("./user");
 
 exports.addNewUser = (req, res) => {
-    bcrypt.hash(req.body.password, 10)
-        .then(hash => {
-            req.body.password = hash;
-            const doctor = new Doctor({...req.body});
-            doctor.save()
-                .then(() => res.status(201).json({message: 'doctor created !'}))
-                .catch(error => {
-                   res.json({error});
-                });
-        })
-        .catch(error => {
-            res.json(error);
-        });
-}
+    user.signup(req, res, Doctor);
+};
 
 exports.logsUser = (req, res) => {
-    Doctor.findOne({email: req.body.email})
-    .then(patient=> {
-        if (!patient)
-            res.status(400).json({ message: 'user not found' });
-        bcrypt.compare(req.body.password, patient.password)
-            .then(valid => {
-                if (!valid)
-                    res.json({ message: 'incorrect password' });
-                res.json({
-                    id: res._id,
-                    token: jwt.sign(
-                        { userId: patient._id },
-                        'RANOM_TOKEN_SECRET',
-                        { expiresIn: '24h' }
-                    )
-                });
-            })
-            .catch(err => {
-                res.json(err)
-            });
-    })
-    .catch(err => res.json({err}));
-}
+    user.signin(req, res, Doctor);
+};
 
 exports.deleteUser = (req, res) => {
-    res.send('delete new');
-}
+    user.deleteUser(req, res, Doctor);
+};
+
+exports.getDoctorById = (req, res) => {
+    user.getUserById(req, res, Doctor);
+};
+
+exports.updateDoctor = (req, res) => {
+    user.updateUser(req, res, Doctor);
+};
+
+exports.getDoctorsBy = (req, res) => {
+    let nameFilter = req.query.name ? req.query.name : "";
+    let specialityFilter = req.query.speciality ? req.query.speciality : "";
+    let postalCodeFilter = req.query.postalCode ? req.query.postalCode : 0;
+    
+    Doctor.find({ $or: 
+        [
+            { firstName: nameFilter }, 
+            { lastName: nameFilter },
+            { speciality: specialityFilter}, 
+            { "address.postalCode": postalCodeFilter}
+        ]})
+        .then(users => {
+            res.status(200).json(users);
+        })
+        .catch(error => res.status(500).json(error));
+
+};

@@ -1,22 +1,23 @@
-const { response } = require('express');
-const db = require('../db');
+const Patient = require("../models/patient");
+const user = require("./user");
 
 exports.addNewUser = (req, res) => {
-    db.addUser(req.body).then((response) => {
-        res.status(201).json(response);
-    }).catch(error => {
-        res.send(error);
-    });
-}
+    user.signup(req, res, Patient);
+};
 
 exports.logsUser = (req, res) => {
-    db.logsUser(req.body.email, req.body.password)
-        .then(response => {
-            res.json(response);
-        })
-        .catch(error => res.json(error));
-}
+    user.signin(req, res, Patient);
+};
 
 exports.deleteUser = (req, res) => {
-    res.send('delete new');
-}
+    user.deleteUser(req, res, Patient);
+};
+
+//To Test
+exports.getPatientById = (req, res) => {
+    user.getUserById(req, res, Patient);
+};
+
+exports.updatePatient = (req, res) => {
+    user.updateUser(req, res, Patient);
+};
