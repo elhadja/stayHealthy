@@ -3,6 +3,7 @@ import { PatientService } from '../../services/patient.service';
 import {DoctorService} from '../../services/doctor.service';
 import {Router} from '@angular/router';
 import {FormBuilder, Validators} from '@angular/forms';
+import {InteractionsService} from '../../services/interactions.service';
 
 @Component({
   selector: 'app-sign-up',
@@ -13,7 +14,7 @@ export class SignUpComponent implements OnInit {
   hide1 = true;
   hide2 = true;
   constructor(private patient: PatientService, private doctor: DoctorService,
-              private router: Router, private fb: FormBuilder) {}
+              private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
 
   signupForm =  this.fb.group({
     firstName: ['', [Validators.required, Validators.minLength(2)]],
@@ -46,13 +47,13 @@ export class SignUpComponent implements OnInit {
   createUser(user: DoctorService|PatientService, data: object): void {
     user.create(data)
       .subscribe(response => {
-          alert(response.message);
+          this.tools.openSnackBar('Inscription réussie');
           console.log(response);
           this.router.navigate(['/login']);
         },
         error => {
           console.error(error);
-          this.signupFailed = error;
+          this.signupFailed = 'Inscription échouée';
         });
   }
 
@@ -78,6 +79,15 @@ export class SignUpComponent implements OnInit {
 
   getFieldErrMessage(type: string): string {
     return this.signupForm.hasError('required', [type]) ? 'Champ Obligatoire' : '';
+  }
+
+  isEqualPwd(): boolean{
+    const data = this.signupForm.value;
+    if (data.password === data.password2) {
+      return true;
+    }
+    this.signupFailed = 'mot de passe incohérents';
+    return false;
   }
 
   ngOnInit(): void {

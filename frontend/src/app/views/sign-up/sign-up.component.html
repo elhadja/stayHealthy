@@ -2,7 +2,7 @@
   <div class="sign-up">
     <h1 class="text-center"><b>Créer votre compte</b></h1>
     <h3 class="text-center">Gérer vos rendez-vous médicaux avec StayHealthy</h3>
-    <form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && onSubmit()">
+    <form [formGroup]="signupForm" (ngSubmit)="signupForm.valid && isEqualPwd() && onSubmit()">
 
       <mat-form-field appearance="outline">
         <mat-label>Nom</mat-label>

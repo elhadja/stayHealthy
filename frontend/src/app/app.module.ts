@@ -16,7 +16,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
-import { MatRadioModule } from '@angular/material/radio';
+import {MatSnackBar, MatSnackBarModule} from '@angular/material/snack-bar';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { LogInComponent } from './views/log-in/log-in.component';
 import { SignUpComponent } from './views/sign-up/sign-up.component';
@@ -52,7 +52,7 @@ import { HomepageComponent } from './views/homepage/homepage.component';
     MatMenuModule,
     MatInputModule,
     MatSelectModule,
-    MatRadioModule,
+    MatSnackBarModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule
