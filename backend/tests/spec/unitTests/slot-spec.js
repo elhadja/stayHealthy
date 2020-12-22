@@ -496,7 +496,7 @@ async function deleteSlot(axiosResponse, header) {
         if (axiosResponse)
             await axios.delete(urlBase + "/slot/" + axiosResponse.data.slot._id, header);
     } catch (error) {
-        await axios.put(urlBase + "/appointment" + "/" + axiosResponse.data.slot._id, header);
+        await axios.put(urlBase + "/appointment" + "/" + axiosResponse.data.slot._id, {}, header);
         await axios.delete(urlBase + "/slot/" + axiosResponse.data.slot._id, header);
     }
 }

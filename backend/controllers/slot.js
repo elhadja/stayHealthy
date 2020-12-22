@@ -1,5 +1,4 @@
 const Slot = require("../models/slot");
-const Patient = require("../models/patient");
 
 exports.addSlot = (req, res) => {
     const slot = new Slot({...req.body, doctorId: req.userId});
@@ -69,34 +68,26 @@ exports.getAppointmentById = (req, res) => {
 };
 
 exports.addAppointment = async (req, res) => {
-    try {
-        const patient = await Patient.findById(req.params.patientId);
-        if (patient) {
-            Slot.findOneAndUpdate(
-                { _id: req.params.slotId, patientId: { $exists: false }},
-                { patientId: req.params.patientId },
-                {useFindAndModify: false, new: true}
-            )
-                .then(mongoRes => {
-                    if (mongoRes)
-                        res.status(200).json({message: "appointment created", slot: mongoRes});
-                    else
-                        res.status(400).json({error: "slot not found or occupied by à patient"});
-                })
-                .catch(error => {
-                    res.status(500).json(error);
-                });
-        } else {
-            res.status(400).json({error: "patientId must be valid"});
-        }
-    } catch (error) {
-        res.status(500).json({error: error});
-    } 
+    Slot.findOneAndUpdate(
+        { _id: req.params.slotId, patientId: { $exists: false }},
+        { patientId: req.userId },
+        {useFindAndModify: false, new: true}
+    )
+        .then(mongoRes => {
+            if (mongoRes) {
+                res.status(200).json({message: "appointment created", slot: mongoRes});
+            }
+            else
+                res.status(400).json({error: "slot not found or occupied by à patient"});
+        })
+        .catch(error => {
+            res.status(500).json(error);
+        });
 };
 
 exports.cancelAppointment = (req, res) => {
     Slot.findOneAndUpdate(
-        { _id: req.params.id},
+        { _id: req.params.id, $or: [{patientId: req.userId}, {doctorId: req.userId}] },
         { $unset: {patientId: ""} },
         {useFindAndModify: false, new: true}
     )
@@ -112,7 +103,7 @@ exports.cancelAppointment = (req, res) => {
 };
 
 exports.getDoctorAppointments = (req, res) => {
-    Slot.find({ doctorId: req.params.idDoctor, patientId: {$exists: true} })
+    Slot.find({ doctorId: req.userId, patientId: {$exists: true} })
         .then(slots => {
             res.status(200).json(slots);
         })
@@ -122,7 +113,7 @@ exports.getDoctorAppointments = (req, res) => {
 
 
 exports.getPatientAppointment = (req, res) => {
-    Slot.find({ patientId: req.params.patientId })
+    Slot.find({ patientId: req.userId })
         .then(slots => {
             console.log(req.params.patientId);
             res.status(200).json(slots);

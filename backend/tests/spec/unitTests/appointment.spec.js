@@ -22,22 +22,38 @@ const slotBody = {
         hh: 12,
         mn: 45
     },
-    doctorId: ""
 };
 
 describe("add appointment tests: ", () => {
 
-    let beforeAllPost;
+    let doctorLoginResponse;
+    let patientLoginResponse;
+    let addDoctorResponse;
+    let addPatientResponse;
+    let patientHeader = {};
+    let doctorHeader = {};
     beforeAll(async () => {
         try {
             const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "addSlotBeforAll@gmail.com",
+                email: "addAppoitmentBeforAll@gmail.com",
                 password: "toto"
             };
-            beforeAllPost = await axios.post(doctorEndPoint, body);
+            addDoctorResponse = await axios.post(doctorEndPoint, body);
+            addPatientResponse = await axios.post(patientEndPoint, body);
+            doctorLoginResponse = await axios.post(doctorEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            patientLoginResponse = await axios.post(patientEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            doctorHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
+            patientHeader.headers = { Authorization: `Bearer ${patientLoginResponse.data.token}`};
+
         } catch(error) {
             fail(error);
         }
@@ -45,7 +61,8 @@ describe("add appointment tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        await deleteDoctor(addDoctorResponse);
+        await deletePatient(addPatientResponse);
     });
 
 
@@ -55,18 +72,17 @@ describe("add appointment tests: ", () => {
         let postSlotResponse;
         try {
             postPatientResponse = await axios.post(patientEndPoint , UserBody);
-            postSlotResponse = await axios.post(slotEndPoint , {
-                ...slotBody, doctorId: beforeAllPost.data.id
-            });
+            postSlotResponse = await axios.post(slotEndPoint , slotBody, doctorHeader);
             const createAppointmentResponse = await axios.post(appointmentEndPoint 
                                             + "/" + postPatientResponse.data.id
-                                            + "/" + postSlotResponse.data.slot._id);
+                                            + "/" + postSlotResponse.data.slot._id, {},
+            patientHeader);
             expect(createAppointmentResponse.status).toBe(200);
         } catch (error) {
             fail(error);
         } finally {
             await deletePatient(postPatientResponse);
-            await deleteSlot(postSlotResponse);
+            await deleteSlot(postSlotResponse, doctorHeader);
         }
     });
 
@@ -77,19 +93,19 @@ describe("add appointment tests: ", () => {
             postPatientResponse = await axios.post(patientEndPoint , UserBody);
             postSlotResponse = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
                 patientId: postPatientResponse.data.id
-            });
+            }, doctorHeader);
             await axios.post(appointmentEndPoint 
                                             + "/" + postPatientResponse.data.id
-                                            + "/" + postSlotResponse.data.slot._id);
+                                            + "/" + postSlotResponse.data.slot._id, {},
+            patientHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
             expect(error.response.data.error).toBe("slot not found or occupied by à patient");
         } finally {
             await deletePatient(postPatientResponse);
-            await deleteSlot(postSlotResponse);
+            await deleteSlot(postSlotResponse, doctorHeader);
         }
  
     });
@@ -101,7 +117,9 @@ describe("add appointment tests: ", () => {
             postPatientResponse = await axios.post(patientEndPoint , UserBody);
             await axios.post(appointmentEndPoint 
                                             + "/" + postPatientResponse.data.id
-                                            + "/" + "eeeeeeeeeeeeeeeeeeeeeeee");
+                                            + "/" + "eeeeeeeeeeeeeeeeeeeeeeee",
+            {},
+            patientHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
@@ -112,30 +130,33 @@ describe("add appointment tests: ", () => {
         
     });
 
-    it("if the patient not exists, the request should fail", async () => {
+    it("if the patient not is not authentified, the request should fail", async () => {
         let postSlotResponse;
         let postSlotResponse2;
         try {
             postSlotResponse = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
-            });
+            }, {}, doctorHeader);
             postSlotResponse2 = await axios.post(appointmentEndPoint 
                                             + "/" + "eeeeeeeeeeeeeeeeeeeeeeee"
                                             + "/" + postSlotResponse.data.slot._id);
             fail();
         } catch (error) {
-            expect(error.response.status).toBe(400);
-            expect(error.response.data.error).toBe("patientId must be valid");
+            expect(error.response.status).toBe(401);
         } finally {
             await deleteSlot(postSlotResponse);
             await deleteSlot(postSlotResponse2);
         }
     });
 });
-
 describe("cancel appointment tests: ", () => {
-    let beforeAllPost;
+    let doctorLoginResponse;
+    let patientLoginResponse;
+    let addDoctorResponse;
+    let addPatientResponse;
+    let patientHeader = {};
+    let doctorHeader = {};
+ 
     beforeAll(async () => {
         try {
             const body = {
@@ -145,7 +166,19 @@ describe("cancel appointment tests: ", () => {
                 email: "addSlotBeforAll@gmail.com",
                 password: "toto"
             };
-            beforeAllPost = await axios.post(doctorEndPoint, body);
+            addDoctorResponse = await axios.post(doctorEndPoint, body);
+            addPatientResponse = await axios.post(patientEndPoint, body);
+            doctorLoginResponse = await axios.post(doctorEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            patientLoginResponse = await axios.post(patientEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            doctorHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
+            patientHeader.headers = { Authorization: `Bearer ${patientLoginResponse.data.token}`};
+
         } catch(error) {
             fail(error);
         }
@@ -153,31 +186,26 @@ describe("cancel appointment tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        await deleteDoctor(addDoctorResponse);
+        await deletePatient(addPatientResponse);
     });
 
     it("appointment should be canceled", async () => {
         let postSlotResponse;
-        let postSlotResponse2;
-        let postPatientResponse;
         try {
 
-            postPatientResponse = await axios.post(patientEndPoint , UserBody);
             postSlotResponse = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
-                patientId: postPatientResponse.data.id
-            });
+                patientId: addPatientResponse.data.id
+            }, doctorHeader);
             const cancelResponse = await axios.put(appointmentEndPoint
-                + "/" + postSlotResponse.data.slot._id, {});
+                + "/" + postSlotResponse.data.slot._id, {}, patientHeader);
             expect(cancelResponse.status).toBe(200);
             expect(cancelResponse.data.message).toBe("appointment canceled");
         } catch (error) {
             fail(error);
         } finally {
-            await deletePatient(postPatientResponse);
-            await deleteSlot(postSlotResponse);
-            await deleteSlot(postSlotResponse2);
+            await deleteSlot(postSlotResponse, doctorHeader);
         }
         
     });
@@ -185,7 +213,7 @@ describe("cancel appointment tests: ", () => {
     it("if the slot not exists, the request should fail", async () => {
         try {
             await axios.put(appointmentEndPoint
-                + "/" + "eeeeeeeeeeeeeeeeeeeeeeee", {});
+                + "/" + "eeeeeeeeeeeeeeeeeeeeeeee", {}, patientHeader);
             fail();
         } catch (error) {
             expect(error.response.status).toBe(400);
@@ -193,65 +221,81 @@ describe("cancel appointment tests: ", () => {
     });
 });
 
+
 describe("get Doctor/Patient appointments tests: ", () => {
-    let beforeAllPost;
+    let doctorLoginResponse;
+    let patientLoginResponse;
+    let addDoctorResponse;
+    let addPatientResponse;
+    let patientHeader = {};
+    let doctorHeader = {};
+ 
     beforeAll(async () => {
         try {
             const body = {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "addSlotBeforAll@gmail.com",
+                email: "getSeveralAppointmentBeforAll@gmail.com",
                 password: "toto"
             };
-            beforeAllPost = await axios.post(doctorEndPoint, body);
+            addDoctorResponse = await axios.post(doctorEndPoint, body);
+            addPatientResponse = await axios.post(patientEndPoint, body);
+            doctorLoginResponse = await axios.post(doctorEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            patientLoginResponse = await axios.post(patientEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            doctorHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
+            patientHeader.headers = { Authorization: `Bearer ${patientLoginResponse.data.token}`};
+
         } catch(error) {
             fail(error);
         }
+ 
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        await deleteDoctor(addDoctorResponse);
+        await deletePatient(addPatientResponse);
     });
 
 
     it("if the appointments exists, the request should return an array with the appointment", async () => {
-        let postPatientResponse;
         let postSlotResponse1;
         let postSlotResponse2;
         let postSlotResponse3;
         try {
-            postPatientResponse = await axios.post(patientEndPoint , UserBody);
             postSlotResponse1 = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
-                patientId: postPatientResponse.data.id
-            });
+                patientId: addPatientResponse.data.id
+            }, doctorHeader);
             postSlotResponse2 = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
-                patientId: postPatientResponse.data.id
-            });
+                patientId: addPatientResponse.data.id
+            }, doctorHeader);
             postSlotResponse3 = await axios.post(slotEndPoint , {
                 ...slotBody, 
-                doctorId: beforeAllPost.data.id,
-            });
+            }, doctorHeader);
  
             const getResponse = await axios.get(appointmentEndPoint 
-                                                + "/doctor/" + beforeAllPost.data.id);
+                                                + "/doctor/" + "toRemove", doctorHeader);
 
             const getResponse2 = await axios.get(appointmentEndPoint 
-                                            + "/patient/" + postPatientResponse.data.id);
+                                            + "/patient/" + "toRemove",
+            patientHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse2.status).toBe(200);
             expect(getResponse2.data.length).toBe(2);
         } catch (error) {
-            fail();
+            fail(error);
         } finally {
-            await deletePatient(postPatientResponse);
-            await deleteSlot(postSlotResponse1);
-            await deleteSlot(postSlotResponse2);
-            await deleteSlot(postSlotResponse3);
+            await deleteSlot(postSlotResponse1, doctorHeader);
+            await deleteSlot(postSlotResponse2, doctorHeader);
+            await deleteSlot(postSlotResponse3, doctorHeader);
         }
     });
 });
@@ -266,12 +310,12 @@ async function deleteDoctor(axiosResponse) {
         await axios.delete(doctorEndPoint + "/" + axiosResponse.data.id);
 }
 
-async function deleteSlot(axiosResponse) {
+async function deleteSlot(axiosResponse, header) {
     try {
         if (axiosResponse)
-            await axios.delete(slotEndPoint + "/" + axiosResponse.data.slot._id);
+            await axios.delete(slotEndPoint + "/" + axiosResponse.data.slot._id, header);
     } catch (error) {
-        await axios.put(appointmentEndPoint + "/" + axiosResponse.data.slot._id);
-        await axios.delete(slotEndPoint + "/" + axiosResponse.data.slot._id);
+        await axios.put(appointmentEndPoint + "/" + axiosResponse.data.slot._id, {}, header);
+        await axios.delete(slotEndPoint + "/" + axiosResponse.data.slot._id, header);
     }
 }
