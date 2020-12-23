@@ -12,11 +12,21 @@ export class InteractionsService {
   PATIENT = 'patient';
   DOCTOR = 'doctor';
 
-  // Observables
+  // user Observables
   private tokenSubject = new BehaviorSubject<string>('undefined');
   token = this.tokenSubject.asObservable();
   private profileSubject = new BehaviorSubject<string>('undefined');
   profile = this.profileSubject.asObservable();
+
+  // search Observables
+  private searchFormStatus = new BehaviorSubject<boolean>(true);
+  searchFormStatusObs = this.searchFormStatus.asObservable();
+  private searchResultStatus =  new BehaviorSubject<boolean>(false);
+  searchResultStatusObs = this.searchResultStatus.asObservable();
+  private doctorListStatus = new BehaviorSubject<boolean>(true);
+  doctorListStatusObs = this.doctorListStatus.asObservable();
+  private doctorInfoStatus = new BehaviorSubject<boolean>(true);
+  doctorInfoStatusObs = this.doctorInfoStatus.asObservable();
 
   constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) { }
 
@@ -76,5 +86,35 @@ export class InteractionsService {
   getCities(name: string): Observable<ResponseType>{
     return this.httpClient.get<ResponseType>(
       `https://vicopo.selfbuild.fr/cherche/${name}?format=callback`);
+  }
+
+  /**
+   * Show search form and hide (search result & doctor info)
+   */
+  showSearchForm(): void {
+    this.searchFormStatus.next(true);
+    this.searchResultStatus.next(false);
+    this.doctorListStatus.next(false);
+    this.doctorInfoStatus.next(false);
+  }
+
+  /**
+   * Show search result and hide (search form & doctor info)
+   */
+  showSearchResult(): void {
+    this.searchFormStatus.next(false);
+    this.searchResultStatus.next(true);
+    this.doctorListStatus.next(true);
+    this.doctorInfoStatus.next(false);
+  }
+
+  /**
+   * Show doctor info and hide (search form & search result)
+   */
+  showDoctorInfo(): void {
+    this.searchFormStatus.next(false);
+    this.searchResultStatus.next(true);
+    this.doctorListStatus.next(false);
+    this.doctorInfoStatus.next(true);
   }
 }

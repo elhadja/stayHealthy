@@ -12,7 +12,18 @@ import { Router } from '@angular/router';
 export class PatientComponent implements OnInit {
   private profile: string | undefined;
 
-  constructor(private tools: InteractionsService) {  }
+  showSearchForm = false;
+  showSearchResult = false;
+
+  constructor(private tools: InteractionsService, private router: Router) {
+    this.tools.searchFormStatusObs.subscribe(status => {
+      this.showSearchForm = status;
+    });
+    this.tools.searchResultStatusObs.subscribe(status => {
+      this.showSearchResult = status;
+    });
+  }
+
 
   /**
    * Show a map in map id selector
@@ -39,10 +50,10 @@ export class PatientComponent implements OnInit {
     // Check the user profile to grant access
     this.tools.profile.subscribe(profile => this.profile = profile);
     console.log(this.profile);
-    // if (this.profile !== 'patient') {
-    //   this.router.navigate(['/']);
-    //   console.log('unauthorized user cannot access to this page');
-    // }
+    if (this.profile !== 'patient') {
+      this.router.navigate(['/']);
+      console.log('unauthorized user cannot access to this page');
+    }
 
     this.initMap();
 

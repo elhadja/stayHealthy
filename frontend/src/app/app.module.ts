@@ -29,6 +29,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { SearchFormComponent } from './components/search-form/search-form.component';
+import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
+import { DoctorInfoComponent } from './components/doctor-info/doctor-info.component';
 
 @NgModule({
   declarations: [
@@ -40,7 +43,10 @@ import { SearchFormComponent } from './components/search-form/search-form.compon
     DoctorComponent,
     PageNotFoundComponent,
     HomepageComponent,
-    SearchFormComponent
+    SearchFormComponent,
+    SearchResultsComponent,
+    DoctorCardComponent,
+    DoctorInfoComponent
   ],
   imports: [
     BrowserModule,

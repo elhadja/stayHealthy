@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {Router} from '@angular/router';
 import {InteractionsService} from '../../services/interactions.service';
 import {map, startWith} from 'rxjs/operators';
 
@@ -30,7 +29,7 @@ export class SearchFormComponent implements OnInit {
   matchList: City[] = [];
   cities: Observable<City[]> | undefined;
 
-  constructor(private tools: InteractionsService, private router: Router) {  }
+  constructor(private tools: InteractionsService) {  }
 
   ngOnInit(): void {
     this.cities = this.location.valueChanges
@@ -70,7 +69,8 @@ export class SearchFormComponent implements OnInit {
    * Called function on submission
    */
   onSubmit(): void {
-    this.tools.openSnackBar(this.speciality.value + ' ' + this.location.value.city);
+    this.tools.openSnackBar(this.speciality.value + ' ' + this.location.value.code);
+    this.tools.showSearchResult();
   }
 
   /**

@@ -1,2 +1,3 @@
 <div id="map"></div>
-<app-search-form class="mat-elevation-z6"></app-search-form>
+<app-search-form class="mat-elevation-z6"  *ngIf="showSearchForm"></app-search-form>
+<app-search-results class="mat-elevation-z6" *ngIf="showSearchResult"></app-search-results>
