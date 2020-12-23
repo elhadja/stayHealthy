@@ -28,6 +28,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { SearchFormComponent } from './components/search-form/search-form.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     PatientComponent,
     DoctorComponent,
     PageNotFoundComponent,
-    HomepageComponent
+    HomepageComponent,
+    SearchFormComponent
   ],
   imports: [
     BrowserModule,

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {City, ResponseType} from '../views/patient/patient.component';
 import {HttpClient} from '@angular/common/http';
+import {ResponseType} from '../components/search-form/search-form.component';
 
 @Injectable({
   providedIn: 'root'
