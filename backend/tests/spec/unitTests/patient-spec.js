@@ -1,24 +1,68 @@
 const axios = require("axios");
+const { response } = require("express");
+const { head, use } = require("../../../routes/slot");
 
 const user = require("./user");
 
+const appointmentEndPoint = "http://localhost:3000/appointment";
+const doctorEndPoint = "http://localhost:3000/doctor";
+const patientEndPoint = "http://localhost:3000/patient";
+const slotEndPoint = "http://localhost:3000/slot";
+
+
+const body = {
+    firstName: "Elhadj Amadou",
+    lastName: "Bah",
+    email: "addAppoitmentBeforAll@gmail.com",
+    password: "toto"
+};
+ 
+
 describe("register patient tests: ", () => {
+    /*
     const urlBase = "http://localhost:3000";
+    let patientLoginResponse;
+    let addPatientResponse;
+    let patientHeader = {};
+
+    beforeAll(async () => {
+        try {
+            addPatientResponse = await axios.post(patientEndPoint, body);
+            patientLoginResponse = await axios.post(patientEndPoint + "/login", {
+                email: body.email,
+                password: body.password
+            });
+            patientHeader.headers = { Authorization: `Bearer ${patientLoginResponse.data.token}`};
+
+        } catch(error) {
+            fail(error);
+        }
+ 
+    });
+
+    afterAll(async () => {
+        await user.deletePatient(addPatientResponse);
+    });
+    */
 
     it("patient should be added", async () => {
-        const body = {
-            firstName: "Elhadj Amadou",
-            lastName: "Bah",
-            adress: "avenue de collégno",
-            email: "newPatientSucess@gmail.com",
-            password: "toto"
-        };
+        let createPatientResponse;
+        let header;
         try {
-            let response = await axios.post(urlBase + "/patient", body);
-            expect(response.status).toBe(201);
-            await axios.delete(urlBase + "/patient/" + response.data.id);
+            createPatientResponse = await user.createPatient({
+                ...body,
+                email: "addPatientSuccess@gmail.com"
+            });
+            let logResponse = await user.logPatient({
+                email: "addPatientSuccess@gmail.com",
+                password: body.password
+            });
+            header = createHeader(logResponse.data.token);
+            expect(createPatientResponse.status).toBe(201);
         } catch (error) {
-            fail(error.response.data);
+            fail(error);
+        } finally {
+            user.deletePatient(createPatientResponse, header);
         }
     });
 
@@ -31,22 +75,24 @@ describe("register patient tests: ", () => {
             const body = {
                 password: "toto"
             };
-            await axios.post(urlBase + "/patient", body);
-            expect(true).toBe(false);
+            await user.createPatient(body);
+            fail();
         } catch(error) {
             expect(error.response.status).toBe(400);
             const numberOfRequiredItems = 3;
             expect(Object.keys(error.response.data.error.errors).length).toBe(numberOfRequiredItems);
         }
     });
-
-
 });
 
 describe("patient login tests: ", () => {
     const urlBase = "http://localhost:3000";
     it("user should be logged", async () => {
         await user.userShouldBeLogged("patient");
+    });
+
+    it("if the password is not correct, the request should fail", async () => {
+        await user.incorrectPassword("patient");
     });
 
     it("if the user is not registered, the request should fail", async () => {
@@ -62,8 +108,11 @@ describe("patient login tests: ", () => {
         }   
  
     });
-
-    it("if the password is not correct, the request should fail", async () => {
-        await user.incorrectPassword("patient");
-    });
 });
+
+function createHeader(token) {
+    const header = { 
+        headers: {Authorization: `Bearer ${token}`}
+    };
+    return header;
+}

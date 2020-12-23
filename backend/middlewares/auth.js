@@ -4,7 +4,7 @@ exports.doctorAuth = (req, res, next) => {
     try {
         const token = req.headers.authorization.split(" ")[1];
         const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-        const isUserIdCorrect = req.params.id ? (req.params.id===decodedToken.userId) : true;
+        const isUserIdCorrect = (req.params.id && req.baseUrl!=="/slot") ? (req.params.id===decodedToken.userId) : true;
         if (!isUserIdCorrect)
             throw "Invalid user Id. The user Id parameter must match token owner";
         else if (decodedToken.scope !== "doctors") {
@@ -15,6 +15,9 @@ exports.doctorAuth = (req, res, next) => {
         }
     } catch (err) {
         console.log("JWT error: ", err);
+        console.log("=============================================")
+        console.log(req)
+        console.log("=============================================")
         res.status(401).json({err: err});
     }
 };
@@ -24,7 +27,7 @@ exports.patientAuth = (req, res, next) => {
         console.log(req.headers);
         const token = req.headers.authorization.split(" ")[1];
         const decodedToken = jwt.verify(token, "RANDOM_TOKEN_SECRET");
-        const isUserIdCorrect = req.params.id ? (req.params.id===decodedToken.userId) : true;
+        const isUserIdCorrect = (req.params.id && req.baseUrl!=="/slot") ? (req.params.id===decodedToken.userId) : true;
         if (!isUserIdCorrect)
             throw "Invalid user Id. The user Id parameter must match token owner";
         if (decodedToken.scope !== "patients") {

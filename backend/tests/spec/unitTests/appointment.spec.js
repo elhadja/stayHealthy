@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+const user = require("./user");
+
 const appointmentEndPoint = "http://localhost:3000/appointment";
 const doctorEndPoint = "http://localhost:3000/doctor";
 const patientEndPoint = "http://localhost:3000/patient";
@@ -61,27 +63,24 @@ describe("add appointment tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(addDoctorResponse);
-        await deletePatient(addPatientResponse);
+        await user.deleteDoctor(addDoctorResponse, doctorHeader);
+        await user.deletePatient(addPatientResponse, patientHeader);
     });
 
 
 
     it("appointment should created", async () => {
-        let postPatientResponse;
         let postSlotResponse;
         try {
-            postPatientResponse = await axios.post(patientEndPoint , UserBody);
             postSlotResponse = await axios.post(slotEndPoint , slotBody, doctorHeader);
             const createAppointmentResponse = await axios.post(appointmentEndPoint 
-                                            + "/" + postPatientResponse.data.id
+                                            + "/" + addPatientResponse.data.id
                                             + "/" + postSlotResponse.data.slot._id, {},
             patientHeader);
             expect(createAppointmentResponse.status).toBe(200);
         } catch (error) {
             fail(error);
         } finally {
-            await deletePatient(postPatientResponse);
             await deleteSlot(postSlotResponse, doctorHeader);
         }
     });
@@ -89,8 +88,14 @@ describe("add appointment tests: ", () => {
     it("if the appoitment is occupied, the request should fail", async () => {
         let postPatientResponse;
         let postSlotResponse;
+        let header;
         try {
             postPatientResponse = await axios.post(patientEndPoint , UserBody);
+            const logPatientResponse = await user.logPatient({
+                email: UserBody.email,
+                password: UserBody.password
+            });
+            header = createHeader(logPatientResponse.data.token);
             postSlotResponse = await axios.post(slotEndPoint , {
                 ...slotBody, 
                 patientId: postPatientResponse.data.id
@@ -104,7 +109,7 @@ describe("add appointment tests: ", () => {
             expect(error.response.status).toBe(400);
             expect(error.response.data.error).toBe("slot not found or occupied by à patient");
         } finally {
-            await deletePatient(postPatientResponse);
+            await user.deletePatient(postPatientResponse, header);
             await deleteSlot(postSlotResponse, doctorHeader);
         }
  
@@ -112,11 +117,9 @@ describe("add appointment tests: ", () => {
 
 
     it("if appointment's slot is not valid, then the request should fail", async () => {
-        let postPatientResponse;
         try {
-            postPatientResponse = await axios.post(patientEndPoint , UserBody);
             await axios.post(appointmentEndPoint 
-                                            + "/" + postPatientResponse.data.id
+                                            + "/" + addPatientResponse.data.id
                                             + "/" + "eeeeeeeeeeeeeeeeeeeeeeee",
             {},
             patientHeader);
@@ -124,10 +127,7 @@ describe("add appointment tests: ", () => {
         } catch (error) {
             expect(error.response.status).toBe(400);
             expect(error.response.data.error).toBe("slot not found or occupied by à patient");
-        } finally {
-            await deletePatient(postPatientResponse);
-        }
-        
+        }         
     });
 
     it("if the patient not is not authentified, the request should fail", async () => {
@@ -144,8 +144,8 @@ describe("add appointment tests: ", () => {
         } catch (error) {
             expect(error.response.status).toBe(401);
         } finally {
-            await deleteSlot(postSlotResponse);
-            await deleteSlot(postSlotResponse2);
+            await deleteSlot(postSlotResponse, doctorHeader);
+            await deleteSlot(postSlotResponse2, doctorHeader);
         }
     });
 });
@@ -163,7 +163,7 @@ describe("cancel appointment tests: ", () => {
                 firstName: "Elhadj Amadou",
                 lastName: "Bah",
                 adress: "avenue de collégno",
-                email: "addSlotBeforAll@gmail.com",
+                email: "cancelAppointmentBeforAll@gmail.com",
                 password: "toto"
             };
             addDoctorResponse = await axios.post(doctorEndPoint, body);
@@ -186,8 +186,8 @@ describe("cancel appointment tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(addDoctorResponse);
-        await deletePatient(addPatientResponse);
+        await user.deleteDoctor(addDoctorResponse, doctorHeader);
+        await user.deletePatient(addPatientResponse, patientHeader);
     });
 
     it("appointment should be canceled", async () => {
@@ -259,8 +259,8 @@ describe("get Doctor/Patient appointments tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(addDoctorResponse);
-        await deletePatient(addPatientResponse);
+        await user.deleteDoctor(addDoctorResponse, doctorHeader);
+        await user.deletePatient(addPatientResponse, patientHeader);
     });
 
 
@@ -300,16 +300,6 @@ describe("get Doctor/Patient appointments tests: ", () => {
     });
 });
 
-async function deletePatient(axiosResponse) {
-    if (axiosResponse)
-        await axios.delete(patientEndPoint + "/" + axiosResponse.data.id);
-}
-
-async function deleteDoctor(axiosResponse) {
-    if (axiosResponse)
-        await axios.delete(doctorEndPoint + "/" + axiosResponse.data.id);
-}
-
 async function deleteSlot(axiosResponse, header) {
     try {
         if (axiosResponse)
@@ -318,4 +308,11 @@ async function deleteSlot(axiosResponse, header) {
         await axios.put(appointmentEndPoint + "/" + axiosResponse.data.slot._id, {}, header);
         await axios.delete(slotEndPoint + "/" + axiosResponse.data.slot._id, header);
     }
+}
+
+function createHeader(token) {
+    const header = { 
+        headers: {Authorization: `Bearer ${token}`}
+    };
+    return header;
 }

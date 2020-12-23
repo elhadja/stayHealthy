@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+const user = require("./user");
+
 const urlBase = "http://localhost:3000";
 
 
@@ -31,7 +33,8 @@ describe("add slot tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        const header = createHeader(doctorLoginResponse.data.token);
+        await user.deleteDoctor(beforeAllPost, header);
     });
 
     it("slot should be added", async () => {
@@ -176,7 +179,8 @@ describe(("update slot tests: "), () => {
     });
 
     afterAll(async () => {
-        deleteDoctor(beforeAllPost);
+        const header = createHeader(doctorLoginResponse.data.token);
+        user.deleteDoctor(beforeAllPost, header);
     });
 
     it("slot should be updated", async () => {
@@ -259,6 +263,7 @@ describe("delete slot tests: ", () => {
     const urlBase = "http://localhost:3000";
 
     let beforeAllPost;
+    let doctorLoginResponse;
     let delteSlotHeader = {};
     beforeAll(async () => {
         try {
@@ -270,7 +275,7 @@ describe("delete slot tests: ", () => {
                 password: "toto"
             };
             beforeAllPost = await axios.post(urlBase + "/doctor", body);
-            const doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+            doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
                 email: body.email,
                 password: body.password
             });
@@ -283,7 +288,8 @@ describe("delete slot tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        const header = createHeader(doctorLoginResponse.data.token);
+        await user.deleteDoctor(beforeAllPost, header);
     });
 
 
@@ -354,6 +360,7 @@ describe("delete slot tests: ", () => {
 
 describe("get slot tests: ", () => {
     let beforeAllPost;
+    let doctorLoginResponse;
     let getSlotHeader = {};
     beforeAll(async () => {
         try {
@@ -365,7 +372,7 @@ describe("get slot tests: ", () => {
                 password: "toto"
             };
             beforeAllPost = await axios.post(urlBase + "/doctor", body);
-            const doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
+            doctorLoginResponse = await axios.post(urlBase + "/doctor/login", {
                 email: body.email,
                 password: body.password
             });
@@ -378,7 +385,8 @@ describe("get slot tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        const header = createHeader(doctorLoginResponse.data.token);
+        await user.deleteDoctor(beforeAllPost, header);
     });
 
 
@@ -424,6 +432,7 @@ describe("get several slots tests: ", () => {
     const urlBase = "http://localhost:3000";
 
     let beforeAllPost;
+    let beforeAllHeader;
     let getSeveralSlotHeader = {};
     beforeAll(async () => {
         try {
@@ -439,6 +448,7 @@ describe("get several slots tests: ", () => {
                 email: body.email,
                 password: body.password
             });
+            beforeAllHeader = createHeader(doctorLoginResponse.data.token);
             getSeveralSlotHeader.headers = { Authorization: `Bearer ${doctorLoginResponse.data.token}`};
 
         } catch(error) {
@@ -448,7 +458,7 @@ describe("get several slots tests: ", () => {
     });
 
     afterAll(async () => {
-        await deleteDoctor(beforeAllPost);
+        await user.deleteDoctor(beforeAllPost, beforeAllHeader);
     });
 
     it("if the slots exists, the request should return an array whitch contents found slots", async () => {
@@ -501,12 +511,14 @@ async function deleteSlot(axiosResponse, header) {
     }
 }
 
-async function deleteDoctor(axiosResponse, header={}) {
-    if (axiosResponse)
-        await axios.delete(urlBase + "/doctor/" + axiosResponse.data.id, header);
-}
-
 async function addSlot(requestBody, requestHeader) {
     const postResponse = await axios.post(urlBase + "/slot", requestBody, requestHeader);
     return postResponse;
+}
+
+function createHeader(token) {
+    const header = { 
+        headers: {Authorization: `Bearer ${token}`}
+    };
+    return header;
 }
