@@ -1,10 +1,10 @@
 <div id="map"></div>
 <div class="search-form px-2 pt-3 mat-elevation-z6">
   <h2 class="ml-4">Recherchez un praticien</h2>
-  <form #searchForm="ngForm" (ngSubmit)="onSubmit(searchForm.value)" class="m-3">
+  <form (ngSubmit)="speciality.valid && location.valid && onSubmit()" class="m-3">
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Spécialité</mat-label>
-      <mat-select name="speciality" ngModel required>
+      <mat-select [formControl]="speciality" required>
         <mat-option value="cardiologue">cardiologue</mat-option>
         <mat-option value="dentiste">dentiste</mat-option>
         <mat-option value="dieteticien">Diététicien</mat-option>
@@ -17,16 +17,24 @@
         <mat-option value="orl">ORL</mat-option>
         <mat-option value="osteopathe">Ostéopathe</mat-option>
       </mat-select>
+      <mat-error *ngIf="speciality.invalid">{{getSpecErrMessage()}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Nom du médecin, Établissement</mat-label>
-      <input matInput name="search" placeholder="Dupont, clinique ..." ngModel required>
+      <input matInput [formControl]="search" placeholder="Dupont, clinique ...">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Localité</mat-label>
-      <input matInput name="region" placeholder="Bordeaux, Talence, ..." ngModel required>
+      <input matInput placeholder="Bordeaux, Talence, ..."
+             [formControl]="location" [matAutocomplete]="auto" required>
+      <mat-error *ngIf="location.invalid">{{getLocationErrMessage()}}</mat-error>
+      <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
+        <mat-option *ngFor="let city of cities | async" [value]="city">
+          {{city.city}} | {{city.code}}
+        </mat-option>
+      </mat-autocomplete>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Chercher</button>

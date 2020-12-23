@@ -22,7 +22,7 @@ export class NavComponent {
   disconnect(): void {
     // clear authorization and profile
     this.tools.reset();
-    console.log('disconnected');
+    this.tools.openSnackBar('Déconnecté');
   }
 
   isLogin(): boolean {
