@@ -22,7 +22,7 @@ exports.emailShouldBeUnique = async (userType) => {
         };
         response1 = await axios.post(urlBase + "/" + userType, body);
         const logResponse = await this.logUser(userType, {email: body.email, password: body.password});
-        header = await createHeader(logResponse.data.token);
+        header = await this.createHeader(logResponse.data.token);
         try {
             await axios.post(urlBase + "/" + userType, body);
             fail();
@@ -67,7 +67,7 @@ exports.incorrectPassword = async (userType) => {
                 email: userBody.email,
                 password: userBody.password
             });
-            let header = createHeader(logResponse.data.token);
+            let header = this.createHeader(logResponse.data.token);
             await axios.delete(urlBase + "/" + userType + "/" + addUserResponse.data.id, header);
         }
     }  
@@ -87,7 +87,7 @@ exports.userShouldBeLogged = async (userType) => {
             email: userBody.email,
             password: "toto"
         });
-        const header = createHeader(responseLogin.data.token);
+        const header = this.createHeader(responseLogin.data.token);
         expect(responseLogin.status).toBe(200);
         expect(responseLogin.data.id).toBe(addUserResponse.data.id);
         if (!responseLogin.data.token)
@@ -125,7 +125,7 @@ exports.logPatient = async (body) => {
 };
 
 exports.logDoctor = async (body) => {
-    const response = await axios.post(patientEndPoint + "/doctor", body);
+    const response = await axios.post(doctorEndPoint + "/login", body);
     return response;
 };
 
@@ -140,12 +140,12 @@ exports.logUser = async (userType, body) => {
     return response;
 };
 
-function createHeader(token) {
+exports.createHeader = (token) => {
     const header = { 
         headers: {Authorization: `Bearer ${token}`}
     };
     return header;
-}
+};
 
 
 

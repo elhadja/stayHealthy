@@ -14,10 +14,8 @@ exports.doctorAuth = (req, res, next) => {
             next();
         }
     } catch (err) {
-        console.log("JWT error: ", err);
-        console.log("=============================================")
-        console.log(req)
-        console.log("=============================================")
+        console.log("JWT error (doctorAuth): ", err);
+        console.log("endpoint: ", req.baseUrl);
         res.status(401).json({err: err});
     }
 };
@@ -37,7 +35,8 @@ exports.patientAuth = (req, res, next) => {
             next();
         }
     } catch (err) {
-        console.log("JWT error: ", err);
+        console.log("JWT error (patientAuth): ", err);
+        console.log("endpoint: ", req.baseUrl);
         res.status(401).json({err: err});
     }
 };
@@ -49,7 +48,8 @@ exports.userAuth = (req, res, next) => {
         req.userId = decodedToken.userId;
         next();
     } catch (err) {
-        console.log("JWT error: ", err);
+        console.log("JWT error (userAuth): ", err);
+        console.log("endpoint: ", req.baseUrl);
         res.status(401).json({err: err});
     }
 };
