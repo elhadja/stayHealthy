@@ -41,7 +41,7 @@ exports.deleteSlot = (req, res) => {
 };
 
 exports.getSlotById = (req, res) => {
-    Slot.findOne({ _id: req.params.id, doctorId: req.userId })
+    Slot.findOne({ _id: req.params.id })
         .then(slot => {
             if (slot) {
                 res.status(200).json(slot);
@@ -55,7 +55,7 @@ exports.getSlotById = (req, res) => {
 
 // todo to rename
 exports.getSlotsBy = (req, res) => {
-    Slot.find({ doctorId: req.userId })
+    Slot.find({ doctorId: req.query.id })
         .then(slots => {
             res.status(200).json(slots);
         })

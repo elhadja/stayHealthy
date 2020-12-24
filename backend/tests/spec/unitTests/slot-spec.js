@@ -489,13 +489,14 @@ describe("get several slots tests: ", () => {
   
     });
 
-    it("if the slot not exists, the request should send an empty array", async () => {
+    it("if the doctor not exists, the request should send an empty array", async () => {
         try {
-            const getResponse = await axios.get(urlBase + "/slots?id=eeeeeeeeeeeeeeeeeeeeaeae", getSeveralSlotHeader);
+            const doctorId = "eeeeeeeeeeeeeeeeeeeeaeae";
+            const getResponse = await axios.get(urlBase + "/slots?id=" + doctorId, getSeveralSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data.length).toBe(0);
         } catch (error) {
-            fail();
+            fail(error);
         } 
         
     });

@@ -1,14 +1,6 @@
 const axios = require("axios");
-const { response } = require("express");
-const { head, use } = require("../../../routes/slot");
 
 const user = require("./user");
-
-const appointmentEndPoint = "http://localhost:3000/appointment";
-const doctorEndPoint = "http://localhost:3000/doctor";
-const patientEndPoint = "http://localhost:3000/patient";
-const slotEndPoint = "http://localhost:3000/slot";
-
 
 const body = {
     firstName: "Elhadj Amadou",
