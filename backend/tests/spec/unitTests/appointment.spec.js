@@ -374,13 +374,21 @@ describe("get Doctor/Patient appointments tests: ", () => {
             }, doctorHeader);
  
             const getResponse = await axios.get(appointmentEndPoint 
-                                                + "/doctor/" + "toRemove", doctorHeader);
+                                                + "/doctor/" + addDoctorResponse.data.id, doctorHeader);
 
             const getResponse2 = await axios.get(appointmentEndPoint 
-                                            + "/patient/" + "toRemove",
+                                            + "/patient/" + addPatientResponse.data.id,
             patientHeader);
+
+            const getResponse3 = await axios.get(appointmentEndPoint 
+                                               + "/doctor", doctorHeader);
+
+            const getResponse4 = await axios.get(appointmentEndPoint 
+                                            + "/patient", patientHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse2.status).toBe(200);
+            expect(getResponse3.status).toBe(200);
+            expect(getResponse4.status).toBe(200);
             expect(getResponse2.data.length).toBe(2);
         } catch (error) {
             fail(error);

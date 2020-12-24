@@ -111,21 +111,23 @@ exports.cancelAppointment = (req, res) => {
 };
 
 exports.getDoctorAppointments = (req, res) => {
-    Slot.find({ doctorId: req.userId, patientId: {$exists: true} })
+    const userId = req.params.doctorId ? req.params.doctorId : req.userId;
+    Slot.find({ doctorId: userId, patientId: {$exists: true} })
         .then(slots => {
             res.status(200).json(slots);
         })
-        .catch(error => res.status(500).json(error));
-
+        .catch(error => {
+            res.status(501).json(error);
+        });
 };
 
-
 exports.getPatientAppointment = (req, res) => {
-    Slot.find({ patientId: req.userId })
+    const userId = req.params.patientId ? req.params.patientId : req.userId;
+    Slot.find({ patientId: userId })
         .then(slots => {
-            console.log(req.params.patientId);
             res.status(200).json(slots);
         })
-        .catch(error => res.status(500).json(error));
-
+        .catch(error => {
+            res.status(502).json(error);
+        });
 };
