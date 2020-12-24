@@ -1,19 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
-import {InteractionsService} from '../../services/interactions.service';
 import {map, startWith} from 'rxjs/operators';
-
-
-export interface City {
-  city: string;
-  code: string;
-}
-
-export interface ResponseType {
-  input: string;
-  cities: City[];
-}
+import {InteractionsService} from '../../services/interactions.service';
+import {City} from '../../services/models.service';
 
 @Component({
   selector: 'app-search-form',

@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {Doctor} from '../../services/models.service';
+import {InteractionsService} from '../../services/interactions.service';
 
 @Component({
   selector: 'app-doctor-info',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class DoctorInfoComponent implements OnInit {
 
-  constructor() { }
+  @Input() doctor!: Doctor;
+
+  constructor(public tools: InteractionsService) { }
 
   ngOnInit(): void {
   }

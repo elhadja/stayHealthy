@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {HttpClient} from '@angular/common/http';
-import {ResponseType} from '../components/search-form/search-form.component';
+import {Doctor, Patient, ResponseType} from '../services/models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -116,5 +116,14 @@ export class InteractionsService {
     this.searchResultStatus.next(true);
     this.doctorListStatus.next(false);
     this.doctorInfoStatus.next(true);
+  }
+
+  getFullName(user: Doctor| Patient): string {
+    return user.firstName + ' ' + user.lastName;
+  }
+
+  getFullAddress(user: Doctor| Patient): string {
+    const address = user.address;
+    return address?.road + ', ' + address?.postalCode + ', ' + address?.city;
   }
 }

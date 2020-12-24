@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {InteractionsService} from '../../services/interactions.service';
+import {Doctor} from '../../services/models.service';
 
 @Component({
   selector: 'app-doctor-card',
@@ -8,12 +9,10 @@ import {InteractionsService} from '../../services/interactions.service';
 })
 export class DoctorCardComponent implements OnInit {
 
-  constructor(private tools: InteractionsService) { }
+  @Input() doctor!: Doctor;
+
+  constructor(public tools: InteractionsService) { }
 
   ngOnInit(): void {
-  }
-
-  getDoctorInfo(): void {
-    this.tools.showDoctorInfo();
   }
 }

@@ -8,6 +8,7 @@ const baseUrl = 'http://localhost:3000';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DoctorService {
   private headers: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application:json',
