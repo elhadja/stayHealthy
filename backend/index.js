@@ -23,6 +23,7 @@ app.use("/doctors", doctorRoutes);
 app.use("/slot", slotRoutes);
 app.use("/slots", slotRoutes);
 app.use("/appointment", appoitnementsRoutes);
+app.use("/appointments", appoitnementsRoutes);
 
 app.listen(port, () => {
     console.log(`app listening at http://localhost:${port}`);

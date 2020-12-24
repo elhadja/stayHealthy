@@ -380,10 +380,10 @@ describe("get Doctor/Patient appointments tests: ", () => {
                                             + "/patient/" + addPatientResponse.data.id,
             patientHeader);
 
-            const getResponse3 = await axios.get(appointmentEndPoint 
+            const getResponse3 = await axios.get(appointmentEndPoint + "s" 
                                                + "/doctor", doctorHeader);
 
-            const getResponse4 = await axios.get(appointmentEndPoint 
+            const getResponse4 = await axios.get(appointmentEndPoint + "s" 
                                             + "/patient", patientHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse2.status).toBe(200);
