@@ -4,7 +4,7 @@ const auth = require("../middlewares/auth");
 
 const router = express.Router();
 
-router.get("/:id", slotController.getAppointmentById);
+router.get("/:id", auth.userAuth, slotController.getAppointmentById);
 router.post("/:patientId/:slotId", auth.patientAuth, slotController.addAppointment);
 router.put("/:id" , auth.userAuth, slotController.cancelAppointment);
 router.get("/patient/:patientId", auth.patientAuth, slotController.getPatientAppointment);

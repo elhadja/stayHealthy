@@ -64,7 +64,14 @@ exports.getSlotsBy = (req, res) => {
 
 
 exports.getAppointmentById = (req, res) => {
-    res.send("get by id");
+    Slot.findOne({ _id: req.params.id, patientId: {$exists: true} })
+        .then(slot => {
+            if (slot)
+                res.status(200).json(slot);
+            else
+                res.status(404).json({error: "appointment not found"});
+        })
+        .catch(error => res.status(500).json(error));
 };
 
 exports.addAppointment = async (req, res) => {
