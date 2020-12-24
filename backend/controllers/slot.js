@@ -75,9 +75,10 @@ exports.getAppointmentById = (req, res) => {
 };
 
 exports.addAppointment = async (req, res) => {
+    const patientId = req.params.patientId ? (req.params.patientId) : req.userId;
     Slot.findOneAndUpdate(
         { _id: req.params.slotId, patientId: { $exists: false }},
-        { patientId: req.userId },
+        { patientId: patientId },
         {useFindAndModify: false, new: true}
     )
         .then(mongoRes => {

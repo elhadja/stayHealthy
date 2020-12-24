@@ -85,6 +85,21 @@ describe("add appointment tests: ", () => {
         }
     });
 
+    it("appointment should be created 2", async () => {
+        let postSlotResponse;
+        try {
+            postSlotResponse = await axios.post(slotEndPoint , slotBody, doctorHeader);
+            const createAppointmentResponse = await axios.post(appointmentEndPoint 
+                                            + "/" + postSlotResponse.data.slot._id, {},
+            patientHeader);
+            expect(createAppointmentResponse.status).toBe(200);
+        } catch (error) {
+            fail(error);
+        } finally {
+            await deleteSlot(postSlotResponse, doctorHeader);
+        }
+    });
+
     it("if the appoitment is occupied, the request should fail", async () => {
         let postPatientResponse;
         let postSlotResponse;

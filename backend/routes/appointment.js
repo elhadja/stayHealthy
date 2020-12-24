@@ -6,6 +6,7 @@ const router = express.Router();
 
 router.get("/:id", auth.userAuth, slotController.getAppointmentById);
 router.post("/:patientId/:slotId", auth.patientAuth, slotController.addAppointment);
+router.post("/:slotId", auth.patientAuth, slotController.addAppointment);
 router.put("/:id" , auth.userAuth, slotController.cancelAppointment);
 router.get("/patient/:patientId", auth.patientAuth, slotController.getPatientAppointment);
 router.get("/doctor/:idDoctor", auth.doctorAuth, slotController.getDoctorAppointments);
