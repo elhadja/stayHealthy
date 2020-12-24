@@ -477,7 +477,7 @@ describe("get several slots tests: ", () => {
             };
             postSlotResponse1 = await axios.post(urlBase + "/slot", body, getSeveralSlotHeader);
             postSlotResponse2 = await axios.post(urlBase + "/slot", body, getSeveralSlotHeader);
-            const getResponse = await axios.get(urlBase + "/slots?id=" + beforeAllPost.data.id, getSeveralSlotHeader);
+            const getResponse = await axios.get(urlBase + "/slots/" + beforeAllPost.data.id, getSeveralSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data.length).toBe(2);
         } catch(error) {
@@ -492,7 +492,7 @@ describe("get several slots tests: ", () => {
     it("if the doctor not exists, the request should send an empty array", async () => {
         try {
             const doctorId = "eeeeeeeeeeeeeeeeeeeeaeae";
-            const getResponse = await axios.get(urlBase + "/slots?id=" + doctorId, getSeveralSlotHeader);
+            const getResponse = await axios.get(urlBase + "/slots/" + doctorId, getSeveralSlotHeader);
             expect(getResponse.status).toBe(200);
             expect(getResponse.data.length).toBe(0);
         } catch (error) {

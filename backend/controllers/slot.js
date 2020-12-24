@@ -55,7 +55,7 @@ exports.getSlotById = (req, res) => {
 
 // todo to rename
 exports.getSlotsBy = (req, res) => {
-    Slot.find({ doctorId: req.query.id })
+    Slot.find({ doctorId: req.params.id })
         .then(slots => {
             res.status(200).json(slots);
         })
