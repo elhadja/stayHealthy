@@ -8,6 +8,5 @@ router.post("/", auth.doctorAuth, slotController.addSlot);
 router.put("/:id", auth.doctorAuth, slotController.updateSlot);
 router.delete("/:id", auth.doctorAuth, slotController.deleteSlot);
 router.get("/:id", auth.userAuth, slotController.getSlotById);
-router.get("/", auth.userAuth, slotController.getSlotsBy);
 
 module.exports = router;

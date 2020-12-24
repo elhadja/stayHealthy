@@ -10,7 +10,11 @@ const doctorSchema = mongoose.Schema({
     password: { type: String, required: true },
     speciality: { type: String},
     meansOfPayment: { type: [String] },
-    diplomas: { type: [String] }
+    diplomas: { type: [String] },
+    prices: [{
+        description: String,
+        price: Number
+    }]
 });
 
 doctorSchema.plugin(uniqueValidator);
