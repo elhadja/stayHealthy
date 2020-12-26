@@ -7,7 +7,6 @@ const router = express.Router();
 router.post("/", auth.doctorAuth, slotController.addSlot);
 router.put("/:id", auth.doctorAuth, slotController.updateSlot);
 router.delete("/:id", auth.doctorAuth, slotController.deleteSlot);
-router.get("/:id", auth.doctorAuth, slotController.getSlotById);
-router.get("/", auth.doctorAuth, slotController.getSlotsBy);
+router.get("/:id", auth.userAuth, slotController.getSlotById);
 
 module.exports = router;

@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./doctor.component.css']
 })
 export class DoctorComponent implements OnInit {
+  name = 'Brad';
 
   private profile: string | undefined;
   constructor(private tools: InteractionsService, private router: Router) {  }

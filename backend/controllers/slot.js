@@ -41,7 +41,7 @@ exports.deleteSlot = (req, res) => {
 };
 
 exports.getSlotById = (req, res) => {
-    Slot.findOne({ _id: req.params.id, doctorId: req.userId })
+    Slot.findOne({ _id: req.params.id })
         .then(slot => {
             if (slot) {
                 res.status(200).json(slot);
@@ -55,7 +55,7 @@ exports.getSlotById = (req, res) => {
 
 // todo to rename
 exports.getSlotsBy = (req, res) => {
-    Slot.find({ doctorId: req.userId })
+    Slot.find({ doctorId: req.params.id })
         .then(slots => {
             res.status(200).json(slots);
         })
@@ -64,13 +64,21 @@ exports.getSlotsBy = (req, res) => {
 
 
 exports.getAppointmentById = (req, res) => {
-    res.send("get by id");
+    Slot.findOne({ _id: req.params.id, patientId: {$exists: true} })
+        .then(slot => {
+            if (slot)
+                res.status(200).json(slot);
+            else
+                res.status(404).json({error: "appointment not found"});
+        })
+        .catch(error => res.status(500).json(error));
 };
 
 exports.addAppointment = async (req, res) => {
+    const patientId = req.params.patientId ? (req.params.patientId) : req.userId;
     Slot.findOneAndUpdate(
         { _id: req.params.slotId, patientId: { $exists: false }},
-        { patientId: req.userId },
+        { patientId: patientId },
         {useFindAndModify: false, new: true}
     )
         .then(mongoRes => {
@@ -103,21 +111,23 @@ exports.cancelAppointment = (req, res) => {
 };
 
 exports.getDoctorAppointments = (req, res) => {
-    Slot.find({ doctorId: req.userId, patientId: {$exists: true} })
+    const userId = req.params.doctorId ? req.params.doctorId : req.userId;
+    Slot.find({ doctorId: userId, patientId: {$exists: true} })
         .then(slots => {
             res.status(200).json(slots);
         })
-        .catch(error => res.status(500).json(error));
-
+        .catch(error => {
+            res.status(501).json(error);
+        });
 };
 
-
 exports.getPatientAppointment = (req, res) => {
-    Slot.find({ patientId: req.userId })
+    const userId = req.params.patientId ? req.params.patientId : req.userId;
+    Slot.find({ patientId: userId })
         .then(slots => {
-            console.log(req.params.patientId);
             res.status(200).json(slots);
         })
-        .catch(error => res.status(500).json(error));
-
+        .catch(error => {
+            res.status(502).json(error);
+        });
 };
