@@ -24,7 +24,9 @@ export class SignUpComponent implements OnInit {
               Validators.minLength(10), Validators.maxLength(10)]],
     password: ['', Validators.required],
     password2: ['', Validators.required],
-    address: ['', Validators.required],
+    road: ['', Validators.required],
+    postalCode: ['', Validators.required],
+    city: ['', Validators.required],
     profile: ['', Validators.required],
   });
 

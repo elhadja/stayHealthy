@@ -35,7 +35,7 @@
 
       <mat-form-field appearance="outline" class="ml-2">
         <mat-label>Retaper Mot de Passe</mat-label>
-        <input matInput [type]="hide2 ? 'password2' : 'text'"matInput formControlName="password2" placeholder="Retaper votre mot de passe"  required>
+        <input matInput [type]="hide2 ? 'password' : 'text'"matInput formControlName="password2" placeholder="Retaper votre mot de passe"  required>
         <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('password2')}}</mat-error>
         <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide2">
           <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -51,9 +51,22 @@
       <br>
 
       <mat-form-field appearance="outline">
-        <mat-label>Adresse</mat-label>
-        <textarea matInput formControlName="address" placeholder="Entrer votre Adresse"  required></textarea>
-        <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('address')}}</mat-error>
+        <mat-label>Numéro et rue</mat-label>
+        <textarea matInput formControlName="road" placeholder="Entrer votre Adresse"  required></textarea>
+        <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('road')}}</mat-error>
+      </mat-form-field>
+      <br>
+
+      <mat-form-field appearance="outline" class="ml-2">
+        <mat-label>Code Postal</mat-label>
+        <input matInput formControlName="postalCode" placeholder="Entrer votre code postal"  required>
+        <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('postalCode')}}</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="ml-2">
+        <mat-label>Commune</mat-label>
+        <input matInput formControlName="city" placeholder="Entrer le nom de votre ville"  required>
+        <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('city')}}</mat-error>
       </mat-form-field>
       <br>
 
