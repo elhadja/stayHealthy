@@ -29,6 +29,10 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 
+import { AvatarModule } from 'ngx-avatar';
+import { MonthCalendarModule } from 'simple-angular-calendar';
+import { DoctorService } from './services/doctor.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -38,7 +42,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     PatientComponent,
     DoctorComponent,
     PageNotFoundComponent,
-    HomepageComponent
+    HomepageComponent,
   ],
   imports: [
     BrowserModule,
@@ -59,9 +63,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
     MatSnackBarModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AvatarModule,
+    MonthCalendarModule
   ],
-  providers: [],
+  providers: [DoctorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

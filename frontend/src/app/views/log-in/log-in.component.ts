@@ -56,6 +56,7 @@ export class LogInComponent implements OnInit {
       .subscribe(response => {
           console.log('connected');
           this.tools.setAuthorization(response.token);
+          this.doctor.setAuthorization(response.token);
           if (profile === this.tools.DOCTOR) {
             this.tools.setProfile(profile);
             this.router.navigate(['/doctor']);
