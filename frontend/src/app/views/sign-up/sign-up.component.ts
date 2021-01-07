@@ -13,6 +13,8 @@ import {InteractionsService} from '../../services/interactions.service';
 export class SignUpComponent implements OnInit {
   hide1 = true;
   hide2 = true;
+  signupFailed = '';
+
   constructor(private patient: PatientService, private doctor: DoctorService,
               private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
 
@@ -30,7 +32,6 @@ export class SignUpComponent implements OnInit {
     profile: ['', Validators.required],
   });
 
-  signupFailed = '';
 
   onSubmit(): void {
     this.signupFailed = '';

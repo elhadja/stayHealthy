@@ -17,6 +17,8 @@ export class InteractionsService {
   token = this.tokenSubject.asObservable();
   private profileSubject = new BehaviorSubject<string>('undefined');
   profile = this.profileSubject.asObservable();
+  private userIdSubject = new BehaviorSubject<string>('undefined');
+  userId = this.userIdSubject.asObservable();
 
   // search Observables
   private searchFormStatus = new BehaviorSubject<boolean>(true);
@@ -35,7 +37,15 @@ export class InteractionsService {
    * @param newToken the token to set
    */
   setAuthorization(newToken: string): void {
-    this.tokenSubject.next('Bearer' + newToken);
+    this.tokenSubject.next('Bearer ' + newToken);
+  }
+
+  /**
+   * Set authorization token
+   * @param newToken the token to set
+   */
+  setUserId(id: string): void {
+    this.userIdSubject.next(id);
   }
 
   /**
@@ -51,6 +61,7 @@ export class InteractionsService {
    */
   reset(): void {
     this.setAuthorization('undefined');
+    this.setUserId('undefined');
     this.setProfile('undefined');
   }
 

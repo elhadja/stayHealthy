@@ -6,6 +6,7 @@ import { SignUpComponent } from './views/sign-up/sign-up.component';
 import { LogInComponent } from './views/log-in/log-in.component';
 import { DoctorComponent } from './views/doctor/doctor.component';
 import { PatientComponent } from './views/patient/patient.component';
+import { ProfileComponent } from './views/profile/profile.component';
 
 const routes: Routes = [
   { path: '', component: HomepageComponent },
@@ -13,6 +14,8 @@ const routes: Routes = [
   { path: 'signup', component: SignUpComponent },
   { path: 'doctor', component: DoctorComponent },
   { path: 'patient', component: PatientComponent },
+  { path: 'profile', component: ProfileComponent },
+  // { path: 'appointments', component: ProfileComponent },
   { path: '**', component: PageNotFoundComponent }  // Wildcard route for a 404 page
 ];
 

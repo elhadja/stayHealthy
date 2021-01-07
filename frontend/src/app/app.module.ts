@@ -32,6 +32,7 @@ import { SearchFormComponent } from './components/search-form/search-form.compon
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
 import { DoctorInfoComponent } from './components/doctor-info/doctor-info.component';
+import { ProfileComponent } from './views/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -46,7 +47,8 @@ import { DoctorInfoComponent } from './components/doctor-info/doctor-info.compon
     SearchFormComponent,
     SearchResultsComponent,
     DoctorCardComponent,
-    DoctorInfoComponent
+    DoctorInfoComponent,
+    ProfileComponent
   ],
   imports: [
     BrowserModule,

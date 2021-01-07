@@ -49,7 +49,6 @@ export class PatientComponent implements OnInit {
   ngOnInit(): void {
     // Check the user profile to grant access
     this.tools.profile.subscribe(profile => this.profile = profile);
-    console.log(this.profile);
     if (this.profile !== 'patient') {
       this.router.navigate(['/']);
       console.log('unauthorized user cannot access to this page');
