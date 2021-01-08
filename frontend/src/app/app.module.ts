@@ -34,6 +34,10 @@ import { DoctorCardComponent } from './components/doctor-card/doctor-card.compon
 import { DoctorInfoComponent } from './components/doctor-info/doctor-info.component';
 import { ProfileComponent } from './views/profile/profile.component';
 
+import { AvatarModule } from 'ngx-avatar';
+import { MonthCalendarModule } from 'simple-angular-calendar';
+import { DoctorService } from './services/doctor.service';
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -69,9 +73,11 @@ import { ProfileComponent } from './views/profile/profile.component';
     MatSnackBarModule,
     ReactiveFormsModule,
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AvatarModule,
+    MonthCalendarModule
   ],
-  providers: [],
+  providers: [DoctorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
