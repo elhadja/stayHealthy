@@ -28,15 +28,19 @@ export class ProfileComponent implements OnInit {
       Validators.minLength(10), Validators.maxLength(10)]],
     password: [''],
     password2: [''],
-    road: ['', Validators.required],
-    postalCode: ['', Validators.required],
-    city: ['', Validators.required],
+    address:  this.fb.group({
+      road: ['', Validators.required],
+      postalCode: ['', Validators.required],
+      city: ['', Validators.required],
+    }),
   });
+
 
   ngOnInit(): void {
     // Check the user profile to grant access
     this.tools.profile.subscribe(profile => this.profile = profile);
     this.tools.userId.subscribe(userId => this.userId = userId);
+
     if (this.profile === 'patient') {
       this.patient.get(this.userId).subscribe(
         response => {
@@ -47,9 +51,11 @@ export class ProfileComponent implements OnInit {
             tel: response.tel,
             password: '',
             password2: '',
-            road: response.road,
-            city: response.city,
-            postalCode: response.postalCode,
+            address: {
+              road: response.address.road,
+              city: response.address.city,
+              postalCode: response.address.postalCode,
+            },
           };
           this.updateForm.setValue(data);
         }
@@ -69,7 +75,8 @@ export class ProfileComponent implements OnInit {
       this.patient.update(this.userId, data)
         .subscribe(response => {
             this.tools.openSnackBar('Modification prise en compte');
-            // console.log(response);
+            console.log('response');
+            console.log(response);
             this.router.navigate(['/patient']);
           },
           error => {
