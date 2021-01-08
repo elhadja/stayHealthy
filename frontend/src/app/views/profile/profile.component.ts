@@ -57,6 +57,7 @@ export class ProfileComponent implements OnInit {
               postalCode: response.address.postalCode,
             },
           };
+          // fill the form with the user informations
           this.updateForm.setValue(data);
         }
       );
@@ -68,15 +69,27 @@ export class ProfileComponent implements OnInit {
 
   onSubmit(): void {
     this.updateFailed = '';
-    const data = this.updateForm.value;
-    console.log('submitted data : ');
-    console.log(data);
+    const dataSubmitted = this.updateForm.value;
+    // remove unwanted fields
+    let data = {
+      firstName: dataSubmitted.firstName,
+      lastName: dataSubmitted.lastName,
+      email: dataSubmitted.email,
+      tel: dataSubmitted.tel,
+      address: {
+        road: dataSubmitted.address.road,
+        city: dataSubmitted.address.city,
+        postalCode: dataSubmitted.address.postalCode,
+      },
+    };
+    // add password field if the user want to set a new one
+    if (dataSubmitted.password !== '') {
+      data = Object.assign(data, {password: dataSubmitted.password});
+    }
     if (this.profile === 'patient') {
       this.patient.update(this.userId, data)
         .subscribe(response => {
             this.tools.openSnackBar('Modification prise en compte');
-            console.log('response');
-            console.log(response);
             this.router.navigate(['/patient']);
           },
           error => {

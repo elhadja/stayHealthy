@@ -3,3 +3,4 @@ backend/node_modules/
 todo.md
 Dockerfile
 docker-compose.yaml
+/.idea/

@@ -10,7 +10,7 @@ const baseUrl = 'http://localhost:3000';
 })
 export class SlotService {
   private headers: HttpHeaders = new HttpHeaders({
-    'Content-Type': 'application:json',
+    'Content-Type': 'application/json',
     Authorization: 'Bearer '
   });
 
