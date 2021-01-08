@@ -1,0 +1,18 @@
+<mat-card class="m-2">
+  <mat-card-title>Dr {{tools.getFullName(doctor)}}</mat-card-title>
+  <mat-card-subtitle>{{doctor.speciality}}</mat-card-subtitle>
+  <mat-card-content>
+    <p>Adresse: {{tools.getFullAddress(doctor)}}</p>
+    <p>Email: {{doctor.email}}</p>
+    <p>Téléphone: {{doctor.tel}}</p>
+    <p>Moyens de paiements</p>
+    <ul *ngFor="let payment of doctor.meansOfPayment">
+      <li>{{payment}}</li>
+    </ul>
+    <p>Diplômes obtenus</p>
+    <ul *ngFor="let diploma of doctor.diplomas">
+      <li>{{diploma}}</li>
+    </ul>
+  </mat-card-content>
+  <mat-card-footer>Disponibilités</mat-card-footer>
+</mat-card>

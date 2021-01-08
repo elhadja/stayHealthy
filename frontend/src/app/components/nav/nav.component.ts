@@ -29,6 +29,10 @@ export class NavComponent {
     return this.tools.isDoctorConnected() || this.tools.isPatientConnected();
   }
 
+  isPatientConnected(): boolean {
+    return this.tools.isPatientConnected();
+  }
+
   getHomePage(): string {
     if (this.tools.isDoctorConnected()) {
       return '/doctor';

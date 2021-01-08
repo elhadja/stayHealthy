@@ -4,11 +4,21 @@
       [mode]="'over'">
     <mat-toolbar>Menu</mat-toolbar>
     <mat-nav-list>
-      <a mat-list-item routerLink="/">
+      <a mat-list-item routerLink="{{getHomePage()}}"
+         (click)="drawer.toggle()">
         Accueil
       </a>
+      <a mat-list-item *ngIf="isLogin()" routerLink="/profile"
+         (click)="drawer.toggle()">
+        Mon Profil
+      </a>
+      <a mat-list-item *ngIf="isPatientConnected()"
+         (click)="drawer.toggle()">
+        Mes Rendez-vous
+      </a>
       <a mat-list-item *ngIf="isLogin()" routerLink="/"
-         (click)="disconnect()">
+         (click)="disconnect()"
+         (click)="drawer.toggle()">
         Déconnection
       </a>
     </mat-nav-list>

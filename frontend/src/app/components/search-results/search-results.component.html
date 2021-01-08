@@ -1,0 +1,12 @@
+
+<button mat-mini-fab color="primary" class="cancel" (click)="onBack()">
+  <mat-icon>backspace</mat-icon>
+</button>
+
+<div class="results" *ngIf="showDoctorList">
+  <app-doctor-card [doctor]="doctor" (click)="getDoctorInfo(doctor)"></app-doctor-card>
+</div>
+
+<app-doctor-info *ngIf="showDoctorInfo" [doctor]="doctorInfo"></app-doctor-info>
+
+

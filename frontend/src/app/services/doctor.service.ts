@@ -9,11 +9,15 @@ const baseUrl = 'http://localhost:3000';
 @Injectable({
   providedIn: 'root'
 })
+
 export class DoctorService {
-  private headers: HttpHeaders | undefined;
+  private headers: HttpHeaders = new HttpHeaders({
+    'Content-Type': 'application/json',
+    Authorization: 'Bearer '
+  });
 
   constructor(private http: HttpClient, private interactions: InteractionsService) {
-    this.interactions.token.subscribe(token => token);//this.headers.set('Authorization', token));
+    this.interactions.token.subscribe(token => this.headers = this.headers.set('Authorization', token));
   }
 
   create(data: object): Observable<any> {
@@ -24,19 +28,15 @@ export class DoctorService {
     return this.http.post(`${baseUrl}/doctor/login`, data);
   }
 
-  setAuthorization(newToken: string): void {
-    this.headers = new HttpHeaders().set("Authorization", "Bearer "+ newToken);
+  get(id: string): Observable<any> {
+    return this.http.get(`${baseUrl}/doctor/${id}`, {headers: this.headers});
   }
 
-  get(id: string) : Observable<Doctor>{
-    return this.http.get<Doctor>(`${baseUrl}/doctor/${id}`, {headers: this.headers});
-  }
-
-  update(id: object, data: object): Observable<any> {
+  update(id: string, data: object): Observable<any> {
     return this.http.put(`${baseUrl}/doctor/${id}`, data, {headers: this.headers});
   }
 
-  delete(id: object): Observable<any> {
+  delete(id: string): Observable<any> {
     return this.http.delete(`${baseUrl}/doctor/${id}`, {headers: this.headers});
   }
 }

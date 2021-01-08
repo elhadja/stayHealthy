@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {City, ResponseType} from '../views/patient/patient.component';
 import {HttpClient} from '@angular/common/http';
+import {Doctor, Patient, ResponseType} from '../services/models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +12,23 @@ export class InteractionsService {
   PATIENT = 'patient';
   DOCTOR = 'doctor';
 
-  // Observables
+  // user Observables
   private tokenSubject = new BehaviorSubject<string>('undefined');
   token = this.tokenSubject.asObservable();
   private profileSubject = new BehaviorSubject<string>('undefined');
   profile = this.profileSubject.asObservable();
+  private userIdSubject = new BehaviorSubject<string>('undefined');
+  userId = this.userIdSubject.asObservable();
+
+  // search Observables
+  private searchFormStatus = new BehaviorSubject<boolean>(true);
+  searchFormStatusObs = this.searchFormStatus.asObservable();
+  private searchResultStatus =  new BehaviorSubject<boolean>(false);
+  searchResultStatusObs = this.searchResultStatus.asObservable();
+  private doctorListStatus = new BehaviorSubject<boolean>(true);
+  doctorListStatusObs = this.doctorListStatus.asObservable();
+  private doctorInfoStatus = new BehaviorSubject<boolean>(true);
+  doctorInfoStatusObs = this.doctorInfoStatus.asObservable();
 
   constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) { }
 
@@ -25,7 +37,15 @@ export class InteractionsService {
    * @param newToken the token to set
    */
   setAuthorization(newToken: string): void {
-    this.tokenSubject.next('Bearer' + newToken);
+    this.tokenSubject.next('Bearer ' + newToken);
+  }
+
+  /**
+   * Set authorization token
+   * @param newToken the token to set
+   */
+  setUserId(id: string): void {
+    this.userIdSubject.next(id);
   }
 
   /**
@@ -41,6 +61,7 @@ export class InteractionsService {
    */
   reset(): void {
     this.setAuthorization('undefined');
+    this.setUserId('undefined');
     this.setProfile('undefined');
   }
 
@@ -76,5 +97,44 @@ export class InteractionsService {
   getCities(name: string): Observable<ResponseType>{
     return this.httpClient.get<ResponseType>(
       `https://vicopo.selfbuild.fr/cherche/${name}?format=callback`);
+  }
+
+  /**
+   * Show search form and hide (search result & doctor info)
+   */
+  showSearchForm(): void {
+    this.searchFormStatus.next(true);
+    this.searchResultStatus.next(false);
+    this.doctorListStatus.next(false);
+    this.doctorInfoStatus.next(false);
+  }
+
+  /**
+   * Show search result and hide (search form & doctor info)
+   */
+  showSearchResult(): void {
+    this.searchFormStatus.next(false);
+    this.searchResultStatus.next(true);
+    this.doctorListStatus.next(true);
+    this.doctorInfoStatus.next(false);
+  }
+
+  /**
+   * Show doctor info and hide (search form & search result)
+   */
+  showDoctorInfo(): void {
+    this.searchFormStatus.next(false);
+    this.searchResultStatus.next(true);
+    this.doctorListStatus.next(false);
+    this.doctorInfoStatus.next(true);
+  }
+
+  getFullName(user: Doctor| Patient): string {
+    return user.firstName + ' ' + user.lastName;
+  }
+
+  getFullAddress(user: Doctor| Patient): string {
+    const address = user.address;
+    return address?.road + ', ' + address?.postalCode + ', ' + address?.city;
   }
 }

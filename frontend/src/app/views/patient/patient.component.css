@@ -4,7 +4,7 @@
   z-index: 0;
 }
 
-.search-form {
+app-search-form {
   position: absolute;
   top: 30%;
   margin: 0 12%;
@@ -14,7 +14,14 @@
   border: 2px greenyellow;
 }
 
-button {
-  bottom: 8px;
-  margin-top: 8px;
+app-search-results {
+  height: 70%;
+  width: 35%;
+
+  position: absolute;
+  top: 20%;
+  left: 5%;
+
+  border-radius: 15px;
+  border: 2px greenyellow;
 }
