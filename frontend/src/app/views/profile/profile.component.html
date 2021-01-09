@@ -115,7 +115,7 @@
               {{price}}
               <mat-icon matChipRemove>cancel</mat-icon>
             </mat-chip>
-            <input placeholder="Tarif1, Tarif2, ..."
+            <input placeholder="Service1:25€, Service2:30€, ..."
                    [matChipInputFor]="priceList"
                    [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                    (matChipInputTokenEnd)="add($event, prices)">

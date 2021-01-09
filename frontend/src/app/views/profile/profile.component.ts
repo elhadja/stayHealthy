@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {InteractionsService} from '../../services/interactions.service';
 import {PatientService} from '../../services/patient.service';
 import {DoctorService} from '../../services/doctor.service';
+import {Price} from '../../services/models.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
@@ -80,6 +81,7 @@ export class ProfileComponent implements OnInit {
         if (this.profile === 'doctor') {
           data = Object.assign(data, {speciality: response.speciality});
           this.diplomas = response.diplomas;
+          this.prices = this.pricesToString(response.prices);
           this.meansOfPayment = response.meansOfPayment;
         }
         // fill the form with the user informations
@@ -114,7 +116,7 @@ export class ProfileComponent implements OnInit {
     } else if (this.profile === 'doctor') {
       data = Object.assign(data, {speciality: dataSubmitted.speciality});
       data = Object.assign(data, {diplomas: this.diplomas});
-      // data = Object.assign(data, {prices: this.prices});
+      data = Object.assign(data, {prices: this.stringToPrices(this.prices)});
       data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
       this.updateUser(this.doctor, data);
     } else {
@@ -139,7 +141,7 @@ export class ProfileComponent implements OnInit {
     const input = event.input;
     const value = event.value;
 
-    // Add our diploma
+    // Add our item
     if ((value || '').trim()) {
       list.push(value.trim());
     }
@@ -155,6 +157,28 @@ export class ProfileComponent implements OnInit {
     if (index >= 0) {
       list.splice(index, 1);
     }
+  }
+
+  stringToPrices(list: string[]): Price[] {
+    const prices: Price[] = [];
+    for (const item of list) {
+      const itemSplit = item.split(':');
+      const price: Price = {
+        description: itemSplit[0],
+        price: Number.parseInt(itemSplit[1], 10),
+      };
+      prices.push(price);
+    }
+    return prices;
+  }
+
+  pricesToString(list: Price[]): string[] {
+    const prices: string[] = [];
+    for (const item of list) {
+      const price = item.description + ' : ' + item.price + '€';
+      prices.push(price);
+    }
+    return prices;
   }
 
   getEmailErrMessage(): string {

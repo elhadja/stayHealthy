@@ -17,7 +17,7 @@ export interface Doctor {
   tel: string;
   address: Address;
   speciality: string;
-  // prices: Array<string>; A clarifier!!!
+  prices: Array<Price>;
   meansOfPayment: Array<string>;
   diplomas: Array<string>;
 }
@@ -29,6 +29,11 @@ export interface Patient {
   email: string;
   tel: string;
   address: Address;
+}
+
+export interface Price {
+  description: string;
+  price: number;
 }
 
 export interface ResponseType {
