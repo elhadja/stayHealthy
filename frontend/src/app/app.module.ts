@@ -77,7 +77,6 @@ import { DoctorService } from './services/doctor.service';
     AvatarModule,
     MonthCalendarModule
   ],
-  providers: [DoctorService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

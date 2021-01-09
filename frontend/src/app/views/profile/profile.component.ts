@@ -3,7 +3,7 @@ import {InteractionsService} from '../../services/interactions.service';
 import {PatientService} from '../../services/patient.service';
 import {DoctorService} from '../../services/doctor.service';
 import {Router} from '@angular/router';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-profile',
@@ -14,57 +14,72 @@ export class ProfileComponent implements OnInit {
   hide1 = true;
   hide2 = true;
   updateFailed = '';
-  private profile = 'undefined';
+  profile = 'undefined';
   private userId = 'undefined';
 
   constructor(private patient: PatientService, private doctor: DoctorService,
               private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
 
-  updateForm =  this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
-      Validators.minLength(10), Validators.maxLength(10)]],
-    password: [''],
-    password2: [''],
-    address:  this.fb.group({
-      road: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      city: ['', Validators.required],
-    }),
-  });
-
+  updateForm!: FormGroup;
 
   ngOnInit(): void {
-    // Check the user profile to grant access
     this.tools.profile.subscribe(profile => this.profile = profile);
     this.tools.userId.subscribe(userId => this.userId = userId);
 
+    this.updateForm =  this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
+        Validators.minLength(10), Validators.maxLength(10)]],
+      password: [''],
+      password2: [''],
+      address:  this.fb.group({
+        road: ['', Validators.required],
+        postalCode: ['', Validators.required],
+        city: ['', Validators.required],
+      }),
+      // speciality: ['', [Validators.required]]
+    });
+    if (this.profile === 'doctor') {
+      this.updateForm.addControl('speciality', new FormControl('', Validators.required));
+    }
+
+    // Check the user profile to grant access
     if (this.profile === 'patient') {
-      this.patient.get(this.userId).subscribe(
-        response => {
-          const data = {
-            firstName: response.firstName,
-            lastName: response.lastName,
-            email: response.email,
-            tel: response.tel,
-            password: '',
-            password2: '',
-            address: {
-              road: response.address.road,
-              city: response.address.city,
-              postalCode: response.address.postalCode,
-            },
-          };
-          // fill the form with the user informations
-          this.updateForm.setValue(data);
-        }
-      );
+      this.fillForm(this.patient);
+    } else if (this.profile === 'doctor') {
+      this.fillForm(this.doctor);
     } else {
       this.router.navigate(['/']);
       console.log('unauthorized user cannot access to this page');
     }
+  }
+
+  fillForm(user: DoctorService|PatientService): void {
+    user.get(this.userId).subscribe(
+      response => {
+        let data = {
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          tel: response.tel,
+          password: '',
+          password2: '',
+          address: {
+            road: response.address.road,
+            city: response.address.city,
+            postalCode: response.address.postalCode,
+          },
+        };
+        if (this.profile === 'doctor') {
+          console.log(response);
+          data = Object.assign(data, {speciality: response.speciality});
+        }
+        // fill the form with the user informations
+        this.updateForm.setValue(data);
+      }
+    );
   }
 
   onSubmit(): void {
@@ -86,31 +101,29 @@ export class ProfileComponent implements OnInit {
     if (dataSubmitted.password !== '') {
       data = Object.assign(data, {password: dataSubmitted.password});
     }
+    // Persist the data
     if (this.profile === 'patient') {
-      this.patient.update(this.userId, data)
-        .subscribe(response => {
-            this.tools.openSnackBar('Modification prise en compte');
-            this.router.navigate(['/patient']);
-          },
-          error => {
-            console.error(error);
-            this.updateFailed = 'Modification échouée';
-          });
+      this.updateUser(this.patient, data);
     } else if (this.profile === 'doctor') {
-      this.doctor.update(this.userId, data)
-        .subscribe(response => {
-            this.tools.openSnackBar('Modification prise en compte');
-            console.log(response);
-            this.router.navigate(['/doctor']);
-          },
-          error => {
-            console.error(error);
-            this.updateFailed = 'Modification échouée';
-          });
+      data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      this.updateUser(this.doctor, data);
     } else {
       console.error('user profile unspecified!');
       this.updateFailed = 'profil utilisateur inconnu';
     }
+  }
+
+  updateUser(user: DoctorService|PatientService, data: object): void {
+    user.update(this.userId, data)
+      .subscribe(response => {
+          this.tools.openSnackBar('Modification prise en compte');
+          console.log(response);
+          this.router.navigate(['/']);
+        },
+        error => {
+          console.error(error);
+          this.updateFailed = 'Modification échouée';
+        });
   }
 
   getEmailErrMessage(): string {
@@ -145,5 +158,4 @@ export class ProfileComponent implements OnInit {
     this.updateFailed = 'mot de passe incohérents';
     return false;
   }
-
 }

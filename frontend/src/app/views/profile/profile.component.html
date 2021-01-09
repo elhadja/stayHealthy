@@ -73,6 +73,30 @@
         <br>
       </div>
 
+      <div *ngIf="profile === 'doctor'">
+        <mat-form-field appearance="outline" class="mx-2">
+          <mat-label>Spécialité</mat-label>
+          <mat-select formControlName="speciality" required>
+            <mat-option value="cardiologue">cardiologue</mat-option>
+            <mat-option value="dentiste">dentiste</mat-option>
+            <mat-option value="dieteticien">Diététicien</mat-option>
+            <mat-option value="dermatologue">Dermatologue</mat-option>
+            <mat-option value="generaliste">Généraliste</mat-option>
+            <mat-option value="gynecologue">Gynécologue</mat-option>
+            <mat-option value="neurologue">Neurologue</mat-option>
+            <mat-option value="psychologue">Psychologue</mat-option>
+            <mat-option value="ophtalmologue">Ophtalmologue</mat-option>
+            <mat-option value="orl">ORL</mat-option>
+            <mat-option value="osteopathe">Ostéopathe</mat-option>
+          </mat-select>
+          <mat-error *ngIf="updateForm.invalid">{{getFieldErrMessage('speciality')}}</mat-error>
+        </mat-form-field>
+        <br>
+
+
+      </div>
+
+
       <div class="m-2 text-center">
         <button mat-raised-button color="primary" type="submit">Enregistrer</button>
         <mat-error *ngIf="updateFailed !== ''">{{updateFailed}}</mat-error>

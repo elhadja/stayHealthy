@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {HttpClient} from '@angular/common/http';
-import {Doctor, Patient, ResponseType} from '../services/models.service';
+import {Doctor, Patient, ResponseType} from './models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -41,8 +41,8 @@ export class InteractionsService {
   }
 
   /**
-   * Set authorization token
-   * @param newToken the token to set
+   * Set the user ID
+   * @param id to set
    */
   setUserId(id: string): void {
     this.userIdSubject.next(id);
