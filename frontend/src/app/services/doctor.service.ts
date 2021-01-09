@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InteractionsService } from './interactions.service';
-import { Doctor } from '../views/doctor/doctor';
 
 const baseUrl = 'http://localhost:3000';
 

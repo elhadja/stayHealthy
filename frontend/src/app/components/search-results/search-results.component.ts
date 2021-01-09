@@ -22,6 +22,7 @@ export class SearchResultsComponent implements OnInit {
     email: 'test@email.com',
     firstName: 'Carl',
     lastName: 'Lewis',
+    prices: [{description: 'Consultation', price: 25}],
     meansOfPayment: ['CB', 'Espèces', 'Carte Vitale'],
     speciality: 'Pédiatre',
     tel: '0605797979',

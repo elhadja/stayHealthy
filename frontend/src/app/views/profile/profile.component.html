@@ -73,10 +73,78 @@
         <br>
       </div>
 
+      <div *ngIf="profile === 'doctor'">
+        <mat-form-field appearance="outline" class="mx-2">
+          <mat-label>Spécialité</mat-label>
+          <mat-select formControlName="speciality" required>
+            <mat-option value="cardiologue">cardiologue</mat-option>
+            <mat-option value="dentiste">dentiste</mat-option>
+            <mat-option value="dieteticien">Diététicien</mat-option>
+            <mat-option value="dermatologue">Dermatologue</mat-option>
+            <mat-option value="generaliste">Généraliste</mat-option>
+            <mat-option value="gynecologue">Gynécologue</mat-option>
+            <mat-option value="neurologue">Neurologue</mat-option>
+            <mat-option value="psychologue">Psychologue</mat-option>
+            <mat-option value="ophtalmologue">Ophtalmologue</mat-option>
+            <mat-option value="orl">ORL</mat-option>
+            <mat-option value="osteopathe">Ostéopathe</mat-option>
+          </mat-select>
+          <mat-error *ngIf="updateForm.invalid">{{getFieldErrMessage('speciality')}}</mat-error>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+          <mat-label>Diplômes obtenus</mat-label>
+          <mat-chip-list #diplomaList>
+            <mat-chip *ngFor="let diploma of diplomas" (removed)="remove(diploma, diplomas)">
+              {{diploma}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Diplôme1, Diplôme2, ..."
+                   [matChipInputFor]="diplomaList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="add($event, diplomas)">
+          </mat-chip-list>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+          <mat-label>Tarifs</mat-label>
+          <mat-chip-list #priceList>
+            <mat-chip *ngFor="let price of prices" (removed)="remove(price, prices)">
+              {{price}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="Service1:25€, Service2:30€, ..."
+                   [matChipInputFor]="priceList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="add($event, prices)">
+          </mat-chip-list>
+        </mat-form-field>
+        <br>
+
+        <mat-form-field>
+          <mat-label>Moyens de paiement</mat-label>
+          <mat-chip-list #meansOfPaymentList>
+            <mat-chip *ngFor="let payment of meansOfPayment"
+                      (removed)="remove(payment, meansOfPayment)">
+              {{payment}}
+              <mat-icon matChipRemove>cancel</mat-icon>
+            </mat-chip>
+            <input placeholder="CB, Carte Vitale, ..."
+                   [matChipInputFor]="meansOfPaymentList"
+                   [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                   (matChipInputTokenEnd)="add($event, meansOfPayment)">
+          </mat-chip-list>
+        </mat-form-field>
+        <br>
+      </div>
+
       <div class="m-2 text-center">
         <button mat-raised-button color="primary" type="submit">Enregistrer</button>
         <mat-error *ngIf="updateFailed !== ''">{{updateFailed}}</mat-error>
       </div>
     </form>
   </div>
+
 </div>

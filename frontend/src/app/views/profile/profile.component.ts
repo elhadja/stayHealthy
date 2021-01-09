@@ -2,8 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import {InteractionsService} from '../../services/interactions.service';
 import {PatientService} from '../../services/patient.service';
 import {DoctorService} from '../../services/doctor.service';
+import {Price} from '../../services/models.service';
 import {Router} from '@angular/router';
-import {FormBuilder, Validators} from '@angular/forms';
+import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'app-profile',
@@ -13,63 +16,84 @@ import {FormBuilder, Validators} from '@angular/forms';
 export class ProfileComponent implements OnInit {
   hide1 = true;
   hide2 = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   updateFailed = '';
-  private profile = 'undefined';
+  profile = 'undefined';
   private userId = 'undefined';
+  updateForm!: FormGroup;
+
+  diplomas: string[] = [];
+  prices: string[] = [];
+  meansOfPayment: string[] = [];
 
   constructor(private patient: PatientService, private doctor: DoctorService,
               private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
 
-  updateForm =  this.fb.group({
-    firstName: ['', [Validators.required, Validators.minLength(2)]],
-    lastName: ['', [Validators.required, Validators.minLength(2)]],
-    email: ['', [Validators.required, Validators.email]],
-    tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
-      Validators.minLength(10), Validators.maxLength(10)]],
-    password: [''],
-    password2: [''],
-    address:  this.fb.group({
-      road: ['', Validators.required],
-      postalCode: ['', Validators.required],
-      city: ['', Validators.required],
-    }),
-  });
-
-
   ngOnInit(): void {
-    // Check the user profile to grant access
     this.tools.profile.subscribe(profile => this.profile = profile);
     this.tools.userId.subscribe(userId => this.userId = userId);
 
+    this.updateForm =  this.fb.group({
+      firstName: ['', [Validators.required, Validators.minLength(2)]],
+      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      email: ['', [Validators.required, Validators.email]],
+      tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
+        Validators.minLength(10), Validators.maxLength(10)]],
+      password: [''],
+      password2: [''],
+      address:  this.fb.group({
+        road: ['', Validators.required],
+        postalCode: ['', Validators.required],
+        city: ['', Validators.required],
+      }),
+    });
+    if (this.profile === 'doctor') {
+      this.updateForm.addControl('speciality', new FormControl('', Validators.required));
+    }
+
+    // Check the user profile to grant access
     if (this.profile === 'patient') {
-      this.patient.get(this.userId).subscribe(
-        response => {
-          const data = {
-            firstName: response.firstName,
-            lastName: response.lastName,
-            email: response.email,
-            tel: response.tel,
-            password: '',
-            password2: '',
-            address: {
-              road: response.address.road,
-              city: response.address.city,
-              postalCode: response.address.postalCode,
-            },
-          };
-          // fill the form with the user informations
-          this.updateForm.setValue(data);
-        }
-      );
+      this.fillForm(this.patient);
+    } else if (this.profile === 'doctor') {
+      this.fillForm(this.doctor);
     } else {
       this.router.navigate(['/']);
       console.log('unauthorized user cannot access to this page');
     }
   }
 
+  fillForm(user: DoctorService|PatientService): void {
+    user.get(this.userId).subscribe(
+      response => {
+        let data = {
+          firstName: response.firstName,
+          lastName: response.lastName,
+          email: response.email,
+          tel: response.tel,
+          password: '',
+          password2: '',
+          address: {
+            road: response.address.road,
+            city: response.address.city,
+            postalCode: response.address.postalCode,
+          },
+        };
+        if (this.profile === 'doctor') {
+          data = Object.assign(data, {speciality: response.speciality});
+          this.diplomas = response.diplomas;
+          this.prices = this.pricesToString(response.prices);
+          this.meansOfPayment = response.meansOfPayment;
+        }
+        // fill the form with the user informations
+        this.updateForm.setValue(data);
+      }
+    );
+  }
+
   onSubmit(): void {
     this.updateFailed = '';
     const dataSubmitted = this.updateForm.value;
+
     // remove unwanted fields
     let data = {
       firstName: dataSubmitted.firstName,
@@ -86,31 +110,75 @@ export class ProfileComponent implements OnInit {
     if (dataSubmitted.password !== '') {
       data = Object.assign(data, {password: dataSubmitted.password});
     }
+    // Persist the data
     if (this.profile === 'patient') {
-      this.patient.update(this.userId, data)
-        .subscribe(response => {
-            this.tools.openSnackBar('Modification prise en compte');
-            this.router.navigate(['/patient']);
-          },
-          error => {
-            console.error(error);
-            this.updateFailed = 'Modification échouée';
-          });
+      this.updateUser(this.patient, data);
     } else if (this.profile === 'doctor') {
-      this.doctor.update(this.userId, data)
-        .subscribe(response => {
-            this.tools.openSnackBar('Modification prise en compte');
-            console.log(response);
-            this.router.navigate(['/doctor']);
-          },
-          error => {
-            console.error(error);
-            this.updateFailed = 'Modification échouée';
-          });
+      data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      data = Object.assign(data, {diplomas: this.diplomas});
+      data = Object.assign(data, {prices: this.stringToPrices(this.prices)});
+      data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
+      this.updateUser(this.doctor, data);
     } else {
       console.error('user profile unspecified!');
       this.updateFailed = 'profil utilisateur inconnu';
     }
+  }
+
+  updateUser(user: DoctorService|PatientService, data: object): void {
+    user.update(this.userId, data)
+      .subscribe(response => {
+          this.tools.openSnackBar('Modification prise en compte');
+          this.router.navigate(['/']);
+        },
+        error => {
+          console.error(error);
+          this.updateFailed = 'Modification échouée';
+        });
+  }
+
+  add(event: MatChipInputEvent, list: string[]): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our item
+    if ((value || '').trim()) {
+      list.push(value.trim());
+    }
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(item: string, list: string[]): void {
+    const index = list.indexOf(item);
+
+    if (index >= 0) {
+      list.splice(index, 1);
+    }
+  }
+
+  stringToPrices(list: string[]): Price[] {
+    const prices: Price[] = [];
+    for (const item of list) {
+      const itemSplit = item.split(':');
+      const price: Price = {
+        description: itemSplit[0],
+        price: Number.parseInt(itemSplit[1], 10),
+      };
+      prices.push(price);
+    }
+    return prices;
+  }
+
+  pricesToString(list: Price[]): string[] {
+    const prices: string[] = [];
+    for (const item of list) {
+      const price = item.description + ' : ' + item.price + '€';
+      prices.push(price);
+    }
+    return prices;
   }
 
   getEmailErrMessage(): string {
@@ -145,5 +213,4 @@ export class ProfileComponent implements OnInit {
     this.updateFailed = 'mot de passe incohérents';
     return false;
   }
-
 }
