@@ -17,6 +17,7 @@ export interface Doctor {
   tel: string;
   address: Address;
   speciality: string;
+  // prices: Array<string>; A clarifier!!!
   meansOfPayment: Array<string>;
   diplomas: Array<string>;
 }

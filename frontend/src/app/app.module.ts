@@ -28,6 +28,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatChipsModule } from '@angular/material/chips';
+
 import { SearchFormComponent } from './components/search-form/search-form.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
@@ -36,7 +39,6 @@ import { ProfileComponent } from './views/profile/profile.component';
 
 import { AvatarModule } from 'ngx-avatar';
 import { MonthCalendarModule } from 'simple-angular-calendar';
-import { DoctorService } from './services/doctor.service';
 
 @NgModule({
   declarations: [
@@ -71,6 +73,8 @@ import { DoctorService } from './services/doctor.service';
     MatInputModule,
     MatSelectModule,
     MatSnackBarModule,
+    MatCheckboxModule,
+    MatChipsModule,
     ReactiveFormsModule,
     HttpClientModule,
     FormsModule,

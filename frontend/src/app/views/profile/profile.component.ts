@@ -4,6 +4,8 @@ import {PatientService} from '../../services/patient.service';
 import {DoctorService} from '../../services/doctor.service';
 import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import {MatChipInputEvent} from '@angular/material/chips';
 
 @Component({
   selector: 'app-profile',
@@ -13,14 +15,18 @@ import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 export class ProfileComponent implements OnInit {
   hide1 = true;
   hide2 = true;
+  readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   updateFailed = '';
   profile = 'undefined';
   private userId = 'undefined';
+  updateForm!: FormGroup;
+
+  diplomas: string[] = [];
+  prices: string[] = [];
+  meansOfPayment: string[] = [];
 
   constructor(private patient: PatientService, private doctor: DoctorService,
               private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
-
-  updateForm!: FormGroup;
 
   ngOnInit(): void {
     this.tools.profile.subscribe(profile => this.profile = profile);
@@ -39,7 +45,6 @@ export class ProfileComponent implements OnInit {
         postalCode: ['', Validators.required],
         city: ['', Validators.required],
       }),
-      // speciality: ['', [Validators.required]]
     });
     if (this.profile === 'doctor') {
       this.updateForm.addControl('speciality', new FormControl('', Validators.required));
@@ -73,8 +78,9 @@ export class ProfileComponent implements OnInit {
           },
         };
         if (this.profile === 'doctor') {
-          console.log(response);
           data = Object.assign(data, {speciality: response.speciality});
+          this.diplomas = response.diplomas;
+          this.meansOfPayment = response.meansOfPayment;
         }
         // fill the form with the user informations
         this.updateForm.setValue(data);
@@ -85,6 +91,7 @@ export class ProfileComponent implements OnInit {
   onSubmit(): void {
     this.updateFailed = '';
     const dataSubmitted = this.updateForm.value;
+
     // remove unwanted fields
     let data = {
       firstName: dataSubmitted.firstName,
@@ -106,6 +113,9 @@ export class ProfileComponent implements OnInit {
       this.updateUser(this.patient, data);
     } else if (this.profile === 'doctor') {
       data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      data = Object.assign(data, {diplomas: this.diplomas});
+      // data = Object.assign(data, {prices: this.prices});
+      data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
       this.updateUser(this.doctor, data);
     } else {
       console.error('user profile unspecified!');
@@ -117,13 +127,34 @@ export class ProfileComponent implements OnInit {
     user.update(this.userId, data)
       .subscribe(response => {
           this.tools.openSnackBar('Modification prise en compte');
-          console.log(response);
           this.router.navigate(['/']);
         },
         error => {
           console.error(error);
           this.updateFailed = 'Modification échouée';
         });
+  }
+
+  add(event: MatChipInputEvent, list: string[]): void {
+    const input = event.input;
+    const value = event.value;
+
+    // Add our diploma
+    if ((value || '').trim()) {
+      list.push(value.trim());
+    }
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+  }
+
+  remove(item: string, list: string[]): void {
+    const index = list.indexOf(item);
+
+    if (index >= 0) {
+      list.splice(index, 1);
+    }
   }
 
   getEmailErrMessage(): string {
