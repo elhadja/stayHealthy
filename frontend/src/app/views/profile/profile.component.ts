@@ -48,7 +48,8 @@ export class ProfileComponent implements OnInit {
       }),
     });
     if (this.profile === 'doctor') {
-      this.updateForm.addControl('speciality', new FormControl('', Validators.required));
+      this.updateForm.addControl('speciality', new FormControl('',
+        [Validators.required, Validators.minLength(3)]));
     }
 
     // Check the user profile to grant access
@@ -79,7 +80,11 @@ export class ProfileComponent implements OnInit {
           },
         };
         if (this.profile === 'doctor') {
-          data = Object.assign(data, {speciality: response.speciality});
+          const speciality = {speciality : response.speciality};
+          if (speciality.speciality === undefined) {
+            speciality.speciality = '';
+          }
+          data = Object.assign(data, speciality);
           this.diplomas = response.diplomas;
           this.prices = this.pricesToString(response.prices);
           this.meansOfPayment = response.meansOfPayment;
@@ -114,7 +119,9 @@ export class ProfileComponent implements OnInit {
     if (this.profile === 'patient') {
       this.updateUser(this.patient, data);
     } else if (this.profile === 'doctor') {
-      data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      if (dataSubmitted.speciality.length > 2) {
+        data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      }
       data = Object.assign(data, {diplomas: this.diplomas});
       data = Object.assign(data, {prices: this.stringToPrices(this.prices)});
       data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
@@ -199,6 +206,11 @@ export class ProfileComponent implements OnInit {
         this.updateForm.getError('minlength', ['tel']) ? 'un numéro est composé de 10 chiffres ' :
           this.updateForm.getError('maxlength', ['tel']) ? 'un numéro est composé de 10 chiffres' :
             '';
+  }
+
+  getSpecialityErrMessage(): string {
+    return this.updateForm.hasError('required', ['speciality']) ? 'Champ Obligatoire' :
+      this.updateForm.getError('minlength', ['speciality']) ? 'Champ Obligatoire' : '';
   }
 
   getFieldErrMessage(type: string): string {

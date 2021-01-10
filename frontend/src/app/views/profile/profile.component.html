@@ -89,7 +89,7 @@
             <mat-option value="orl">ORL</mat-option>
             <mat-option value="osteopathe">Ostéopathe</mat-option>
           </mat-select>
-          <mat-error *ngIf="updateForm.invalid">{{getFieldErrMessage('speciality')}}</mat-error>
+          <mat-error *ngIf="updateForm.invalid">{{getSpecialityErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
 
