@@ -24,7 +24,6 @@ export class PatientComponent implements OnInit {
     });
   }
 
-
   /**
    * Show a map in map id selector
    */

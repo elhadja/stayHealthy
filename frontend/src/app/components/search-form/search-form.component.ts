@@ -3,7 +3,8 @@ import {FormControl, Validators} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {InteractionsService} from '../../services/interactions.service';
-import {City} from '../../services/models.service';
+import {DoctorService} from '../../services/doctor.service';
+import {City, Doctor} from '../../services/models.service';
 
 @Component({
   selector: 'app-search-form',
@@ -14,12 +15,14 @@ export class SearchFormComponent implements OnInit {
 
   speciality = new FormControl('', Validators.required);
   location = new FormControl('', Validators.required);
-  search = new FormControl();
+  name = new FormControl();
+
+  searchFailed = '';
 
   matchList: City[] = [];
-  cities: Observable<City[]> | undefined;
+  cities!: Observable<City[]>;
 
-  constructor(private tools: InteractionsService) {  }
+  constructor(private doctor: DoctorService, private tools: InteractionsService) {  }
 
   ngOnInit(): void {
     this.cities = this.location.valueChanges
@@ -59,8 +62,27 @@ export class SearchFormComponent implements OnInit {
    * Called function on submission
    */
   onSubmit(): void {
-    this.tools.openSnackBar(this.speciality.value + ' ' + this.location.value.code);
-    this.tools.showSearchResult();
+    if (this.speciality.value !== '' && this.location.value.code) {
+      this.doctor.getDoctorsByLocation( this.location.value.code).subscribe(
+        results => {
+          const searchResult: Doctor[] = [];
+          for (const result of results){
+            if (result.speciality === this.speciality.value) {
+              searchResult.push(result);
+            }
+          }
+          this.tools.setSearchResult(searchResult);
+        });
+      this.tools.openSnackBar(this.speciality.value + ' ' + this.location.value.code + ' search by location');
+      this.tools.showSearchResult();
+    } else if (this.name.value) {
+      this.doctor.getDoctorsByName( this.name.value).subscribe(
+        results => this.tools.setSearchResult(results));
+      this.tools.openSnackBar(this.name.value + ' search by name');
+      this.tools.showSearchResult();
+    } else {
+      this.searchFailed = 'erreur dans le formulaire!';
+    }
   }
 
   /**

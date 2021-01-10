@@ -27,6 +27,14 @@ export class DoctorService {
     return this.http.post(`${baseUrl}/doctor/login`, data);
   }
 
+  getDoctorsByLocation(postalCode: string): Observable<any> {
+    return this.http.get(`${baseUrl}/doctor?postalCode=${postalCode}`, {headers: this.headers});
+  }
+
+  getDoctorsByName(name: string): Observable<any> {
+    return this.http.get(`${baseUrl}/doctor?name=${name}`, {headers: this.headers});
+  }
+
   get(id: string): Observable<any> {
     return this.http.get(`${baseUrl}/doctor/${id}`, {headers: this.headers});
   }

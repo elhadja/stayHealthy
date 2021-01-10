@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {InteractionsService} from '../../services/interactions.service';
 import {Doctor} from '../../services/models.service';
 
@@ -11,23 +11,7 @@ export class SearchResultsComponent implements OnInit {
   showDoctorList = false;
   showDoctorInfo = false;
 
-  doctor = {
-    id: '1',
-    address: {
-      road: '1 avenue collegno',
-      postalCode: 33400,
-      city: 'Talence'
-    },
-    diplomas: ['Diplôme en Diététique', 'Diplôme en Psychologie', 'Diplôme en Pédiatrie'],
-    email: 'test@email.com',
-    firstName: 'Carl',
-    lastName: 'Lewis',
-    prices: [{description: 'Consultation', price: 25}],
-    meansOfPayment: ['CB', 'Espèces', 'Carte Vitale'],
-    speciality: 'Pédiatre',
-    tel: '0605797979',
-  };
-
+  doctors!: Doctor[];
   doctorInfo!: Doctor;
 
   constructor(private tools: InteractionsService) {
@@ -36,6 +20,9 @@ export class SearchResultsComponent implements OnInit {
     });
     this.tools.doctorInfoStatusObs.subscribe(status => {
       this.showDoctorInfo = status;
+    });
+    this.tools.searchResultsObs.subscribe(results => {
+      this.doctors = results;
     });
   }
 
@@ -50,8 +37,8 @@ export class SearchResultsComponent implements OnInit {
     }
   }
 
-  getDoctorInfo(doctorInfo: object): void {
-    this.doctorInfo = (doctorInfo as Doctor);
+  getDoctorInfo(doctorInfo: Doctor): void {
+    this.doctorInfo = doctorInfo;
     this.tools.showDoctorInfo();
   }
 }

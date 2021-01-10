@@ -21,6 +21,8 @@ export class InteractionsService {
   userId = this.userIdSubject.asObservable();
 
   // search Observables
+  private searchResults = new BehaviorSubject<Doctor[]>([]);
+  searchResultsObs = this.searchResults.asObservable();
   private searchFormStatus = new BehaviorSubject<boolean>(true);
   searchFormStatusObs = this.searchFormStatus.asObservable();
   private searchResultStatus =  new BehaviorSubject<boolean>(false);
@@ -100,6 +102,21 @@ export class InteractionsService {
   }
 
   /**
+   * update the search result
+   * @param results to set
+   */
+  setSearchResult(results: Doctor[]): void {
+    this.searchResults.next(results);
+  }
+
+  /**
+   * Return a list of doctors from search search result
+   */
+  getSearchResult(): Doctor[] {
+    return this.searchResults.value;
+  }
+
+  /**
    * Show search form and hide (search result & doctor info)
    */
   showSearchForm(): void {
@@ -129,10 +146,18 @@ export class InteractionsService {
     this.doctorInfoStatus.next(true);
   }
 
+  /**
+   * concatenate user firstName and lastName to one string
+   * @param user from which to extract the names
+   */
   getFullName(user: Doctor| Patient): string {
     return user.firstName + ' ' + user.lastName;
   }
 
+  /**
+   * Convert address objet to string object
+   * @param user from which to extract address object
+   */
   getFullAddress(user: Doctor| Patient): string {
     const address = user.address;
     return address?.road + ', ' + address?.postalCode + ', ' + address?.city;

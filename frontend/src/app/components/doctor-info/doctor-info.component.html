@@ -5,6 +5,10 @@
     <p>Adresse: {{tools.getFullAddress(doctor)}}</p>
     <p>Email: {{doctor.email}}</p>
     <p>Téléphone: {{doctor.tel}}</p>
+    <p>Tarification</p>
+    <ul *ngFor="let price of doctor.prices">
+      <li>{{price.description}} : {{price.price}} €</li>
+    </ul>
     <p>Moyens de paiements</p>
     <ul *ngFor="let payment of doctor.meansOfPayment">
       <li>{{payment}}</li>

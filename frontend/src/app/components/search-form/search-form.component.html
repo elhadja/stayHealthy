@@ -1,9 +1,9 @@
 <div class="search-form px-2 pt-3">
   <h2 class="ml-4">Recherchez un praticien</h2>
-  <form (ngSubmit)="speciality.valid && location.valid && onSubmit()" class="m-3">
+  <form (ngSubmit)="onSubmit()" class="m-3">
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Spécialité</mat-label>
-      <mat-select [formControl]="speciality" required>
+      <mat-select [formControl]="speciality">
         <mat-option value="cardiologue">cardiologue</mat-option>
         <mat-option value="dentiste">dentiste</mat-option>
         <mat-option value="dieteticien">Diététicien</mat-option>
@@ -21,13 +21,13 @@
 
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Nom du médecin, Établissement</mat-label>
-      <input matInput [formControl]="search" placeholder="Dupont, clinique ...">
+      <input matInput [formControl]="name" placeholder="Dupont, clinique ...">
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Localité</mat-label>
       <input matInput placeholder="Bordeaux, Talence, ..."
-             [formControl]="location" [matAutocomplete]="auto" required>
+             [formControl]="location" [matAutocomplete]="auto">
       <mat-error *ngIf="location.invalid">{{getLocationErrMessage()}}</mat-error>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let city of cities | async" [value]="city">
@@ -37,5 +37,6 @@
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Chercher</button>
+    <mat-error *ngIf="searchFailed !== ''">{{searchFailed}}</mat-error>
   </form>
 </div>

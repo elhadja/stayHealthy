@@ -17,3 +17,9 @@ app-doctor-card {
   overflow: hidden;
   overflow-y: inherit;
 }
+
+.no-result {
+  background-color: #b5b4b4;
+  text-align: center;
+  margin: 50px;
+}
