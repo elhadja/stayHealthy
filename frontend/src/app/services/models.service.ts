@@ -41,6 +41,11 @@ export interface ResponseType {
   cities: City[];
 }
 
+export interface Coordinate {
+  x: number;
+  y: number;
+}
+
 export class ModelsService {
   constructor() { }
 }

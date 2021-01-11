@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { InteractionsService } from '../../services/interactions.service';
 import { Router } from '@angular/router';
+import {PatientService} from '../../services/patient.service';
 
 
 @Component({
@@ -15,34 +16,13 @@ export class PatientComponent implements OnInit {
   showSearchForm = false;
   showSearchResult = false;
 
-  constructor(private tools: InteractionsService, private router: Router) {
+  constructor(private patient: PatientService, private tools: InteractionsService, private router: Router) {
     this.tools.searchFormStatusObs.subscribe(status => {
       this.showSearchForm = status;
     });
     this.tools.searchResultStatusObs.subscribe(status => {
       this.showSearchResult = status;
     });
-  }
-
-  /**
-   * Show a map in map id selector
-   */
-  private initMap(): void {
-    const center = [48.8641, 2.333]; // Paris 1er Arr Coordinates.
-    const zoom = 12; // adjust map's zoom
-
-    // Setting Up the Map
-    // @ts-ignore
-    const maps = L.map('map').setView(center, zoom);
-    // @ts-ignore
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; ' +
-        '<a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-    }).addTo(maps);
-
-    // Put Marker on the Map
-    // const marker = L.marker(center);
-    // marker.addTo(map);
   }
 
   ngOnInit(): void {
@@ -53,7 +33,7 @@ export class PatientComponent implements OnInit {
       console.log('unauthorized user cannot access to this page');
     }
 
-    this.initMap();
+    this.patient.initMap();
 
   }
 
