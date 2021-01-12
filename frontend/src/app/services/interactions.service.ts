@@ -1,8 +1,7 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {HttpClient} from '@angular/common/http';
-import {Doctor, Patient, ResponseType} from './models.service';
+import {Doctor, Patient} from './models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -30,7 +29,7 @@ export class InteractionsService {
   private doctorInfoStatus = new BehaviorSubject<boolean>(true);
   doctorInfoStatusObs = this.doctorInfoStatus.asObservable();
 
-  constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) { }
+  constructor(private snackBar: MatSnackBar) { }
 
   /**
    * Set authorization token
@@ -91,15 +90,6 @@ export class InteractionsService {
   }
 
   /**
-   * Get a list of cities starting by @name and their postal code
-   * @param name of the city
-   */
-  getCities(name: string): Observable<ResponseType>{
-    return this.httpClient.get<ResponseType>(
-      `https://vicopo.selfbuild.fr/cherche/${name}?format=callback`);
-  }
-
-  /**
    * Show search form and hide (search result & doctor info)
    */
   showSearchForm(): void {
@@ -129,12 +119,40 @@ export class InteractionsService {
     this.doctorInfoStatus.next(true);
   }
 
+  /**
+   * concatenate user firstName and lastName to one string
+   * @param user from which to extract the names
+   */
   getFullName(user: Doctor| Patient): string {
     return user.firstName + ' ' + user.lastName;
   }
 
+  /**
+   * Convert address objet to string object
+   * @param user from which to extract address object
+   */
   getFullAddress(user: Doctor| Patient): string {
     const address = user.address;
     return address?.road + ', ' + address?.postalCode + ', ' + address?.city;
+  }
+  getDay(date: Date): string {
+    const day = date.getDay();
+    if (day === 0) {
+      return 'Dimanche';
+    } else if (day === 1) {
+      return 'Lundi';
+    } else if (day === 2) {
+      return 'Mardi';
+    } else if (day === 3) {
+      return 'Mercredi';
+    } else if (day === 4) {
+      return 'Jeudi';
+    } else if (day === 5) {
+      return 'Vendredi';
+    } else if (day === 6) {
+      return 'Samedi';
+    } else {
+      return 'Erreur';
+    }
   }
 }

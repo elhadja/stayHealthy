@@ -7,6 +7,8 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
+import {DialogComponent} from '../../components/dialog/dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +29,8 @@ export class ProfileComponent implements OnInit {
   meansOfPayment: string[] = [];
 
   constructor(private patient: PatientService, private doctor: DoctorService,
-              private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
+              private tools: InteractionsService, private router: Router,
+              private fb: FormBuilder, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.tools.profile.subscribe(profile => this.profile = profile);
@@ -48,7 +51,8 @@ export class ProfileComponent implements OnInit {
       }),
     });
     if (this.profile === 'doctor') {
-      this.updateForm.addControl('speciality', new FormControl('', Validators.required));
+      this.updateForm.addControl('speciality', new FormControl('',
+        [Validators.required, Validators.minLength(3)]));
     }
 
     // Check the user profile to grant access
@@ -79,7 +83,11 @@ export class ProfileComponent implements OnInit {
           },
         };
         if (this.profile === 'doctor') {
-          data = Object.assign(data, {speciality: response.speciality});
+          const speciality = {speciality : response.speciality};
+          if (speciality.speciality === undefined) {
+            speciality.speciality = '';
+          }
+          data = Object.assign(data, speciality);
           this.diplomas = response.diplomas;
           this.prices = this.pricesToString(response.prices);
           this.meansOfPayment = response.meansOfPayment;
@@ -114,7 +122,9 @@ export class ProfileComponent implements OnInit {
     if (this.profile === 'patient') {
       this.updateUser(this.patient, data);
     } else if (this.profile === 'doctor') {
-      data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      if (dataSubmitted.speciality.length > 2) {
+        data = Object.assign(data, {speciality: dataSubmitted.speciality});
+      }
       data = Object.assign(data, {diplomas: this.diplomas});
       data = Object.assign(data, {prices: this.stringToPrices(this.prices)});
       data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
@@ -181,6 +191,27 @@ export class ProfileComponent implements OnInit {
     return prices;
   }
 
+  deleteAccount(): void{
+    const dialogRef = this.dialog.open(DialogComponent,
+      {width: '270px', data: 'Etês-vous vraiment sûr de supprimer ce compte?'});
+    dialogRef.afterClosed().subscribe(
+      confirm => {
+        if (confirm) {
+          this.patient.delete(this.userId).subscribe(
+            response => {
+              this.tools.openSnackBar('Compte supprimé!');
+              this.tools.reset();
+              this.router.navigate(['/']);
+            },
+            error => {
+              this.tools.openSnackBar('Erreur lors de la suppression!');
+              console.log(error);
+            }
+          );
+        }
+      });
+  }
+
   getEmailErrMessage(): string {
     return this.updateForm.getError('required', ['email']) ? 'Saisissez votre email' :
       this.updateForm.getError('email', ['email']) ? 'Email invalide' :
@@ -199,6 +230,11 @@ export class ProfileComponent implements OnInit {
         this.updateForm.getError('minlength', ['tel']) ? 'un numéro est composé de 10 chiffres ' :
           this.updateForm.getError('maxlength', ['tel']) ? 'un numéro est composé de 10 chiffres' :
             '';
+  }
+
+  getSpecialityErrMessage(): string {
+    return this.updateForm.hasError('required', ['speciality']) ? 'Champ Obligatoire' :
+      this.updateForm.getError('minlength', ['speciality']) ? 'Champ Obligatoire' : '';
   }
 
   getFieldErrMessage(type: string): string {

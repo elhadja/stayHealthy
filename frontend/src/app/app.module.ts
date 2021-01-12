@@ -30,9 +30,11 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatDialogModule } from '@angular/material/dialog';
 
 import { SearchFormComponent } from './components/search-form/search-form.component';
 import { SearchResultsComponent } from './components/search-results/search-results.component';
+import { DialogComponent } from './components/dialog/dialog.component';
 import { DoctorCardComponent } from './components/doctor-card/doctor-card.component';
 import { DoctorInfoComponent } from './components/doctor-info/doctor-info.component';
 import { ProfileComponent } from './views/profile/profile.component';
@@ -54,7 +56,8 @@ import { MonthCalendarModule } from 'simple-angular-calendar';
     SearchResultsComponent,
     DoctorCardComponent,
     DoctorInfoComponent,
-    ProfileComponent
+    ProfileComponent,
+    DialogComponent
   ],
   imports: [
     BrowserModule,
@@ -79,7 +82,8 @@ import { MonthCalendarModule } from 'simple-angular-calendar';
     HttpClientModule,
     FormsModule,
     AvatarModule,
-    MonthCalendarModule
+    MonthCalendarModule,
+    MatDialogModule
   ],
   bootstrap: [AppComponent]
 })

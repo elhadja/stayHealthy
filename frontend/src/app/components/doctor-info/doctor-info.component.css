@@ -1,3 +1,5 @@
 mat-card {
-  height: 89%;
+  height: 97%;
+  overflow: hidden;
+  overflow-y: inherit;
 }

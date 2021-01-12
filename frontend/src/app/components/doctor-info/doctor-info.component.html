@@ -2,17 +2,29 @@
   <mat-card-title>Dr {{tools.getFullName(doctor)}}</mat-card-title>
   <mat-card-subtitle>{{doctor.speciality}}</mat-card-subtitle>
   <mat-card-content>
-    <p>Adresse: {{tools.getFullAddress(doctor)}}</p>
-    <p>Email: {{doctor.email}}</p>
-    <p>Téléphone: {{doctor.tel}}</p>
-    <p>Moyens de paiements</p>
+    <p><b>Adresse:</b> {{tools.getFullAddress(doctor)}}</p>
+    <p><b>Email:</b> {{doctor.email}}</p>
+    <p><b>Téléphone:</b> {{doctor.tel}}</p>
+
+    <p><b>Tarification</b></p>
+    <ul *ngFor="let price of doctor.prices">
+      <li>{{price.description}} : {{price.price}} €</li>
+    </ul>
+
+    <p><b>Moyens de paiements</b></p>
     <ul *ngFor="let payment of doctor.meansOfPayment">
       <li>{{payment}}</li>
     </ul>
-    <p>Diplômes obtenus</p>
+
+    <p><b>Diplômes obtenus</b></p>
     <ul *ngFor="let diploma of doctor.diplomas">
       <li>{{diploma}}</li>
     </ul>
+
+    <p><b>Disponibilités</b></p>
+    <mat-list *ngFor="let slot of slots">
+      <mat-list-item (click)="book(slot)">{{displayDateHour(slot)}}</mat-list-item>
+      <mat-divider></mat-divider>
+    </mat-list>
   </mat-card-content>
-  <mat-card-footer>Disponibilités</mat-card-footer>
 </mat-card>

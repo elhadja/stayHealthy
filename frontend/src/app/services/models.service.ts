@@ -5,12 +5,12 @@ export interface Address{
 }
 
 export interface City {
-  city: string;
+  name: string;
   code: string;
 }
 
 export interface Doctor {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -36,9 +36,24 @@ export interface Price {
   price: number;
 }
 
-export interface ResponseType {
-  input: string;
-  cities: City[];
+export interface Coordinate {
+  x: number;
+  y: number;
+}
+
+export interface Slot {
+  _id: string;
+  date: {
+    jj: number,
+    mm: number,
+    yy: number
+  };
+  startHour: {
+    hh: number,
+    mn: number
+  };
+  doctorId: string;
+  patientId: string;
 }
 
 export class ModelsService {
