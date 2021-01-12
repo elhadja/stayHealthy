@@ -23,19 +23,19 @@ exports.updateDoctor = (req, res) => {
 
 exports.getDoctorsBy = (req, res) => {
     let nameFilter = req.query.name ? req.query.name : "";
+    let regexNameFilter = new RegExp(["^", nameFilter, "$"].join(""), "i"); 
     let specialityFilter = req.query.speciality ? req.query.speciality : "";
     let postalCodeFilter = req.query.postalCode ? req.query.postalCode : 0;
     
     Doctor.find({ $or: 
         [
-            { firstName: nameFilter }, 
-            { lastName: nameFilter },
-            { speciality: specialityFilter}, 
+            { firstName:  regexNameFilter}, 
+            { lastName:  regexNameFilter},
+            { speciality: new RegExp(["^", specialityFilter, "$"].join(""), "i")}, 
             { "address.postalCode": postalCodeFilter}
         ]})
         .then(users => {
             res.status(200).json(users);
         })
         .catch(error => res.status(500).json(error));
-
 };

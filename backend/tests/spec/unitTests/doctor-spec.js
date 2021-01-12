@@ -344,8 +344,8 @@ describe("get severals doctors tests: ", () => {
             });
             header4 = user.createHeader(logResponse.data.token);
 
-            const getResponse = await axios.get(urlBase + "/doctors?name=aLastName"
-                                                        + "&speciality=aSpeciality"
+            const getResponse = await axios.get(urlBase + "/doctors?name=alaStNaMe"
+                                                        + "&speciality=aSpecIaliTY"
                                                         + "&postalCode=99990", header4);
 
             expect(getResponse.status).toBe(200);
