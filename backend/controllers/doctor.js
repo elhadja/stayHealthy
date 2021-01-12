@@ -28,8 +28,8 @@ exports.getDoctorsBy = (req, res) => {
     
     Doctor.find({ $or: 
         [
-            { firstName: nameFilter }, 
-            { lastName: nameFilter },
+            { firstName: new RegExp(["^", nameFilter, "$"].join(""), "i") }, 
+            { lastName:  new RegExp(["^", nameFilter, "$"].join(""), "i") },
             { speciality: specialityFilter}, 
             { "address.postalCode": postalCodeFilter}
         ]})
@@ -37,5 +37,4 @@ exports.getDoctorsBy = (req, res) => {
             res.status(200).json(users);
         })
         .catch(error => res.status(500).json(error));
-
 };
