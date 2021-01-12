@@ -5,7 +5,7 @@ export interface Address{
 }
 
 export interface City {
-  city: string;
+  name: string;
   code: string;
 }
 
@@ -34,11 +34,6 @@ export interface Patient {
 export interface Price {
   description: string;
   price: number;
-}
-
-export interface ResponseType {
-  input: string;
-  cities: City[];
 }
 
 export interface Coordinate {

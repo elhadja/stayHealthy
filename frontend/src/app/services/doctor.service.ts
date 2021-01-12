@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InteractionsService } from './interactions.service';
+import { Doctor } from './models.service';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -10,6 +11,7 @@ const baseUrl = 'http://localhost:3000';
 })
 
 export class DoctorService {
+  private searchResults: Doctor[] = [];
   private headers: HttpHeaders = new HttpHeaders({
     'Content-Type': 'application/json',
     Authorization: 'Bearer '
@@ -45,5 +47,20 @@ export class DoctorService {
 
   delete(id: string): Observable<any> {
     return this.http.delete(`${baseUrl}/doctor/${id}`, {headers: this.headers});
+  }
+
+  /**
+   * update the search result
+   * @param results to set
+   */
+  setSearchResult(results: Doctor[]): void {
+    this.searchResults = results;
+  }
+
+  /**
+   * Return a list of doctors from search search result
+   */
+  getSearchResult(): Doctor[] {
+    return this.searchResults;
   }
 }

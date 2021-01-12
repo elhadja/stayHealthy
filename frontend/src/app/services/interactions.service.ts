@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {HttpClient} from '@angular/common/http';
-import {Doctor, Patient, ResponseType} from './models.service';
+import {Doctor, Patient} from './models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -21,8 +21,6 @@ export class InteractionsService {
   userId = this.userIdSubject.asObservable();
 
   // search Observables
-  private searchResults = new BehaviorSubject<Doctor[]>([]);
-  searchResultsObs = this.searchResults.asObservable();
   private searchFormStatus = new BehaviorSubject<boolean>(true);
   searchFormStatusObs = this.searchFormStatus.asObservable();
   private searchResultStatus =  new BehaviorSubject<boolean>(false);
@@ -32,7 +30,7 @@ export class InteractionsService {
   private doctorInfoStatus = new BehaviorSubject<boolean>(true);
   doctorInfoStatusObs = this.doctorInfoStatus.asObservable();
 
-  constructor(private snackBar: MatSnackBar, private httpClient: HttpClient) { }
+  constructor(private snackBar: MatSnackBar) { }
 
   /**
    * Set authorization token
@@ -90,30 +88,6 @@ export class InteractionsService {
       duration: 2000,
       verticalPosition: 'top'
     });
-  }
-
-  /**
-   * Get a list of cities starting by @name and their postal code
-   * @param name of the city
-   */
-  getCities(name: string): Observable<ResponseType>{
-    return this.httpClient.get<ResponseType>(
-      `https://vicopo.selfbuild.fr/cherche/${name}?format=callback`);
-  }
-
-  /**
-   * update the search result
-   * @param results to set
-   */
-  setSearchResult(results: Doctor[]): void {
-    this.searchResults.next(results);
-  }
-
-  /**
-   * Return a list of doctors from search search result
-   */
-  getSearchResult(): Doctor[] {
-    return this.searchResults.value;
   }
 
   /**

@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {InteractionsService} from '../../services/interactions.service';
-import {Coordinate, Doctor} from '../../services/models.service';
+import {Doctor} from '../../services/models.service';
+import {DoctorService} from '../../services/doctor.service';
 import {PatientService} from '../../services/patient.service';
 
 @Component({
@@ -15,20 +16,18 @@ export class SearchResultsComponent implements OnInit {
   doctors!: Doctor[];
   doctorInfo!: Doctor;
 
-  constructor(private patient: PatientService, private tools: InteractionsService) {
+  constructor(private patient: PatientService, private doctor: DoctorService, private tools: InteractionsService) {
     this.tools.doctorListStatusObs.subscribe(status => {
       this.showDoctorList = status;
     });
     this.tools.doctorInfoStatusObs.subscribe(status => {
       this.showDoctorInfo = status;
     });
-    this.tools.searchResultsObs.subscribe(results => {
-      this.doctors = results;
-      if (results.length > 0) {
-        this.patient.setCenter(this.tools.getFullAddress(results[0]));
-        this.addResultsToMap(results);
-      }
-    });
+    this.doctors = this.doctor.getSearchResult();
+    if (this.doctors.length > 0) {
+      this.patient.setCenter(this.tools.getFullAddress(this.doctors[0]));
+      this.addResultsToMap(this.doctors);
+    }
   }
 
   ngOnInit(): void {

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { InteractionsService } from './interactions.service';
-import {Address, Coordinate} from './models.service';
+import {Coordinate} from './models.service';
 
 const baseUrl = 'http://localhost:3000';
 
@@ -46,7 +46,7 @@ export class PatientService {
 
   initMap(): void {
     const center = [48.8641, 2.333]; // Paris 1er Arr Coordinates.
-    const zoom = 12; // adjust map's zoom
+    const zoom = 13; // adjust map's zoom
     // @ts-ignore
     this.map = L.map('map').setView(center, zoom);
     // @ts-ignore
@@ -92,5 +92,6 @@ export class PatientService {
       // @ts-ignore
       this.map.removeLayer(marker);
     }
+    this.markers = [];
   }
 }
