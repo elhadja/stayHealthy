@@ -18,23 +18,19 @@ export class AppointmentService {
     this.interactions.token.subscribe(token => this.headers = this.headers.set('Authorization', token));
   }
 
-  create(data: object): Observable<any> {
-    return this.http.post(`${baseUrl}/appointment`, data);
+  create(slotId: string): Observable<any> {
+    return this.http.post(`${baseUrl}/appointment/${slotId}`, {}, {headers: this.headers});
   }
 
   getAllFromPat(patientId: string): Observable<any> {
-    return this.http.get(`${baseUrl}/appointment/patient/${patientId}`, {headers: this.headers});
+    return this.http.get(`${baseUrl}/appointment/patient/`, {headers: this.headers});
   }
 
   getAllFromDoc(doctorId: string): Observable<any> {
-    return this.http.get(`${baseUrl}/appointment/doctor/${doctorId}`, {headers: this.headers});
+    return this.http.get(`${baseUrl}/appointment/doctor/`, {headers: this.headers});
   }
 
   update(id: string, data: object): Observable<any> {
-    return this.http.put(`${baseUrl}/appointment/${id}`, data, {headers: this.headers});
-  }
-
-  delete(id: string): Observable<any> {
-    return this.http.delete(`${baseUrl}/appointment/${id}`, {headers: this.headers});
+    return this.http.put(`${baseUrl}/appointment/${id}`, {}, {headers: this.headers});
   }
 }

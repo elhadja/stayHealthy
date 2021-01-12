@@ -3,10 +3,11 @@
   <mat-icon>backspace</mat-icon>
 </button>
 
-<div class="results" *ngIf="showDoctorList">
-  <app-doctor-card [doctor]="doctor" (click)="getDoctorInfo(doctor)"></app-doctor-card>
+<div class="resultList" *ngIf="showDoctorList" >
+  <div class="results" *ngFor="let doctor of doctors">
+    <app-doctor-card [doctor]="doctor" (click)="getDoctorInfo(doctor)"></app-doctor-card>
+  </div>
+    <p class="no-result" *ngIf="doctors.length <= 0">Aucun résultat</p>
 </div>
 
 <app-doctor-info *ngIf="showDoctorInfo" [doctor]="doctorInfo"></app-doctor-info>
-
-

@@ -1,6 +1,11 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {Doctor} from '../../services/models.service';
+import {Doctor, Slot} from '../../services/models.service';
+import {AppointmentService} from '../../services/appointment.service';
 import {InteractionsService} from '../../services/interactions.service';
+import {PatientService} from '../../services/patient.service';
+import {SlotService} from '../../services/slot.service';
+import {MatDialog} from '@angular/material/dialog';
+import {DialogComponent} from '../dialog/dialog.component';
 
 @Component({
   selector: 'app-doctor-info',
@@ -10,10 +15,52 @@ import {InteractionsService} from '../../services/interactions.service';
 export class DoctorInfoComponent implements OnInit {
 
   @Input() doctor!: Doctor;
+  slots: Slot[] = [];
 
-  constructor(public tools: InteractionsService) { }
+  constructor(private appointment: AppointmentService, private slotService: SlotService,
+              private patient: PatientService,
+              private dialog: MatDialog, public tools: InteractionsService) { }
 
   ngOnInit(): void {
+    this.slotService.getAllFromDoc(this.doctor._id).subscribe(
+      results => {
+        for (const result of results) {
+          // Keep only unbooked slots
+          if (!result.patientId) {
+            this.slots.push(result);
+          }
+        }
+      }
+    );
   }
 
+  book(slot: Slot): void {
+    const dialogRef = this.dialog.open(DialogComponent,
+      {width: '270px', data: 'Réservez ce créneau?'});
+    dialogRef.afterClosed().subscribe(
+      confirm => {
+        if (confirm) {
+          this.appointment.create(slot._id).subscribe(
+            response => {
+              this.tools.openSnackBar('Créneau réservez!');
+              this.patient.removeMarkers();
+              this.tools.showSearchForm();
+            },
+            error => this.tools.openSnackBar('Erreur lors de la réservation!')
+          );
+        }
+      });
+  }
+
+  displayDateHour(slot: Slot): string {
+    let dateHour = '';
+    const date = new Date();
+    date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
+    date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
+    dateHour =  `${this.tools.getDay(date)} Le ${date.getDate()}/${date.getMonth()}/${date.getFullYear()} à ${date.getHours()}h`;
+    if (date.getMinutes() !== 0) {
+      dateHour += ' ' +  date.getMinutes();
+    }
+    return dateHour;
+  }
 }

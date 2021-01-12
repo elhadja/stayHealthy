@@ -89,7 +89,7 @@
             <mat-option value="orl">ORL</mat-option>
             <mat-option value="osteopathe">Ostéopathe</mat-option>
           </mat-select>
-          <mat-error *ngIf="updateForm.invalid">{{getFieldErrMessage('speciality')}}</mat-error>
+          <mat-error *ngIf="updateForm.invalid">{{getSpecialityErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
 
@@ -143,6 +143,9 @@
       <div class="m-2 text-center">
         <button mat-raised-button color="primary" type="submit">Enregistrer</button>
         <mat-error *ngIf="updateFailed !== ''">{{updateFailed}}</mat-error>
+        <button class="m-2" mat-raised-button color="warn" (click)="deleteAccount()" type="button">
+          Supprimer le compte
+        </button>
       </div>
     </form>
   </div>
