@@ -143,6 +143,9 @@
       <div class="m-2 text-center">
         <button mat-raised-button color="primary" type="submit">Enregistrer</button>
         <mat-error *ngIf="updateFailed !== ''">{{updateFailed}}</mat-error>
+        <button class="m-2" mat-raised-button color="warn" (click)="deleteAccount()" type="button">
+          Supprimer le compte
+        </button>
       </div>
     </form>
   </div>

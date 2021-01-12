@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {HttpClient} from '@angular/common/http';
 import {Doctor, Patient} from './models.service';
 
 @Injectable({
@@ -135,5 +134,25 @@ export class InteractionsService {
   getFullAddress(user: Doctor| Patient): string {
     const address = user.address;
     return address?.road + ', ' + address?.postalCode + ', ' + address?.city;
+  }
+  getDay(date: Date): string {
+    const day = date.getDay();
+    if (day === 0) {
+      return 'Dimanche';
+    } else if (day === 1) {
+      return 'Lundi';
+    } else if (day === 2) {
+      return 'Mardi';
+    } else if (day === 3) {
+      return 'Mercredi';
+    } else if (day === 4) {
+      return 'Jeudi';
+    } else if (day === 5) {
+      return 'Vendredi';
+    } else if (day === 6) {
+      return 'Samedi';
+    } else {
+      return 'Erreur';
+    }
   }
 }

@@ -7,6 +7,8 @@ import {Router} from '@angular/router';
 import {FormBuilder, FormControl, FormGroup, Validators} from '@angular/forms';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
+import {DialogComponent} from '../../components/dialog/dialog.component';
+import {MatDialog} from '@angular/material/dialog';
 
 @Component({
   selector: 'app-profile',
@@ -27,7 +29,8 @@ export class ProfileComponent implements OnInit {
   meansOfPayment: string[] = [];
 
   constructor(private patient: PatientService, private doctor: DoctorService,
-              private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
+              private tools: InteractionsService, private router: Router,
+              private fb: FormBuilder, private dialog: MatDialog) {}
 
   ngOnInit(): void {
     this.tools.profile.subscribe(profile => this.profile = profile);
@@ -186,6 +189,27 @@ export class ProfileComponent implements OnInit {
       prices.push(price);
     }
     return prices;
+  }
+
+  deleteAccount(): void{
+    const dialogRef = this.dialog.open(DialogComponent,
+      {width: '270px', data: 'Etês-vous vraiment sûr de supprimer ce compte?'});
+    dialogRef.afterClosed().subscribe(
+      confirm => {
+        if (confirm) {
+          this.patient.delete(this.userId).subscribe(
+            response => {
+              this.tools.openSnackBar('Compte supprimé!');
+              this.tools.reset();
+              this.router.navigate(['/']);
+            },
+            error => {
+              this.tools.openSnackBar('Erreur lors de la suppression!');
+              console.log(error);
+            }
+          );
+        }
+      });
   }
 
   getEmailErrMessage(): string {

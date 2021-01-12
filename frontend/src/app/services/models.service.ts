@@ -10,7 +10,7 @@ export interface City {
 }
 
 export interface Doctor {
-  id: string;
+  _id: string;
   firstName: string;
   lastName: string;
   email: string;
@@ -39,6 +39,21 @@ export interface Price {
 export interface Coordinate {
   x: number;
   y: number;
+}
+
+export interface Slot {
+  _id: string;
+  date: {
+    jj: number,
+    mm: number,
+    yy: number
+  };
+  startHour: {
+    hh: number,
+    mn: number
+  };
+  doctorId: string;
+  patientId: string;
 }
 
 export class ModelsService {
