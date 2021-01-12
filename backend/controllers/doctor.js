@@ -23,14 +23,15 @@ exports.updateDoctor = (req, res) => {
 
 exports.getDoctorsBy = (req, res) => {
     let nameFilter = req.query.name ? req.query.name : "";
+    let regexNameFilter = new RegExp(["^", nameFilter, "$"].join(""), "i"); 
     let specialityFilter = req.query.speciality ? req.query.speciality : "";
     let postalCodeFilter = req.query.postalCode ? req.query.postalCode : 0;
     
     Doctor.find({ $or: 
         [
-            { firstName: new RegExp(["^", nameFilter, "$"].join(""), "i") }, 
-            { lastName:  new RegExp(["^", nameFilter, "$"].join(""), "i") },
-            { speciality: specialityFilter}, 
+            { firstName:  regexNameFilter}, 
+            { lastName:  regexNameFilter},
+            { speciality: new RegExp(["^", specialityFilter, "$"].join(""), "i")}, 
             { "address.postalCode": postalCodeFilter}
         ]})
         .then(users => {
