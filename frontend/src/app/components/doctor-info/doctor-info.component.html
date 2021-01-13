@@ -23,7 +23,12 @@
 
     <p><b>Disponibilités</b></p>
     <mat-list *ngFor="let slot of slots">
-      <mat-list-item (click)="book(slot)">{{displayDateHour(slot)}}</mat-list-item>
+      <mat-list-item>{{this.tools.displayDateHour(slot)}}</mat-list-item>
+      <div class="cancel" (click)="book(slot)">
+        <button mat-mini-fab color="primary" >
+          <mat-icon>event_available</mat-icon>
+        </button>
+      </div>
       <mat-divider></mat-divider>
     </mat-list>
   </mat-card-content>

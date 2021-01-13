@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import {Doctor, Patient} from './models.service';
+import {Doctor, Patient, Slot} from './models.service';
 
 @Injectable({
   providedIn: 'root'
@@ -135,6 +135,11 @@ export class InteractionsService {
     const address = user.address;
     return address?.road + ', ' + address?.postalCode + ', ' + address?.city;
   }
+
+  /**
+   * Convert from date in day of a week
+   * @param date to convert
+   */
   getDay(date: Date): string {
     const day = date.getDay();
     if (day === 0) {
@@ -154,5 +159,23 @@ export class InteractionsService {
     } else {
       return 'Erreur';
     }
+  }
+
+  /**
+   * Parse slot date and hour in string
+   * @param slot from which to extract date and hour
+   */
+  displayDateHour(slot: Slot): string {
+    let dateHour = '';
+    const date = new Date();
+    date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
+    date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
+    dateHour =  `${this.getDay(date)} Le ${date.getDate()}/${date.getMonth()}/${date.getFullYear()} à ${date.getHours()}h`;
+    if (date.getMinutes() !== 0) {
+      dateHour += '' +  date.getMinutes();
+    } else {
+      dateHour += '00';
+    }
+    return dateHour;
   }
 }

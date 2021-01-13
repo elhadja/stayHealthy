@@ -41,6 +41,7 @@ import { ProfileComponent } from './views/profile/profile.component';
 
 import { AvatarModule } from 'ngx-avatar';
 import { MonthCalendarModule } from 'simple-angular-calendar';
+import { AgendaComponent } from './views/agenda/agenda.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { MonthCalendarModule } from 'simple-angular-calendar';
     DoctorCardComponent,
     DoctorInfoComponent,
     ProfileComponent,
-    DialogComponent
+    DialogComponent,
+    AgendaComponent
   ],
   imports: [
     BrowserModule,

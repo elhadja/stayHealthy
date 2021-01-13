@@ -51,16 +51,4 @@ export class DoctorInfoComponent implements OnInit {
         }
       });
   }
-
-  displayDateHour(slot: Slot): string {
-    let dateHour = '';
-    const date = new Date();
-    date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
-    date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
-    dateHour =  `${this.tools.getDay(date)} Le ${date.getDate()}/${date.getMonth()}/${date.getFullYear()} à ${date.getHours()}h`;
-    if (date.getMinutes() !== 0) {
-      dateHour += ' ' +  date.getMinutes();
-    }
-    return dateHour;
-  }
 }
