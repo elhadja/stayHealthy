@@ -1,0 +1,10 @@
+.username {
+  font-size: 18px;
+  font-family: Calibri, sans-serif;
+  text-align: center;
+}
+
+ngx-avatar {
+  display: flex;
+  justify-content: center;
+}

@@ -11,7 +11,7 @@ import {Doctor} from '../../services/models.service';
 })
 export class DoctorComponent implements OnInit {
 
-  private profile: string | undefined;
+  private profile = 'undefined';
   private userId = 'undefined';
 
   constructor(private doctorService: DoctorService, private tools: InteractionsService, private router: Router) {  }
