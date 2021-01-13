@@ -12,7 +12,7 @@
          (click)="drawer.toggle()">
         Mon Profil
       </a>
-      <a mat-list-item *ngIf="isPatientConnected()"
+      <a mat-list-item *ngIf="isLogin()" routerLink="/agenda"
          (click)="drawer.toggle()">
         Mes Rendez-vous
       </a>

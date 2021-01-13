@@ -56,6 +56,13 @@ export interface Slot {
   patientId: string;
 }
 
+export interface AppointmentLight {
+  id: string;
+  name: string;
+  dateHour: string;
+  address: string;
+}
+
 export class ModelsService {
   constructor() { }
 }

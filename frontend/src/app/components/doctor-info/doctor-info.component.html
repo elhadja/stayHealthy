@@ -23,7 +23,7 @@
 
     <p><b>Disponibilités</b></p>
     <mat-list *ngFor="let slot of slots">
-      <mat-list-item (click)="book(slot)">{{displayDateHour(slot)}}</mat-list-item>
+      <mat-list-item (click)="book(slot)">{{this.tools.displayDateHour(slot)}}</mat-list-item>
       <mat-divider></mat-divider>
     </mat-list>
   </mat-card-content>

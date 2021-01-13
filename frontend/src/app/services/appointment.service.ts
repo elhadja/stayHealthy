@@ -22,15 +22,15 @@ export class AppointmentService {
     return this.http.post(`${baseUrl}/appointment/${slotId}`, {}, {headers: this.headers});
   }
 
-  getAllFromPat(patientId: string): Observable<any> {
+  getAllFromPat(): Observable<any> {
     return this.http.get(`${baseUrl}/appointment/patient/`, {headers: this.headers});
   }
 
-  getAllFromDoc(doctorId: string): Observable<any> {
+  getAllFromDoc(): Observable<any> {
     return this.http.get(`${baseUrl}/appointment/doctor/`, {headers: this.headers});
   }
 
-  update(id: string, data: object): Observable<any> {
+  update(id: string): Observable<any> {
     return this.http.put(`${baseUrl}/appointment/${id}`, {}, {headers: this.headers});
   }
 }

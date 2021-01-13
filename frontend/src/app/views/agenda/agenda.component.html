@@ -1,0 +1,13 @@
+<h1>Mes Rendez-vous</h1>
+<div class="slots" *ngFor="let slot of slots">
+  <mat-card class="m-2" (click)="cancel(slot)">
+    <mat-card-title>Dr {{slot.name}}</mat-card-title>
+    <mat-card-subtitle>{{slot.dateHour}}</mat-card-subtitle>
+    <mat-card-content>{{slot.address}}</mat-card-content>
+  </mat-card>
+</div>
+
+<div *ngIf="slots.length === 0">
+  <h3>Vous ne disposez d'aucun rendez-vous pour le moment!</h3>
+</div>
+
