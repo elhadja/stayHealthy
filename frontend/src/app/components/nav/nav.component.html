@@ -6,19 +6,23 @@
     <mat-nav-list>
       <a mat-list-item routerLink="{{getHomePage()}}"
          (click)="drawer.toggle()">
+        <mat-icon color="primary">home</mat-icon>
         Accueil
       </a>
       <a mat-list-item *ngIf="isLogin()" routerLink="/profile"
          (click)="drawer.toggle()">
+        <mat-icon color="primary">portrait</mat-icon>
         Mon Profil
       </a>
       <a mat-list-item *ngIf="isLogin()" routerLink="/agenda"
          (click)="drawer.toggle()">
+        <mat-icon color="primary">event_note</mat-icon>
         Mes Rendez-vous
       </a>
       <a mat-list-item *ngIf="isLogin()" routerLink="/"
          (click)="disconnect()"
          (click)="drawer.toggle()">
+        <mat-icon color="warn">exit_to_app</mat-icon>
         Déconnection
       </a>
     </mat-nav-list>

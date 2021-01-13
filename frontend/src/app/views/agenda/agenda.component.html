@@ -1,9 +1,17 @@
-<h1>Mes Rendez-vous</h1>
+<h1 class="m-4">Mes Rendez-vous</h1>
+
 <div class="slots" *ngFor="let slot of slots">
-  <mat-card class="m-2" (click)="cancel(slot)">
+  <mat-card class="my-2 mx-4">
     <mat-card-title>Dr {{slot.name}}</mat-card-title>
-    <mat-card-subtitle>{{slot.dateHour}}</mat-card-subtitle>
-    <mat-card-content>{{slot.address}}</mat-card-content>
+    <mat-card-subtitle class="ml-2">{{slot.dateHour}}</mat-card-subtitle>
+    <mat-card-content class="ml-4">
+      {{slot.address}}
+      <div class="cancel" (click)="cancel(slot)">
+        <button mat-mini-fab color="warn" >
+          <mat-icon>event_busy</mat-icon>
+        </button>
+      </div>
+    </mat-card-content>
   </mat-card>
 </div>
 

@@ -3,3 +3,9 @@ mat-card {
   overflow: hidden;
   overflow-y: inherit;
 }
+
+.cancel {
+  position: absolute;
+  right: 2px;
+  margin-top: -45px;
+}

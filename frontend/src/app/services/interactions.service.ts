@@ -161,6 +161,10 @@ export class InteractionsService {
     }
   }
 
+  /**
+   * Parse slot date and hour in string
+   * @param slot from which to extract date and hour
+   */
   displayDateHour(slot: Slot): string {
     let dateHour = '';
     const date = new Date();
