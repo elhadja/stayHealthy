@@ -34,8 +34,6 @@ export class NavComponent {
       this.getUser(this.doctor);
     } else if (this.profile === 'patient') {
       this.getUser(this.patient);
-    } else {
-      console.error('Error finding user');
     }
   }
 
