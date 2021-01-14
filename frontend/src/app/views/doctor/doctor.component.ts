@@ -2,11 +2,11 @@ import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { InteractionsService } from '../../services/interactions.service';
 import { Router } from '@angular/router';
 import { DoctorService } from 'src/app/services/doctor.service';
-import {colors, Doctor} from '../../services/models.service';
+import {PatientService} from '../../services/patient.service';
+import {SlotService} from '../../services/slot.service';
+import {colors, Doctor, Slot} from '../../services/models.service';
+import {addMinutes, isSameDay, isSameMonth} from 'date-fns';
 import {CustomEventTitleFormatter, DateFormatterService} from '../../services/date-formatter.service';
-import {addDays, addMinutes, isSameDay, isSameMonth} from 'date-fns';
-
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
   CalendarEvent,
   CalendarDateFormatter,
@@ -45,68 +45,20 @@ export class DoctorComponent implements OnInit {
   locale = 'fr-FR';
 
   weekStartsOn: number = DAYS_OF_WEEK.MONDAY;
-
   weekendDays: number[] = [DAYS_OF_WEEK.SATURDAY, DAYS_OF_WEEK.SUNDAY];
 
   CalendarView = CalendarView;
-
   view: CalendarView = CalendarView.Month;
-
   viewDate = new Date();
-
   activeDayIsOpen = true;
 
-  actions: CalendarEventAction[] = [
-    {
-      label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-      a11yLabel: 'Edit',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        this.handleEvent('Edited', event);
-      },
-    },
-    {
-      label: '<i class="fas fa-fw fa-trash-alt"></i>',
-      a11yLabel: 'Delete',
-      onClick: ({ event }: { event: CalendarEvent }): void => {
-        // this.events = this.events.filter((iEvent) => iEvent !== event);
-        this.handleEvent('Deleted', event);
-      },
-    },
-  ];
+  events: CalendarEvent[] = [];
 
-  events: CalendarEvent[] = [
-    {
-      title: 'Click me',
-      color: colors.yellow,
-      start: new Date(),
-      end: addMinutes(new Date(), 30),
-      actions: this.actions
-    },
-    {
-      title: 'Or click me',
-      color: colors.red,
-      start: new Date(),
-      end: addMinutes(new Date(), 30),
-      actions: this.actions
-    },
-    {
-      title: 'Or click me',
-      color: colors.green,
-      start: addMinutes(new Date(), 30),
-      end: addMinutes(addMinutes(new Date(), 30), 30),
-      actions: this.actions
-    },
-    {
-      title: 'click here',
-      color: colors.blue,
-      start: addDays(new Date(), 1),
-      end: addDays(addMinutes(new Date(), 30), 1),
-      actions: this.actions
-    },
-  ];
+  slots: Slot[] = [];
 
-  constructor(private doctorService: DoctorService, private tools: InteractionsService,
-              private router: Router, private modal: NgbModal) {
+  constructor(private doctorService: DoctorService, private patientService: PatientService,
+              private slotService: SlotService, private tools: InteractionsService,
+              private router: Router) {
     // Init hours and minutes values for the form
     for (let h = 8; h < 20; h++) {
       this.hours.push(h);
@@ -124,11 +76,74 @@ export class DoctorComponent implements OnInit {
 
     if (this.profile === 'doctor') {
       this.doctorService.get(this.userId).subscribe(
-        response => { this.doctor = response; });
+        response => this.doctor = response);
+
+      // Get all slots and put them in the calendar
+      this.slotService.getAllFromDoc(this.userId).subscribe(
+        results => {
+          for (const result of results) {
+            this.slots.push(result);
+            this.addSlotInCalendar(result);
+          }
+        }
+      );
     } else {
       this.router.navigate(['/']);
       console.log('you don\'t have profile to access to this page');
     }
+  }
+
+  addSlotInCalendar(slot: Slot): void {
+    let customTitle = 'libre';
+    let customColor = colors.green;
+    const customActions: CalendarEventAction[] = [
+        {
+          label: '<i class="fas fa-fw fa-trash-alt"></i>',
+          a11yLabel: 'Delete',
+          onClick: ({ event }: { event: CalendarEvent }): void => {
+            // this.events = this.events.filter((iEvent) => iEvent !== event);
+            this.handleEvent('Deleted', event);
+          }
+        }
+      ];
+
+    const date = new Date();
+    // adjust shift in month value (0 == Jan, 1 == Feb, 2 == Mar, ...)
+    if (slot.date.mm > 0) {
+      date.setFullYear(slot.date.yy, slot.date.mm - 1, slot.date.jj);
+    } else {
+      date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
+    }
+    date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
+
+    // customize appointment event
+    if (slot.patientId !== undefined) {
+      customTitle = 'réservé';
+      // this.patientService.get(slot.patientId).toPromise().then(
+      //   user => {
+      //     customTitle = this.tools.getFullName(user);
+      //   }
+      // );
+      customColor = colors.red;
+      customActions.push({
+        label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+        a11yLabel: 'Edit',
+        onClick: ({ event }: { event: CalendarEvent }): void => {
+          this.handleEvent('Edited', event);
+        },
+      });
+    }
+
+    // Create the event and add it to the list
+    const customEvent =
+        {
+          title: customTitle,
+          color: customColor,
+          start: date,
+          end: addMinutes(date, 30),
+          actions: customActions
+        };
+    this.events.push(customEvent);
   }
 
   sundayFilter = (d: Date | null): boolean => {
@@ -153,9 +168,5 @@ export class DoctorComponent implements OnInit {
   }
   handleEvent(action: string, event: CalendarEvent): void {
     console.log('Event Occurred ',  action);
-  }
-
-  eventClicked({ event }: { event: CalendarEvent }): void {
-    console.log('Event clicked', event);
   }
 }

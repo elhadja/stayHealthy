@@ -75,7 +75,6 @@
         [weekendDays]="weekendDays"
         [activeDayIsOpen]="true"
         (dayClicked)="dayClicked($event.day)"
-        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-month-view>
       <mwl-calendar-week-view
@@ -87,7 +86,6 @@
         [locale]="locale"
         [weekStartsOn]="weekStartsOn"
         [weekendDays]="weekendDays"
-        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-week-view>
       <mwl-calendar-day-view
@@ -97,7 +95,6 @@
         [dayEndHour]="19"
         [events]="events"
         [locale]="locale"
-        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-day-view>
     </div>
