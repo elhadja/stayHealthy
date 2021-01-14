@@ -12,6 +12,7 @@
             mwlCalendarPreviousView
             [view]="view"
             [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
           >
             Précédent
           </div>
@@ -27,6 +28,7 @@
             mwlCalendarNextView
             [view]="view"
             [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
           >
             Suivant
           </div>
@@ -70,10 +72,11 @@
         *ngSwitchCase="'month'"
         [viewDate]="viewDate"
         [events]="events"
+        [refresh]="refresh"
         [locale]="locale"
         [weekStartsOn]="weekStartsOn"
         [weekendDays]="weekendDays"
-        [activeDayIsOpen]="true"
+        [activeDayIsOpen]="activeDayIsOpen"
         (dayClicked)="dayClicked($event.day)"
       >
       </mwl-calendar-month-view>
@@ -83,6 +86,7 @@
         [dayStartHour]="8"
         [dayEndHour]="19"
         [events]="events"
+        [refresh]="refresh"
         [locale]="locale"
         [weekStartsOn]="weekStartsOn"
         [weekendDays]="weekendDays"
@@ -94,6 +98,7 @@
         [dayStartHour]="8"
         [dayEndHour]="19"
         [events]="events"
+        [refresh]="refresh"
         [locale]="locale"
       >
       </mwl-calendar-day-view>
@@ -101,28 +106,35 @@
 
   </div>
 
-  <div class="add-event m-4 text-center">
+  <form class="m-4 text-center" [formGroup]="slotForm" (ngSubmit)="slotForm.valid && onSubmit()">
     <mat-form-field class="mr-4" appearance="outline">
       <mat-label>Choisissez une date</mat-label>
-      <input matInput [min]="viewDate" [matDatepickerFilter]="sundayFilter" [matDatepicker]="picker" required>
+      <input matInput formControlName="date"
+             [min]="viewDate"
+             [matDatepickerFilter]="sundayFilter"
+             [matDatepicker]="picker" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('date')}}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="time" appearance="outline">
       <mat-label>hh</mat-label>
-      <mat-select required>
-        <mat-option *ngFor="let h of hours"  value="h">{{h}} h</mat-option>
+      <mat-select formControlName="hour" required>
+        <mat-option *ngFor="let h of hours" value="{{h}}">{{h}} h</mat-option>
       </mat-select>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('hour')}}</mat-error>
     </mat-form-field> :
 
     <mat-form-field class="time mr-4" appearance="outline">
       <mat-label>mm</mat-label>
-      <mat-select required>
-        <mat-option *ngFor="let m of minutes"  value="{{m}}">{{m}} mn</mat-option>
+      <mat-select formControlName="minute" required>
+        <mat-option *ngFor="let m of minutes" value="{{m}}">{{m}} mn</mat-option>
       </mat-select>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('minute')}}</mat-error>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Ajouter un créneau</button>
-  </div>
+    <mat-error *ngIf="slotFormError !== ''">{{slotFormError}}</mat-error>
+  </form>
 </div>

@@ -1,7 +1,9 @@
 import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
 import { InteractionsService } from '../../services/interactions.service';
 import { Router } from '@angular/router';
-import { DoctorService } from 'src/app/services/doctor.service';
+import {Subject} from 'rxjs';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {DoctorService } from 'src/app/services/doctor.service';
 import {PatientService} from '../../services/patient.service';
 import {SlotService} from '../../services/slot.service';
 import {colors, Doctor, Slot} from '../../services/models.service';
@@ -38,6 +40,8 @@ export class DoctorComponent implements OnInit {
   private profile = 'undefined';
   private userId = 'undefined';
   doctor!: Doctor;
+  slotForm!: FormGroup;
+  slotFormError = '';
 
   hours: number[] = [];
   minutes: number[] = [];
@@ -50,7 +54,9 @@ export class DoctorComponent implements OnInit {
   CalendarView = CalendarView;
   view: CalendarView = CalendarView.Month;
   viewDate = new Date();
-  activeDayIsOpen = true;
+  activeDayIsOpen = false;
+
+  refresh: Subject<any> = new Subject();
 
   events: CalendarEvent[] = [];
 
@@ -58,7 +64,7 @@ export class DoctorComponent implements OnInit {
 
   constructor(private doctorService: DoctorService, private patientService: PatientService,
               private slotService: SlotService, private tools: InteractionsService,
-              private router: Router) {
+              private router: Router, private fb: FormBuilder) {
     // Init hours and minutes values for the form
     for (let h = 8; h < 20; h++) {
       this.hours.push(h);
@@ -67,6 +73,13 @@ export class DoctorComponent implements OnInit {
     for (let m = 0; m < 2; m++) {
       this.minutes.push(m * 30);
     }
+
+    // Init Form Group controller
+    this.slotForm =  this.fb.group({
+      date: ['', [Validators.required]],
+      hour: ['', [Validators.required]],
+      minute: ['', [Validators.required]]
+    });
   }
 
   ngOnInit(): void {
@@ -85,6 +98,7 @@ export class DoctorComponent implements OnInit {
             this.slots.push(result);
             this.addSlotInCalendar(result);
           }
+          this.refresh.next();
         }
       );
     } else {
@@ -107,23 +121,18 @@ export class DoctorComponent implements OnInit {
         }
       ];
 
+    // Extract and setup the date
     const date = new Date();
-    // adjust shift in month value (0 == Jan, 1 == Feb, 2 == Mar, ...)
-    if (slot.date.mm > 0) {
-      date.setFullYear(slot.date.yy, slot.date.mm - 1, slot.date.jj);
-    } else {
-      date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
-    }
+    date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
     date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
 
     // customize appointment event
     if (slot.patientId !== undefined) {
       customTitle = 'réservé';
-      // this.patientService.get(slot.patientId).toPromise().then(
+      // this.patientService.get(slot.patientId).subscribe(
       //   user => {
       //     customTitle = this.tools.getFullName(user);
-      //   }
-      // );
+      //   });
       customColor = colors.red;
       customActions.push({
         label: '<i class="fas fa-fw fa-pencil-alt"></i>',
@@ -166,7 +175,50 @@ export class DoctorComponent implements OnInit {
       this.viewDate = date;
     }
   }
+
+  closeOpenMonthViewDay(): void {
+    this.activeDayIsOpen = false;
+  }
+
   handleEvent(action: string, event: CalendarEvent): void {
     console.log('Event Occurred ',  action);
+  }
+
+  onSubmit(): void {
+    this.slotFormError = '';
+    const dataSubmitted = this.slotForm.value;
+    // remove unwanted fields
+    const data = {
+      date: {
+        jj: dataSubmitted.date.getDate(),
+        mm: dataSubmitted.date.getMonth(),
+        yy: dataSubmitted.date.getFullYear()
+      },
+      startHour: {
+        hh: dataSubmitted.hour,
+        mn: dataSubmitted.minute
+      }
+    };
+    // Now persist it in data base and display it on calendar
+    this.slotService.create(data).subscribe(
+      response => {
+        if (response.slot) {
+          this.tools.openSnackBar('Le créneau a été crée');
+          this.addSlotInCalendar(response.slot);
+          this.refresh.next();
+        } else {
+          this.tools.openSnackBar('Une erreur est survenu lors de la création');
+          this.slotFormError = 'Créneau existant ou créneau situé dans le passé';
+        }
+      },
+      error => {
+        console.error(error);
+        this.tools.openSnackBar('Une erreur est survenu lors de la création');
+      }
+    );
+  }
+
+  getFieldErrMessage(type: string): string {
+    return this.slotForm.hasError('required', [type]) ? 'Champ Obligatoire' : '';
   }
 }
