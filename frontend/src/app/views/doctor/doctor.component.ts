@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { DoctorService } from 'src/app/services/doctor.service';
 import {colors, Doctor} from '../../services/models.service';
 import {CustomEventTitleFormatter, DateFormatterService} from '../../services/date-formatter.service';
-import { addDays, isSameDay, isSameMonth } from 'date-fns';
+import {addDays, addMinutes, isSameDay, isSameMonth} from 'date-fns';
 
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import {
@@ -79,30 +79,41 @@ export class DoctorComponent implements OnInit {
       title: 'Click me',
       color: colors.yellow,
       start: new Date(),
+      end: addMinutes(new Date(), 30),
       actions: this.actions
     },
     {
       title: 'Or click me',
       color: colors.red,
       start: new Date(),
+      end: addMinutes(new Date(), 30),
+      actions: this.actions
+    },
+    {
+      title: 'Or click me',
+      color: colors.green,
+      start: addMinutes(new Date(), 30),
+      end: addMinutes(addMinutes(new Date(), 30), 30),
       actions: this.actions
     },
     {
       title: 'click here',
       color: colors.blue,
       start: addDays(new Date(), 1),
+      end: addDays(addMinutes(new Date(), 30), 1),
       actions: this.actions
     },
   ];
 
   constructor(private doctorService: DoctorService, private tools: InteractionsService,
               private router: Router, private modal: NgbModal) {
-    for (let h = 0; h < 24; h++) {
+    // Init hours and minutes values for the form
+    for (let h = 8; h < 20; h++) {
       this.hours.push(h);
     }
 
-    for (let m = 0; m < 4; m++) {
-      this.minutes.push(m * 15);
+    for (let m = 0; m < 2; m++) {
+      this.minutes.push(m * 30);
     }
   }
 

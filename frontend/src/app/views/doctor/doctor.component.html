@@ -81,6 +81,8 @@
       <mwl-calendar-week-view
         *ngSwitchCase="'week'"
         [viewDate]="viewDate"
+        [dayStartHour]="8"
+        [dayEndHour]="19"
         [events]="events"
         [locale]="locale"
         [weekStartsOn]="weekStartsOn"
@@ -91,6 +93,8 @@
       <mwl-calendar-day-view
         *ngSwitchCase="'day'"
         [viewDate]="viewDate"
+        [dayStartHour]="8"
+        [dayEndHour]="19"
         [events]="events"
         [locale]="locale"
         (eventClicked)="eventClicked($event)"
@@ -103,7 +107,7 @@
   <div class="add-event m-4 text-center">
     <mat-form-field class="mr-4" appearance="outline">
       <mat-label>Choisissez une date</mat-label>
-      <input matInput [min]="viewDate" [matDatepickerFilter]="sundayFilter" [matDatepicker]="picker">
+      <input matInput [min]="viewDate" [matDatepickerFilter]="sundayFilter" [matDatepicker]="picker" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
