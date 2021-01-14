@@ -6,26 +6,10 @@
   <p *ngIf="doctor" style="text-align: center;"><strong><span style="font-size: 18px; font-family: Calibri, sans-serif;">Bienvenue Dr {{doctor.firstName}}</span></strong></p>
 
 
-<!--
-  <ul class="doctors">
-    <li *ngFor="let doctor of doctors" (click)="onSelect(doctor)">
-      <span class="badge">{{doctor.id}}</span> {{doctor.firstName}}
-    </li>
-  </ul>
-   <div *ngIf="selectedDoctor">
-    <h2>{{selectedDoctor.firstName | uppercase}} Details</h2>
-    <div><span>id: </span>{{selectedDoctor.id}}</div>
-    <div>
-      <label>name:
-        <input [(ngModel)]="selectedDoctor.firstName" placeholder="name"/>
-      </label>
-    </div>  
-  </div> -->
+  <h2>Calendrier en maintenance</h2>
 
-  <h2>Calendrier en construction</h2>
-
-  <div style="width: 100%; height: 500px;">
-    <sc-month-calendar></sc-month-calendar>
+  <div>
+    <app-calendar></app-calendar>
   </div>
 
   <!-- <img style="position: absolute; left: 0; bottom: 0;" src="assets/files/doctors.png"> -->

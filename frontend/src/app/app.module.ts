@@ -1,5 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { AppComponent } from './app.component';
 import { DoctorComponent } from './views/doctor/doctor.component';
@@ -40,8 +44,10 @@ import { DoctorInfoComponent } from './components/doctor-info/doctor-info.compon
 import { ProfileComponent } from './views/profile/profile.component';
 
 import { AvatarModule } from 'ngx-avatar';
-import { MonthCalendarModule } from 'simple-angular-calendar';
 import { AgendaComponent } from './views/agenda/agenda.component';
+import { CalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { CalendarComponent } from './views/calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -59,9 +65,12 @@ import { AgendaComponent } from './views/agenda/agenda.component';
     DoctorInfoComponent,
     ProfileComponent,
     DialogComponent,
-    AgendaComponent
+    AgendaComponent,
+    CalendarComponent
   ],
   imports: [
+    CommonModule,
+    NgbModalModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
@@ -84,9 +93,11 @@ import { AgendaComponent } from './views/agenda/agenda.component';
     HttpClientModule,
     FormsModule,
     AvatarModule,
-    MonthCalendarModule,
-    MatDialogModule
+    MatDialogModule,
+    FlatpickrModule.forRoot(),
+    CalendarModule.forRoot({ provide: DateAdapter, useFactory: adapterFactory })
   ],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [CalendarComponent],
 })
 export class AppModule { }
