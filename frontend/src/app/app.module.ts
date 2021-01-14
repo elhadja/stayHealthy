@@ -1,7 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FlatpickrModule } from 'angularx-flatpickr';
 import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 
 
@@ -72,8 +71,7 @@ registerLocaleData(localeFr);
     DoctorInfoComponent,
     ProfileComponent,
     DialogComponent,
-    AgendaComponent,
-    CalendarComponent
+    AgendaComponent
   ],
   imports: [
     CommonModule,
