@@ -14,7 +14,7 @@
         <mat-icon color="primary">portrait</mat-icon>
         Mon Profil
       </a>
-      <a mat-list-item *ngIf="isLogin()" routerLink="/agenda"
+      <a mat-list-item *ngIf="isPatientConnected()" routerLink="/agenda"
          (click)="drawer.toggle()">
         <mat-icon color="primary">event_note</mat-icon>
         Mes Rendez-vous

@@ -31,14 +31,12 @@ export class AgendaComponent implements OnInit {
     if (this.profile === 'patient') {
       this.appointment.getAllFromPat().subscribe(
         results => this.extractData(results, this.doctor));
-    } else if (this.profile === 'doctor') {
-      this.appointment.getAllFromDoc().subscribe(
-        results => this.extractData(results, this.patient));
     } else {
       this.router.navigate(['/']);
       console.log('unauthorized user cannot access to this page');
     }
   }
+
   extractData(slots: Slot[], user: DoctorService|PatientService): void{
     for (const slot of slots) {
       let userId = 'undefined';
@@ -73,7 +71,7 @@ export class AgendaComponent implements OnInit {
       confirm => {
         if (confirm) {
           this.appointment.update(slot.id).subscribe(
-            response => {
+            () => {
               this.tools.openSnackBar('Rendez-vous annulé!');
               this.slots = [];
               this.ngOnInit();
