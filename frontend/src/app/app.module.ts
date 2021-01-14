@@ -1,5 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FlatpickrModule } from 'angularx-flatpickr';
+import { NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+
 
 import { AppComponent } from './app.component';
 import { DoctorComponent } from './views/doctor/doctor.component';
@@ -68,9 +72,12 @@ registerLocaleData(localeFr);
     DoctorInfoComponent,
     ProfileComponent,
     DialogComponent,
-    AgendaComponent
+    AgendaComponent,
+    CalendarComponent
   ],
   imports: [
+    CommonModule,
+    NgbModalModule,
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
