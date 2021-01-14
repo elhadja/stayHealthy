@@ -1,36 +1,139 @@
 <div class="container mt-4">
-  
-  <div *ngIf="doctor" class="container" style="display: flex; justify-content: center">
-    <ngx-avatar  name={{doctor.firstName}}></ngx-avatar>
+  <div *ngIf="doctor" class="username">
+    <ngx-avatar name={{doctor.firstName}}></ngx-avatar>
+    <p><strong>Bienvenue Dr {{doctor.firstName}}</strong></p>
   </div>
-  <p *ngIf="doctor" style="text-align: center;"><strong><span style="font-size: 18px; font-family: Calibri, sans-serif;">Bienvenue Dr {{doctor.firstName}}</span></strong></p>
+  <div class="calendar">
+    <div class="row text-center">
+      <div class="col-md-4">
+        <div class="btn-group">
+          <div
+            class="btn btn-success"
+            mwlCalendarPreviousView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
+          >
+            Précédent
+          </div>
+          <div
+            class="btn btn-outline-secondary"
+            mwlCalendarToday
+            [(viewDate)]="viewDate"
+          >
+            Aujourd'hui
+          </div>
+          <div
+            class="btn btn-success"
+            mwlCalendarNextView
+            [view]="view"
+            [(viewDate)]="viewDate"
+            (viewDateChange)="closeOpenMonthViewDay()"
+          >
+            Suivant
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <h3>
+          {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:weekStartsOn }}
+        </h3>
+      </div>
+      <div class="col-md-4">
+        <div class="btn-group">
+          <div
+            class="btn btn-success"
+            (click)="setView(CalendarView.Month)"
+            [class.active]="view === CalendarView.Month"
+          >
+            Mois
+          </div>
+          <div
+            class="btn btn-success"
+            (click)="setView(CalendarView.Week)"
+            [class.active]="view === CalendarView.Week"
+          >
+            Semaine
+          </div>
+          <div
+            class="btn btn-success"
+            (click)="setView(CalendarView.Day)"
+            [class.active]="view === CalendarView.Day"
+          >
+            Jour
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
 
-
-  <h2>Calendrier en maintenance</h2>
-
-  <div>
-    <app-calendar></app-calendar>
+    <div [ngSwitch]="view">
+      <mwl-calendar-month-view
+        *ngSwitchCase="'month'"
+        [viewDate]="viewDate"
+        [events]="events"
+        [refresh]="refresh"
+        [locale]="locale"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+        [activeDayIsOpen]="activeDayIsOpen"
+        (dayClicked)="dayClicked($event.day)"
+      >
+      </mwl-calendar-month-view>
+      <mwl-calendar-week-view
+        *ngSwitchCase="'week'"
+        [viewDate]="viewDate"
+        [dayStartHour]="8"
+        [dayEndHour]="19"
+        [events]="events"
+        [refresh]="refresh"
+        [locale]="locale"
+        [weekStartsOn]="weekStartsOn"
+        [weekendDays]="weekendDays"
+      >
+      </mwl-calendar-week-view>
+      <mwl-calendar-day-view
+        *ngSwitchCase="'day'"
+        [viewDate]="viewDate"
+        [dayStartHour]="8"
+        [dayEndHour]="19"
+        [events]="events"
+        [refresh]="refresh"
+        [locale]="locale"
+      >
+      </mwl-calendar-day-view>
+    </div>
   </div>
 
-  <!-- <img style="position: absolute; left: 0; bottom: 0;" src="assets/files/doctors.png"> -->
+  <form class="m-4 text-center" [formGroup]="slotForm" (ngSubmit)="slotForm.valid && onSubmit()">
+    <mat-form-field class="mr-4" appearance="outline">
+      <mat-label>Choisissez une date</mat-label>
+      <input matInput formControlName="date"
+             [min]="viewDate"
+             [matDatepickerFilter]="sundayFilter"
+             [matDatepicker]="picker" required>
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('date')}}</mat-error>
+    </mat-form-field>
+
+    <mat-form-field class="time" appearance="outline">
+      <mat-label>hh</mat-label>
+      <mat-select formControlName="hour" required>
+        <mat-option *ngFor="let h of hours" value="{{h}}">{{h}} h</mat-option>
+      </mat-select>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('hour')}}</mat-error>
+    </mat-form-field> :
+
+    <mat-form-field class="time mr-4" appearance="outline">
+      <mat-label>mm</mat-label>
+      <mat-select formControlName="minute" required>
+        <mat-option *ngFor="let m of minutes" value="{{m}}">{{m}} mn</mat-option>
+      </mat-select>
+      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('minute')}}</mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" type="submit">Ajouter un créneau</button>
+    <mat-error *ngIf="slotFormError !== ''">{{slotFormError}}</mat-error>
+  </form>
 </div>
-
-<style>
-  /*
-  Limited in width,
-  useful with grow mode proportional
-  or grow mode mixed
-*/
-.wrapper-horizontally-limited {
-  width: 500px;
-}
- 
-/*
-  Limited in height,
-  useful with grow mode stretch
-*/
-.wrapper-vertically-limited {
-  width: 100%;
-  height: 500px;
-}
-</style>
