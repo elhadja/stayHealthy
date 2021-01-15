@@ -2,16 +2,40 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { ObjectId } = require("mongodb");
 
+const Slot = require("../models/slot");
+
 exports.deleteUser = (req, res, UserModel) => {
     UserModel.deleteOne({ _id: req.params.id })
-        .then((response) => {
-            if (response.deletedCount === 1) 
+        .then(async (response) => {
+            console.log("model: ", UserModel.collection.collectionName);
+            if (response.deletedCount === 1) {
+                if (UserModel.collection.collectionName === "patients")
+                    await cancelPatientAppoitment(req.params.id);
+                else
+                    await deleteDoctorSlots(req.params.id);
                 res.status(200).json({ message: "user deleted !", response: response});
+            }
             else
                 res.status(404).json({ error: "user not found", response: response });
         })
         .catch(error => res.status(404).json({ error: error.message }));
 };
+
+async function deleteDoctorSlots(doctorId) {
+    const res = await Slot.deleteMany({
+        doctorId: doctorId
+    });
+    console.log("res: ", res);
+}
+
+async function cancelPatientAppoitment(patientId) {
+    const res = await Slot.updateMany(
+        { patientId: patientId },
+        { $unset: {patientId: ""} }
+    );
+    console.log("patientId: ", res);
+    console.log("res: ", res);
+}
 
 exports.signin = (req, res, UserModel) => {
     UserModel.findOne({email: req.body.email})
