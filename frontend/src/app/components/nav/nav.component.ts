@@ -46,6 +46,8 @@ export class NavComponent {
   }
 
   disconnect(): void {
+    this.tools.showSearchForm();
+    this.patient.removeMarkers();
     // clear authorization and profile
     this.tools.reset();
     this.tools.openSnackBar('Déconnecté');

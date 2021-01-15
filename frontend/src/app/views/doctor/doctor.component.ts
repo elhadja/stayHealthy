@@ -17,7 +17,8 @@ import {
   CalendarDateFormatter,
   DAYS_OF_WEEK,
   CalendarView,
-  CalendarEventTitleFormatter, CalendarEventAction
+  CalendarEventTitleFormatter,
+  CalendarEventAction
 } from 'angular-calendar';
 
 @Component({

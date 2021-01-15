@@ -37,21 +37,19 @@ export class AgendaComponent implements OnInit {
     }
   }
 
-  extractData(slots: Slot[], user: DoctorService|PatientService): void{
+  extractData(slots: Slot[], doctorService: DoctorService): void{
     for (const slot of slots) {
       let userId = 'undefined';
       if (this.profile === 'patient') {
         userId = slot.doctorId;
-      } else if (this.profile === 'doctor') {
-        userId = slot.patientId;
       } else {
         return;
       }
-      user.get(userId).subscribe(
-        userObj => {
-          const fullName = this.tools.getFullName(userObj);
+      doctorService.get(userId).subscribe(
+        doctor => {
+          const fullName = this.tools.getFullName(doctor);
           const date = this.tools.displayDateHour(slot);
-          const fullAddress = this.tools.getFullAddress(userObj);
+          const fullAddress = this.tools.getFullAddress(doctor);
           const appointment = {
             id: slot._id,
             name: fullName,

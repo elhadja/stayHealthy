@@ -6,30 +6,116 @@
     <p><b>Email:</b> {{doctor.email}}</p>
     <p><b>Téléphone:</b> {{doctor.tel}}</p>
 
-    <p><b>Tarification</b></p>
-    <ul *ngFor="let price of doctor.prices">
-      <li>{{price.description}} : {{price.price}} €</li>
-    </ul>
+    <div class="" *ngIf="doctor.prices.length > 0">
+      <p><b>Tarification</b></p>
+      <ul *ngFor="let price of doctor.prices">
+        <li>{{price.description}} : {{price.price}} €</li>
+      </ul>
+    </div>
 
-    <p><b>Moyens de paiements</b></p>
-    <ul *ngFor="let payment of doctor.meansOfPayment">
-      <li>{{payment}}</li>
-    </ul>
+    <div *ngIf="doctor.meansOfPayment.length > 0">
+      <p><b>Moyens de paiements</b></p>
+      <ul *ngFor="let payment of doctor.meansOfPayment">
+        <li>{{payment}}</li>
+      </ul>
+    </div>
 
-    <p><b>Diplômes obtenus</b></p>
-    <ul *ngFor="let diploma of doctor.diplomas">
-      <li>{{diploma}}</li>
-    </ul>
+    <div class="" *ngIf="doctor.diplomas.length > 0">
+      <p><b>Diplômes obtenus</b></p>
+      <ul *ngFor="let diploma of doctor.diplomas">
+        <li>{{diploma}}</li>
+      </ul>
+    </div>
 
     <p><b>Disponibilités</b></p>
-    <mat-list *ngFor="let slot of slots">
-      <mat-list-item>{{this.tools.displayDateHour(slot)}}</mat-list-item>
-      <div class="cancel" (click)="book(slot)">
-        <button mat-mini-fab color="primary" >
-          <mat-icon>event_available</mat-icon>
-        </button>
+    <div class="calendar mb-4">
+      <div class="row text-center">
+        <div class="col-md-6">
+          <div class="btn-group">
+            <div
+              class="btn btn-success btn-sm"
+              mwlCalendarPreviousView
+              [view]="view"
+              [(viewDate)]="viewDate"
+            >
+              Précédent
+            </div>
+            <div
+              class="btn btn-outline-secondary btn-sm"
+              mwlCalendarToday
+              [(viewDate)]="viewDate"
+            >
+              Aujourd'hui
+            </div>
+            <div
+              class="btn btn-success btn-sm"
+              mwlCalendarNextView
+              [view]="view"
+              [(viewDate)]="viewDate"
+            >
+              Suivant
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h3>
+            {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:weekStartsOn }}
+          </h3>
+        </div>
       </div>
-      <mat-divider></mat-divider>
-    </mat-list>
+      <br/>
+
+      <div [ngSwitch]="view">
+        <mwl-calendar-week-view
+          *ngSwitchCase="'week'"
+          [viewDate]="viewDate"
+          [dayStartHour]="8"
+          [dayEndHour]="19"
+          [events]="events"
+          [refresh]="refresh"
+          [locale]="locale"
+          [weekStartsOn]="weekStartsOn"
+          [weekendDays]="weekendDays"
+          (eventClicked)="book($event)"
+        >
+        </mwl-calendar-week-view>
+      </div>
+
+      <br>
+      <div class="row text-center">
+        <div class="col-md-6">
+          <div class="btn-group">
+            <div
+              class="btn btn-success btn-sm"
+              mwlCalendarPreviousView
+              [view]="view"
+              [(viewDate)]="viewDate"
+            >
+              Précédent
+            </div>
+            <div
+              class="btn btn-outline-secondary btn-sm"
+              mwlCalendarToday
+              [(viewDate)]="viewDate"
+            >
+              Aujourd'hui
+            </div>
+            <div
+              class="btn btn-success btn-sm"
+              mwlCalendarNextView
+              [view]="view"
+              [(viewDate)]="viewDate"
+            >
+              Suivant
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <h3>
+            {{ viewDate | calendarDate:(view + 'ViewTitle'):locale:weekStartsOn }}
+          </h3>
+        </div>
+      </div>
+    </div>
   </mat-card-content>
 </mat-card>
