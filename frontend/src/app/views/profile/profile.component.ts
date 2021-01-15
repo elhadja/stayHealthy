@@ -23,6 +23,7 @@ export class ProfileComponent implements OnInit {
   profile = 'undefined';
   private userId = 'undefined';
   updateForm!: FormGroup;
+  addressForm!: FormGroup;
 
   diplomas: string[] = [];
   prices: string[] = [];
@@ -36,19 +37,22 @@ export class ProfileComponent implements OnInit {
     this.tools.profile.subscribe(profile => this.profile = profile);
     this.tools.userId.subscribe(userId => this.userId = userId);
 
+    this.addressForm = this.fb.group({
+      road: ['', Validators.required],
+      postalCode: ['', [Validators.required, Validators.pattern('[0-9]*'),
+        Validators.minLength(5), Validators.maxLength(5)]],
+      city: ['', [Validators.required, Validators.pattern('[a-zA-Z]*')]],
+    });
+
     this.updateForm =  this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2)]],
-      lastName: ['', [Validators.required, Validators.minLength(2)]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z]*')]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z]*')]],
       email: ['', [Validators.required, Validators.email]],
       tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
         Validators.minLength(10), Validators.maxLength(10)]],
       password: [''],
       password2: [''],
-      address:  this.fb.group({
-        road: ['', Validators.required],
-        postalCode: ['', Validators.required],
-        city: ['', Validators.required],
-      }),
+      address: this.addressForm,
     });
     if (this.profile === 'doctor') {
       this.updateForm.addControl('speciality', new FormControl('',
@@ -137,7 +141,7 @@ export class ProfileComponent implements OnInit {
 
   updateUser(user: DoctorService|PatientService, data: object): void {
     user.update(this.userId, data)
-      .subscribe(response => {
+      .subscribe(() => {
           this.tools.openSnackBar('Modification prise en compte');
           this.router.navigate(['/']);
         },
@@ -198,7 +202,7 @@ export class ProfileComponent implements OnInit {
       confirm => {
         if (confirm) {
           this.patient.delete(this.userId).subscribe(
-            response => {
+            () => {
               this.tools.openSnackBar('Compte supprimé!');
               this.tools.reset();
               this.router.navigate(['/']);
@@ -219,17 +223,43 @@ export class ProfileComponent implements OnInit {
   }
 
   getNameErrMessage(name: string): string {
-    return this.updateForm.getError('required', [name]) ? 'Champ Obligatoire' :
-      this.updateForm.getError('minlength', [name]) ? 'La longueur est invalide' :
-        '';
+    return this.updateForm.getError('required', [name]) ? 'ce champ Obligatoire. ' :
+      this.updateForm.getError('minlength', [name]) ? 'la longueur est invalide. ' :
+        this.updateForm.getError('pattern', [name]) ? 'un nom est composé de lettres uniquement. ' :
+          '';
   }
 
   getPhoneErrMessage(): string {
-    return this.updateForm.getError('required', ['tel']) ? 'Saisissez votre numéro de tél.' :
-      this.updateForm.getError('pattern', ['tel']) ? 'un numéro est composé de chiffres uniquement' :
-        this.updateForm.getError('minlength', ['tel']) ? 'un numéro est composé de 10 chiffres ' :
-          this.updateForm.getError('maxlength', ['tel']) ? 'un numéro est composé de 10 chiffres' :
+    return this.updateForm.getError('required', ['tel']) ? 'saisissez votre numéro de téléphone.' :
+      this.updateForm.getError('pattern', ['tel']) ? 'un numéro est composé de chiffres uniquement. ' :
+        this.updateForm.getError('minlength', ['tel']) ? 'un numéro est composé de 10 chiffres. ' :
+          this.updateForm.getError('maxlength', ['tel']) ? 'un numéro est composé de 10 chiffres. ' :
             '';
+  }
+
+  getPasswordErrMessage(): string {
+    return this.updateForm.getError('required', ['password']) ? 'Saisissez votre numéro de tél.' :
+      this.updateForm.getError('minlength', ['password']) ? '8 caractères au minimum. ' :
+        this.updateForm.getError('maxlength', ['password']) ? '32 caractères au maximum. ' :
+          '';
+  }
+
+  getPostalCodeErrMessage(): string {
+    return this.addressForm.getError('required', ['postalCode']) ? 'Saisissez votre code postal.' :
+      this.addressForm.getError('pattern', ['postalCode']) ? 'ce champ est composé de chiffres uniquement' :
+        this.addressForm.getError('minlength', ['postalCode']) ? 'ce champ est composé de 5 chiffres. ' :
+          this.addressForm.getError('maxlength', ['postalCode']) ? 'ce champ est composé de 5 chiffres.' :
+            '';
+  }
+
+  getCityErrMessage(): string {
+    return this.addressForm.getError('required', ['city']) ? 'Saisissez votre code postal.' :
+      this.addressForm.getError('pattern', ['city']) ? 'une ville est composé de lettres uniquement. ' :
+        '';
+  }
+
+  getRoadErrMessage(): string {
+    return this.addressForm.hasError('required', ['road']) ? 'ce champ Obligatoire. ' : '';
   }
 
   getSpecialityErrMessage(): string {
@@ -238,7 +268,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getFieldErrMessage(type: string): string {
-    return this.updateForm.hasError('required', [type]) ? 'Champ Obligatoire' : '';
+    return this.updateForm.hasError('required', [type]) ? 'ce champ Obligatoire' : '';
   }
 
   isEqualPwd(): boolean{
