@@ -7,7 +7,6 @@ const Slot = require("../models/slot");
 exports.deleteUser = (req, res, UserModel) => {
     UserModel.deleteOne({ _id: req.params.id })
         .then(async (response) => {
-            console.log("model: ", UserModel.collection.collectionName);
             if (response.deletedCount === 1) {
                 if (UserModel.collection.collectionName === "patients")
                     await cancelPatientAppoitment(req.params.id);
@@ -22,19 +21,16 @@ exports.deleteUser = (req, res, UserModel) => {
 };
 
 async function deleteDoctorSlots(doctorId) {
-    const res = await Slot.deleteMany({
+    await Slot.deleteMany({
         doctorId: doctorId
     });
-    console.log("res: ", res);
 }
 
 async function cancelPatientAppoitment(patientId) {
-    const res = await Slot.updateMany(
+    await Slot.updateMany(
         { patientId: patientId },
         { $unset: {patientId: ""} }
     );
-    console.log("patientId: ", res);
-    console.log("res: ", res);
 }
 
 exports.signin = (req, res, UserModel) => {
