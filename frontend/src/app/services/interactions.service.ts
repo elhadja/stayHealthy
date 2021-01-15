@@ -162,6 +162,41 @@ export class InteractionsService {
   }
 
   /**
+   * Convert from date in day of a week
+   * @param date to convert
+   */
+  getMonth(date: Date): string {
+    const month = date.getMonth();
+    if (month === 0) {
+      return 'Janvier';
+    } else if (month === 1) {
+      return 'Février';
+    } else if (month === 2) {
+      return 'Mars';
+    } else if (month === 3) {
+      return 'Avril';
+    } else if (month === 4) {
+      return 'Mai';
+    } else if (month === 5) {
+      return 'Juin';
+    } else if (month === 6) {
+      return 'Juillet';
+    } else if (month === 7) {
+      return 'Août';
+    } else if (month === 8) {
+      return 'Septembre';
+    } else if (month === 9) {
+      return 'Octobre';
+    } else if (month === 10) {
+      return 'Novembre';
+    } else if (month === 11) {
+      return 'Décembre';
+    } else {
+      return 'Erreur';
+    }
+  }
+
+  /**
    * Parse slot date and hour in string
    * @param slot from which to extract date and hour
    */
@@ -170,7 +205,7 @@ export class InteractionsService {
     const date = new Date();
     date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
     date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
-    dateHour =  `${this.getDay(date)} Le ${date.getDate()}/${date.getMonth()}/${date.getFullYear()} à ${date.getHours()}h`;
+    dateHour = `${this.getDay(date)} Le ${date.getDate()} ${this.getMonth(date)} ${date.getFullYear()} à ${date.getHours()}h`;
     if (date.getMinutes() !== 0) {
       dateHour += '' +  date.getMinutes();
     } else {

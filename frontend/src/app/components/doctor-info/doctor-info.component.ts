@@ -6,6 +6,7 @@ import {PatientService} from '../../services/patient.service';
 import {SlotService} from '../../services/slot.service';
 import {MatDialog} from '@angular/material/dialog';
 import {DialogComponent} from '../dialog/dialog.component';
+import {Router} from '@angular/router';
 import {Subject} from 'rxjs';
 import {CustomEventTitleFormatter, DateFormatterService} from '../../services/date-formatter.service';
 import {
@@ -49,8 +50,8 @@ export class DoctorInfoComponent implements OnInit {
   slots: Slot[] = [];
 
   constructor(private appointment: AppointmentService, private slotService: SlotService,
-              private patient: PatientService,
-              private dialog: MatDialog, public tools: InteractionsService) {  }
+              private patient: PatientService, private dialog: MatDialog,
+              public tools: InteractionsService, private router: Router) {  }
 
   ngOnInit(): void {
     this.slotService.getAllFromDoc(this.doctor._id).subscribe(
@@ -101,6 +102,7 @@ export class DoctorInfoComponent implements OnInit {
               this.tools.openSnackBar('Créneau réservez!');
               this.patient.removeMarkers();
               this.tools.showSearchForm();
+              this.router.navigate(['/agenda']);
             },
             error => this.tools.openSnackBar('Erreur lors de la réservation!')
           );
