@@ -10,7 +10,7 @@ import {SlotService} from '../../services/slot.service';
 import {DialogComponent} from '../../components/dialog/dialog.component';
 import {MatDialog} from '@angular/material/dialog';
 import {colors, Doctor, Slot} from '../../services/models.service';
-import {addMinutes, isSameDay, isSameMonth, isValid, isAfter} from 'date-fns';
+import {addMinutes, isSameDay, isSameMonth, isValid, isAfter, isSameHour} from 'date-fns';
 import {CustomEventTitleFormatter, DateFormatterService} from '../../services/date-formatter.service';
 import {
   CalendarEvent,
@@ -160,7 +160,7 @@ export class DoctorComponent implements OnInit {
           start: date,
           end: addMinutes(date, 30),
           actions: customActions,
-          id: slot._id
+          meta: {id: slot._id}
         };
     this.events.push(customEvent);
   }
@@ -175,6 +175,13 @@ export class DoctorComponent implements OnInit {
     if (!isValid(date) || !isAfter(date, this.viewDate)) {
       this.slotFormError = 'créneau situé dans le passé ou date invalide';
       return;
+    }
+    // Check for event duplication
+    for (const event of this.events) {
+      if (isSameDay(event.start, date) && isSameHour(event.start, date) && isSameHour(event.start, date)) {
+        this.slotFormError = 'créneau déjà existant';
+        return;
+      }
     }
 
     // remove unwanted fields
@@ -216,7 +223,7 @@ export class DoctorComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       confirm => {
         if (confirm) {
-          this.appointment.update(event.id as string).subscribe(
+          this.appointment.update(event.meta.id).subscribe(
             response => {
               this.tools.openSnackBar('Rendez-vous annulé!');
               this.slots = [];
@@ -230,15 +237,23 @@ export class DoctorComponent implements OnInit {
   }
 
   onDelete(event: CalendarEvent): void {
-    // Remove the event from the calendar
-    this.events = this.events.filter((iEvent) => iEvent !== event);
-    // Remove the slot from database
-    this.slotService.delete(event.id as string).subscribe(
-      () => {
-        this.tools.openSnackBar('Créneau supprimé!');
-        this.refresh.next();
-      }
-    );
+    const dialogRef = this.dialog.open(DialogComponent,
+      {width: '270px', data: 'Annulez ce Rendez-vous?'});
+    dialogRef.afterClosed().subscribe(
+      confirm => {
+        if (confirm) {
+          // Remove the event from the calendar
+          this.events = this.events.filter((iEvent) => iEvent !== event);
+          // Remove the slot from database
+          this.slotService.delete(event.meta.id).subscribe(
+            () => {
+              this.tools.openSnackBar('Créneau supprimé!');
+              this.refresh.next();
+            },
+            error => this.tools.openSnackBar('Erreur lors de la suppression!')
+          );
+        }
+      });
   }
 
   sundayFilter = (d: Date | null): boolean => {

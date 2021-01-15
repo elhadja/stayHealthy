@@ -7,7 +7,10 @@
   <div class="results" *ngFor="let doctor of doctors">
     <app-doctor-card [doctor]="doctor" (click)="getDoctorInfo(doctor)"></app-doctor-card>
   </div>
-    <p class="no-result" *ngIf="doctors.length <= 0">Aucun résultat</p>
+  <div class="no-result" *ngIf="doctors.length <= 0">
+    <p class="m-4">Aucun résultat</p>
+    <img src="assets/files/undraw_people_search_wctu.png">
+  </div>
 </div>
 
 <app-doctor-info *ngIf="showDoctorInfo" [doctor]="doctorInfo"></app-doctor-info>

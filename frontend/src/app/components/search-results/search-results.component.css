@@ -19,7 +19,11 @@ app-doctor-card {
 }
 
 .no-result {
-  background-color: #b5b4b4;
+  background-color: #fff;
   text-align: center;
-  margin: 50px;
+  margin: 5%;
+}
+
+img {
+  width: 100%;
 }

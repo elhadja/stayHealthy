@@ -85,7 +85,7 @@ export class DoctorInfoComponent implements OnInit {
         start: date,
         end: addMinutes(date, 30),
         actions: [],
-        id: slot._id
+        meta: {id: slot._id}
       };
     this.events.push(customEvent);
   }
@@ -96,7 +96,7 @@ export class DoctorInfoComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       confirm => {
         if (confirm) {
-          this.appointment.create(event.id as string).subscribe(
+          this.appointment.create(event.meta.id).subscribe(
             () => {
               this.tools.openSnackBar('Créneau réservez!');
               this.patient.removeMarkers();
