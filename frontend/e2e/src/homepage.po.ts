@@ -35,12 +35,29 @@ export class StayHealthyPage {
 
   async clickSignUpButton(): Promise<string> {
     // click the home page sign up button
-    const button = element(by.className('signin-btn'));
-    button.click();
-    // tslint:disable-next-line:only-arrow-functions typedef
-    const urlChanged = function() {
-      // tslint:disable-next-line:only-arrow-functions typedef
-      return browser.getCurrentUrl().then(function(url) {
+    const button = browser.driver.findElement(by.className('signin-btn'));
+    button.click().then( () => {
+      browser.waitForAngular();
+    });
+
+    const urlChanged = () => {
+      return browser.getCurrentUrl().then( url => {
+        return url;
+      });
+    };
+
+    return urlChanged().then((value) => value);
+  }
+
+  async clickLoginButton(): Promise<string> {
+    // click the home page sign up button
+    const button = browser.driver.findElement(by.className('login-btn'));
+    button.click().then( () => {
+      browser.waitForAngular();
+    });
+
+    const urlChanged = () => {
+      return browser.getCurrentUrl().then( url => {
         return url;
       });
     };

@@ -30,14 +30,19 @@ describe('StayHealthy Home Page Test', () => {
     expect(await page.getSignUpButton()).toEqual('S\'enregistrer');
   });
 
-  it('should click on sign in button then redirect to signin page', async () => {
+  it('should click on sign in button then render signin page', async () => {
     await page.navigateTo();
-    expect(await page.clickSignUpButton()).toEqual('http://localhost:4200/');
+    expect(await page.clickSignUpButton()).toContain('signup');
   });
 
-  it('should get log in button', async () => {
+  it('should check if log in button exist', async () => {
     await page.navigateTo();
     expect(await page.getLoginButton()).toEqual('Se connecter');
+  });
+
+  it('should click on log in button then render login page', async () => {
+    await page.navigateTo();
+    expect(await page.clickLoginButton()).toContain('login');
   });
 
 

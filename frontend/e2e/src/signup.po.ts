@@ -1,13 +1,12 @@
-import { browser, element, by, Key } from 'protractor'
+import { browser, element, by } from 'protractor';
 
 export class SignUpPage {
-    navigateTo() {
+    async navigateTo(): Promise<unknown> {
         return browser.get('/signin');
     }
 
-    sendRegisterName() {
-        let randomString = Math.random().toString(36).substr(2, 7);
-        element(by.className('firstName-input')).sendKeys('protractor'+randomString);
-        browser.pause;
+    async sendRegisterName(): Promise<void> {
+        const randomString = Math.random().toString(36).substr(2, 7);
+        element(by.className('firstName-input')).sendKeys('protractor' + randomString);
     }
 }
