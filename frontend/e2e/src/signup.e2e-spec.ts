@@ -1,7 +1,7 @@
 import { SignUpPage } from './signup.po';
 import { browser, WebDriver } from 'protractor';
 
-describe('StayHealty SignUp Page Fill', function(){
+describe('StayHealty SignUp Page Test', () => {
     let page: SignUpPage;
 
     beforeEach(() => {
@@ -11,5 +11,5 @@ describe('StayHealty SignUp Page Fill', function(){
     it('Should fill first name input element', () => {
         page.navigateTo();
         page.sendRegisterName();
-    })
-})
+    });
+});
