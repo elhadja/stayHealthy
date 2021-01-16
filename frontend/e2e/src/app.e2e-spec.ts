@@ -1,17 +1,48 @@
-import { AppPage } from './app.po';
+import { StayHealthyPage } from './app.po';
 import { browser, logging } from 'protractor';
+import { protractor } from 'protractor/built/ptor';
 
-describe('workspace-project App', () => {
-  let page: AppPage;
+describe('stayhealthy App', () => {
+  let page: StayHealthyPage;
 
   beforeEach(() => {
-    page = new AppPage();
+    page = new StayHealthyPage();
+  });
+  // Test Home Page Elements
+  
+  it('should display the home page heading saying StayHealthy', async () => {
+    await page.navigateTo();
+    expect(await page.getHeadingText()).toEqual('StayHealthy');
   });
 
-  it('should display welcome message', async () => {
+  it('should display the home page title saying StayHealthy', async () => {
     await page.navigateTo();
-    expect(await page.getTitleText()).toEqual('frontend app is running!');
+    expect(await page.getTitleText()).toEqual('StayHealthy');
   });
+
+  it('should display the home page message', async () => {
+    await page.navigateTo();
+    expect(await page.getHomeMessage()).toEqual('Trouvez un Professionnel de santé et gérez vos rendez-vous facilement');
+  });
+
+  it('should check if sign in button exist', async () => {
+    await page.navigateTo();
+    expect(await page.getSignUpButton()).toEqual("S'enregistrer");
+  });
+
+  it('should click on sign in button then redirect to signin page', async () => {
+    await page.navigateTo();
+    expect(await page.clickSignUpButton()).toEqual("http://localhost:4200/");
+  });
+  
+  it('should get log in button', async () => {
+    await page.navigateTo();
+    expect(await page.getLoginButton()).toEqual("Se connecter");
+  });
+
+
+
+  
 
   afterEach(async () => {
     // Assert that there are no errors emitted from the browser
