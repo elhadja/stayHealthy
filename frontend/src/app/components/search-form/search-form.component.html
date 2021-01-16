@@ -17,7 +17,6 @@
         <mat-option value="orl">ORL</mat-option>
         <mat-option value="osteopathe">Ostéopathe</mat-option>
       </mat-select>
-      <mat-error *ngIf="speciality.invalid">{{getSpecErrMessage()}}</mat-error>
     </mat-form-field>
 
     <mat-form-field appearance="outline" class="mx-2">
@@ -29,7 +28,6 @@
       <mat-label>Localité</mat-label>
       <input matInput placeholder="Bordeaux, Talence, ..."
              [formControl]="location" [matAutocomplete]="auto">
-      <mat-error *ngIf="location.invalid">{{getLocationErrMessage()}}</mat-error>
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let city of cities | async" [value]="city">
           {{city.name}} | {{city.code}}

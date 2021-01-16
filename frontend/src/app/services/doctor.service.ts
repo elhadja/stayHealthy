@@ -37,6 +37,10 @@ export class DoctorService {
     return this.http.get(`${baseUrl}/doctor?name=${name}`, {headers: this.headers});
   }
 
+  getDoctorsBySpeciality(name: string): Observable<any> {
+    return this.http.get(`${baseUrl}/doctor?speciality=${name}`, {headers: this.headers});
+  }
+
   get(id: string): Observable<any> {
     return this.http.get(`${baseUrl}/doctor/${id}`, {headers: this.headers});
   }
