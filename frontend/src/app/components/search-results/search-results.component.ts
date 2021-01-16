@@ -25,7 +25,7 @@ export class SearchResultsComponent implements OnInit {
     });
     this.doctors = this.doctor.getSearchResult();
     if (this.doctors.length > 0) {
-      this.patient.setCenter(this.tools.getFullAddress(this.doctors[0]));
+      this.patient.setCenter(this.tools.getFullAddress(this.doctors[0]), 13, 0.05);
       this.addResultsToMap(this.doctors);
     }
   }
@@ -38,7 +38,7 @@ export class SearchResultsComponent implements OnInit {
       this.patient.removeMarkers();
       this.tools.showSearchResult();
       if (this.doctors.length > 0) {
-        this.patient.setCenter(this.tools.getFullAddress(this.doctors[0]));
+        this.patient.setCenter(this.tools.getFullAddress(this.doctors[0]), 13, 0.05);
         this.addResultsToMap(this.doctors);
       }
     } else if (this.showDoctorList) {
@@ -51,7 +51,7 @@ export class SearchResultsComponent implements OnInit {
     this.doctorInfo = doctorInfo;
     const address = this.tools.getFullAddress(this.doctorInfo);
     this.patient.removeMarkers();
-    this.patient.setCenter(address);
+    this.patient.setCenter(address, 15, 0.01);
     this.patient.addMarker(address);
     this.tools.showDoctorInfo();
   }

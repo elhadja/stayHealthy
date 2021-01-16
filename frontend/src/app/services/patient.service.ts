@@ -57,15 +57,15 @@ export class PatientService {
 
   }
 
-  setCenter(address: string): void {
+  setCenter(address: string, zoom: number, shift: number): void {
     const position: Coordinate = {x: 0, y: 0};
     this.getLocation(address).subscribe(
       response => {
         position.x = response[0].lat;
-        position.y = response[0].lon;
+        position.y = parseFloat(response[0].lon) - shift;
 
         // @ts-ignore
-        this.map.panTo(new L.LatLng(position.x, position.y));
+        this.map.setView([position.x, position.y], zoom);
       });
   }
 

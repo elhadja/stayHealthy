@@ -15,11 +15,11 @@ app-search-form {
 }
 
 app-search-results {
-  height: 70%;
-  width: 35%;
+  height: 80%;
+  width: 45%;
 
   position: absolute;
-  top: 20%;
+  top: 10%;
   left: 5%;
 
   border-radius: 15px;

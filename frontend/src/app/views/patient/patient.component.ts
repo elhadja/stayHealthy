@@ -13,7 +13,7 @@ import {PatientService} from '../../services/patient.service';
 export class PatientComponent implements OnInit {
   private profile: string | undefined;
 
-  showSearchForm = false;
+  showSearchForm = true;
   showSearchResult = false;
 
   constructor(private patient: PatientService, private tools: InteractionsService, private router: Router) {

@@ -4,6 +4,7 @@ import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {InteractionsService} from '../../services/interactions.service';
 import {DoctorService} from '../../services/doctor.service';
+import {PatientService} from '../../services/patient.service';
 import {City, Doctor} from '../../services/models.service';
 import {HttpClient} from '@angular/common/http';
 
@@ -14,8 +15,8 @@ import {HttpClient} from '@angular/common/http';
 })
 export class SearchFormComponent implements OnInit {
 
-  speciality = new FormControl('', Validators.required);
-  location = new FormControl('', Validators.required);
+  speciality = new FormControl('');
+  location = new FormControl('');
   name = new FormControl();
 
   searchFailed = '';
@@ -23,7 +24,12 @@ export class SearchFormComponent implements OnInit {
   matchList: City[] = [];
   cities!: Observable<City[]>;
 
-  constructor(private doctor: DoctorService, private tools: InteractionsService, private httpClient: HttpClient) {  }
+  private userId!: string;
+
+  constructor(private doctor: DoctorService, private patient: PatientService,
+              private tools: InteractionsService, private httpClient: HttpClient) {
+    this.tools.userId.subscribe(userId => this.userId = userId);
+  }
 
   ngOnInit(): void {
     this.cities = this.location.valueChanges
@@ -77,41 +83,53 @@ export class SearchFormComponent implements OnInit {
    * Called function on submission
    */
   onSubmit(): void {
-    if ((this.speciality.value !== '' && this.location.value.code) && !this.name.value) {
+    if (this.location.value.code && this.speciality.value === '' && !this.name.value) {
+      // search by location
       this.doctor.getDoctorsByLocation( this.location.value.code).subscribe(
         results => {
-          const searchResult: Doctor[] = [];
-          for (const result of results){
-            if (result.speciality === this.speciality.value) {
-              searchResult.push(result);
-            }
-          }
-          this.doctor.setSearchResult(searchResult);
+          this.doctor.setSearchResult(results);
           this.tools.showSearchResult();
         });
-    } else if (!(this.speciality.value !== '' || this.location.value.code) && this.name.value) {
+    } else if (this.speciality.value !== '' && !this.location.value.code && !this.name.value) {
+      // search by speciality and location of the patient
+      this.patient.get(this.userId).subscribe(
+        user => {
+          this.searchByLocationAndSpec('' + user.address.postalCode, this.speciality.value);
+        }
+      );
+    } else if (this.speciality.value !== '' && this.location.value.code && !this.name.value) {
+      // search by speciality and location
+      this.searchByLocationAndSpec(this.location.value.code, this.speciality.value);
+    } else if (this.name.value && !(this.speciality.value !== '' || this.location.value.code)) {
+      // search by name
       this.doctor.getDoctorsByName(this.name.value).subscribe(
         results => {
           this.doctor.setSearchResult(results);
           this.tools.showSearchResult();
         });
     } else {
-      this.searchFailed = 'erreur dans le formulaire! Recherche uniquement par localité ou par nom';
+      this.searchFailed = 'erreur dans le formulaire!';
     }
   }
 
   /**
-   * Error message for speciality field
+   * search a doctor by location and speciality
+   * @param location location in which to search for
+   * @param speciality speciality to search for
    */
-  getSpecErrMessage(): string {
-    return this.speciality.hasError('required') ? 'Précisez la spécialité' : '';
-  }
-
-  /**
-   * Error message for location field
-   */
-  getLocationErrMessage(): string {
-    return this.location.hasError('required') ? 'Précisez la zone de recherche' : '';
+  searchByLocationAndSpec(location: string, speciality: string): void {
+    this.doctor.getDoctorsByLocation(location).subscribe(
+      results => {
+        const searchResult: Doctor[] = [];
+        // filter by speciality
+        for (const result of results){
+          if (result.speciality === speciality) {
+            searchResult.push(result);
+          }
+        }
+        this.doctor.setSearchResult(searchResult);
+        this.tools.showSearchResult();
+      });
   }
 
 }

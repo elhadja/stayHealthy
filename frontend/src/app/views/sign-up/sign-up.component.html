@@ -27,7 +27,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Mot de Passe</mat-label>
         <input matInput [type]="hide1 ? 'password' : 'text'"matInput formControlName="password" placeholder="Entrer votre mot de passe"  required>
-        <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('password')}}</mat-error>
+        <mat-error *ngIf="signupForm.invalid">{{getPasswordErrMessage()}}</mat-error>
         <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide1">
           <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
@@ -54,20 +54,20 @@
         <mat-form-field appearance="outline">
           <mat-label>Numéro et rue</mat-label>
           <textarea matInput formControlName="road" placeholder="Entrer votre Adresse"  required></textarea>
-          <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('road')}}</mat-error>
+          <mat-error *ngIf="addressForm.invalid">{{getRoadErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
 
         <mat-form-field appearance="outline" class="ml-2">
           <mat-label>Code Postal</mat-label>
           <input matInput formControlName="postalCode" placeholder="Entrer votre code postal"  required>
-          <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('postalCode')}}</mat-error>
+          <mat-error *ngIf="addressForm.invalid">{{getPostalCodeErrMessage()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="ml-2">
           <mat-label>Commune</mat-label>
           <input matInput formControlName="city" placeholder="Entrer le nom de votre ville"  required>
-          <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('city')}}</mat-error>
+          <mat-error *ngIf="addressForm.invalid">{{getCityErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
       </div>
