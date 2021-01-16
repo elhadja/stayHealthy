@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {FormControl, Validators} from '@angular/forms';
+import {FormControl} from '@angular/forms';
 import {Observable} from 'rxjs';
 import {map, startWith} from 'rxjs/operators';
 import {InteractionsService} from '../../services/interactions.service';
@@ -100,13 +100,24 @@ export class SearchFormComponent implements OnInit {
     } else if (this.speciality.value !== '' && this.location.value.code && !this.name.value) {
       // search by speciality and location
       this.searchByLocationAndSpec(this.location.value.code, this.speciality.value);
-    } else if (this.name.value && !(this.speciality.value !== '' || this.location.value.code)) {
-      // search by name
-      this.doctor.getDoctorsByName(this.name.value).subscribe(
-        results => {
-          this.doctor.setSearchResult(results);
-          this.tools.showSearchResult();
-        });
+    } else if (this.name.value && this.speciality.value === '' && !this.location.value.code) {
+      // search by name and location of the patient
+      this.patient.get(this.userId).subscribe(
+        user => this.searchByLocationAndName('' + user.address.postalCode, this.name.value)
+      );
+    } else if (this.name.value && this.speciality.value === '' && this.location.value.code) {
+      // search by name and location
+      this.searchByLocationAndName(this.location.value.code, this.name.value);
+    } else if (this.name.value && this.speciality.value !== '' && !this.location.value.code) {
+      // search by name, location pat and speciality
+      this.patient.get(this.userId).subscribe(
+        user => {
+          this.searchByLocNameSpec('' + user.address.postalCode, this.name.value, this.speciality.value);
+        }
+      );
+    } else if (this.name.value && this.speciality.value !== '' && this.location.value.code) {
+      // search by name, location and speciality
+      this.searchByLocNameSpec(this.location.value.code, this.name.value, this.speciality.value);
     } else {
       this.searchFailed = 'erreur dans le formulaire!';
     }
@@ -114,7 +125,7 @@ export class SearchFormComponent implements OnInit {
 
   /**
    * search a doctor by location and speciality
-   * @param location location in which to search for
+   * @param location location in which to search a doctor
    * @param speciality speciality to search for
    */
   searchByLocationAndSpec(location: string, speciality: string): void {
@@ -124,6 +135,48 @@ export class SearchFormComponent implements OnInit {
         // filter by speciality
         for (const result of results){
           if (result.speciality === speciality) {
+            searchResult.push(result);
+          }
+        }
+        this.doctor.setSearchResult(searchResult);
+        this.tools.showSearchResult();
+      });
+  }
+
+  /**
+   * search a doctor by location and name
+   * @param location location in which to search for
+   * @param name name to search for
+   */
+  searchByLocationAndName(location: string, name: string): void {
+    this.doctor.getDoctorsByName(name).subscribe(
+      results => {
+        const searchResult: Doctor[] = [];
+        // filter by location
+        for (const result of results){
+          if ('' + result.address.postalCode === location) {
+            searchResult.push(result);
+          }
+        }
+        this.doctor.setSearchResult(searchResult);
+        this.tools.showSearchResult();
+      });
+  }
+
+  /**
+   * search a doctor by location and name
+   * @param location location in which to search for
+   * @param name name to search for
+   * @param speciality speciality to search for
+   */
+  searchByLocNameSpec(location: string, name: string, speciality: string): void {
+    this.doctor.getDoctorsByName(name).subscribe(
+      results => {
+        const searchResult: Doctor[] = [];
+        // filter by location
+        for (const result of results){
+          if ('' + result.address.postalCode === location &&
+            result.speciality === speciality) {
             searchResult.push(result);
           }
         }

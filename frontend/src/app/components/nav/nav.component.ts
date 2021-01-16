@@ -13,7 +13,6 @@ import {Doctor, Patient} from '../../services/models.service';
   styleUrls: ['./nav.component.css']
 })
 export class NavComponent {
-  user!: Doctor|Patient;
   private profile = 'undefined';
   private userId = 'undefined';
 
@@ -28,21 +27,6 @@ export class NavComponent {
 
     this.tools.profile.subscribe(profile => this.profile = profile);
     this.tools.userId.subscribe(userId => this.userId = userId);
-
-    console.log(this.profile);
-    if (this.profile === 'doctor') {
-      this.getUser(this.doctor);
-    } else if (this.profile === 'patient') {
-      this.getUser(this.patient);
-    }
-  }
-
-  getUser(userService: DoctorService|PatientService): void{
-    userService.get(this.userId).subscribe(
-      response => {
-        this.user = response;
-        console.log(response);
-      });
   }
 
   disconnect(): void {
