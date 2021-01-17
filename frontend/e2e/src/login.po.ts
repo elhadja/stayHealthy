@@ -29,7 +29,7 @@ export class LogInPage {
   }
 
   async clickLoginButton(): Promise<void> {
-    browser.driver.findElement(by.css('button[type="submit"]')).submit().then( () => {
+    browser.driver.findElement(by.css('button[type="submit"]')).click().then( () => {
       browser.waitForAngular();
     });
   }

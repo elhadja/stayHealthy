@@ -35,7 +35,7 @@ describe('StayHealthy Login Page Test', () => {
     await page.clickLoginButton();
     await browser.sleep(500);
 
-    browser.getCurrentUrl().then(url => expect(url).toContain('doctor'));
+    await browser.getCurrentUrl().then(url => expect(url).toContain('doctor'));
   });
 
   it('Should notify for invalid email', async () => {
@@ -47,7 +47,7 @@ describe('StayHealthy Login Page Test', () => {
     await browser.sleep(500);
 
     expect(await page.getEmailError()).toBeTruthy();
-    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
   });
 
   it('Should notify required fields', async () => {
@@ -59,7 +59,7 @@ describe('StayHealthy Login Page Test', () => {
     expect(await page.getEmailError()).toBeTruthy();
     expect(await page.getPasswordError()).toBeTruthy();
     expect(await page.getProfileError()).toBeTruthy();
-    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
   });
 
   it('Should notify for failed connection v1', async () => {
@@ -67,12 +67,13 @@ describe('StayHealthy Login Page Test', () => {
     await page.putEmail('t@email.com');
     await page.putPassword('mdp');
     await page.selectProfile('patient');
+    await browser.sleep(500);
 
     await page.clickLoginButton();
     await browser.sleep(500);
 
     expect(await page.getLoginError()).toBeTruthy();
-    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
   });
 
   it('Should notify for failed connection v2', async () => {
@@ -80,11 +81,12 @@ describe('StayHealthy Login Page Test', () => {
     await page.putEmail('test@email.com');
     await page.putPassword('m');
     await page.selectProfile('patient');
+    await browser.sleep(500);
 
     await page.clickLoginButton();
     await browser.sleep(500);
 
     expect(await page.getLoginError()).toBeTruthy();
-    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
   });
 });
