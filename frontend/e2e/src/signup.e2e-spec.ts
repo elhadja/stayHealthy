@@ -1,14 +1,14 @@
 import { SignUpPage } from './signup.po';
 import {browser, logging, WebDriver} from 'protractor';
 
-describe('StayHealty SignUp Page Test', () => {
+describe('StayHealty Registration Test', () => {
     let page: SignUpPage;
 
     beforeEach(() => {
         page = new SignUpPage();
     });
 
-    it('Should fill register form input elements then register fake patient', async () => {
+    it('should register a fake patient', async () => {
 
       await page.navigateTo();
       await page.sendRegisterFirstName();
@@ -21,6 +21,13 @@ describe('StayHealty SignUp Page Test', () => {
       await page.sendRegisterPostCode();
       await page.sendRegisterCity();
       await page.generatePatientProfil();
+      await browser.sleep(3000);
+    });
+
+    it('should check if the fake patient registration succeed ', async () => {
+
+      expect(await page.checkRegistration()).toEqual('Inscription réussie');
+
     });
 
     afterEach(async () => {

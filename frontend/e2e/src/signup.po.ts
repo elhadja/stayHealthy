@@ -48,4 +48,8 @@ export class SignUpPage {
       } ).then(() => element(by.className('register-btn')).click() );
       return true;
     }
+
+    async checkRegistration(): Promise<string> {
+      return browser.findElement(by.css('simple-snack-bar')).getText();
+    }
 }
