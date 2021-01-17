@@ -9,3 +9,8 @@ img {
   margin-top: 2%;
   text-align: center;
 }
+
+.signin-btn, .login-btn {
+  color: white;
+  font-weight: bold;
+}

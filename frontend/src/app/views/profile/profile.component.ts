@@ -201,19 +201,28 @@ export class ProfileComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       confirm => {
         if (confirm) {
-          this.patient.delete(this.userId).subscribe(
-            () => {
-              this.tools.openSnackBar('Compte supprimé!');
-              this.tools.reset();
-              this.router.navigate(['/']);
-            },
-            error => {
-              this.tools.openSnackBar('Erreur lors de la suppression!');
-              console.log(error);
-            }
-          );
+          if (this.profile === 'doctor') {
+            this.deleteUser(this.patient);
+          } else if (this.profile === 'patient'){
+            this.deleteUser(this.patient);
+          } else {
+            this.tools.openSnackBar('Erreur lors de la suppression! Profil Inconnu');
+          }
         }
       });
+  }
+  deleteUser(user: DoctorService|PatientService): void {
+    user.delete(this.userId).subscribe(
+      () => {
+        this.tools.openSnackBar('Compte supprimé!');
+        this.tools.reset();
+        this.router.navigate(['/']);
+      },
+      error => {
+        this.tools.openSnackBar('Erreur lors de la suppression!');
+        console.log(error);
+      }
+    );
   }
 
   getEmailErrMessage(): string {
