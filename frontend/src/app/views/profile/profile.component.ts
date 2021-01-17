@@ -202,7 +202,7 @@ export class ProfileComponent implements OnInit {
       confirm => {
         if (confirm) {
           if (this.profile === 'doctor') {
-            this.deleteUser(this.patient);
+            this.deleteUser(this.doctor);
           } else if (this.profile === 'patient'){
             this.deleteUser(this.patient);
           } else {
