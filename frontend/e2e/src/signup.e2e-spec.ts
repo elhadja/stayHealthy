@@ -1,15 +1,63 @@
 import { SignUpPage } from './signup.po';
-import { browser, WebDriver } from 'protractor';
+import {browser, logging, WebDriver} from 'protractor';
 
-describe('StayHealty SignUp Page Test', () => {
+describe('StayHealty Registration Test', () => {
     let page: SignUpPage;
 
     beforeEach(() => {
         page = new SignUpPage();
     });
 
-    it('Should fill first name input element', () => {
-        page.navigateTo();
-        page.sendRegisterName();
+    it('should register a fake patient', async () => {
+
+      await page.navigateTo();
+      await page.sendRegisterFirstName();
+      await page.sendRegisterLastName();
+      await page.sendRegisterEmail();
+      await page.sendRegisterPassword();
+      await page.sendRegisterVerifyPassword();
+      await page.sendRegisterPhoneNumber();
+      await page.sendRegisterStreetNumber();
+      await page.sendRegisterPostCode();
+      await page.sendRegisterCity();
+      await page.generatePatientProfil();
+      await browser.sleep(3000);
+    });
+
+    it('should check if the fake patient registration succeed ', async () => {
+
+      expect(await page.checkRegistration()).toEqual('Inscription réussie');
+
+    });
+
+    it('should register a fake doctor', async () => {
+
+      await page.navigateTo();
+      await page.sendRegisterFirstName();
+      await page.sendRegisterLastName();
+      await page.sendRegisterEmail();
+      await page.sendRegisterPassword();
+      await page.sendRegisterVerifyPassword();
+      await page.sendRegisterPhoneNumber();
+      await page.sendRegisterStreetNumber();
+      await page.sendRegisterPostCode();
+      await page.sendRegisterCity();
+      await page.generateDoctorProfil();
+      await browser.sleep(3000);
+    });
+
+    it('should check if the fake doctor registration succeed ', async () => {
+
+      expect(await page.checkRegistration()).toEqual('Inscription réussie');
+
+    });
+
+    afterEach(async () => {
+      // Assert that there are no errors emitted from the browser
+      const logs = await browser.manage().logs().get(logging.Type.BROWSER);
+      const value = expect(logs).not.toContain(jasmine.objectContaining({
+        level: logging.Level.SEVERE,
+      } as logging.Entry));
     });
 });
+
