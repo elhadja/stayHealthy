@@ -49,6 +49,14 @@ export class SignUpPage {
       return true;
     }
 
+  async generateDoctorProfil(): Promise<boolean> {
+    const button = element(by.id('profil-form'));
+    button.click().then( () => {
+      element(by.id('doctor-profil')).click();
+    } ).then(() => element(by.className('register-btn')).click() );
+    return true;
+  }
+
     async checkRegistration(): Promise<string> {
       return browser.findElement(by.css('simple-snack-bar')).getText();
     }
