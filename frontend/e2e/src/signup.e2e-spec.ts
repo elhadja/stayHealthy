@@ -21,7 +21,7 @@ describe('StayHealty Registration Test', () => {
       await page.sendRegisterPostCode();
       await page.sendRegisterCity();
       await page.generatePatientProfil();
-      await browser.sleep(3000);
+      await browser.sleep(2000);
     });
 
     it('should check if the fake patient registration succeed ', async () => {
@@ -43,7 +43,7 @@ describe('StayHealty Registration Test', () => {
       await page.sendRegisterPostCode();
       await page.sendRegisterCity();
       await page.generateDoctorProfil();
-      await browser.sleep(3000);
+      await browser.sleep(2000);
     });
 
     it('should check if the fake doctor registration succeed ', async () => {
