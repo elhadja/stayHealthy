@@ -55,7 +55,7 @@ describe('StayHealty Registration Test', () => {
     afterEach(async () => {
       // Assert that there are no errors emitted from the browser
       const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-      const value = expect(logs).not.toContain(jasmine.objectContaining({
+      expect(logs).not.toContain(jasmine.objectContaining({
         level: logging.Level.SEVERE,
       } as logging.Entry));
     });
