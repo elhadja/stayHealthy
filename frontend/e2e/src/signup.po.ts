@@ -1,4 +1,4 @@
-import {browser, element, by, WebDriver, ExpectedConditions} from 'protractor';
+import {browser, element, by} from 'protractor';
 
 export class SignUpPage {
     async navigateTo(): Promise<unknown> {

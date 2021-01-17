@@ -9,14 +9,14 @@
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
         <input matInput type="email" placeholder="Entrer votre email"  formControlName="email" required>
-        <mat-error *ngIf="loginForm.invalid">{{getEmailErrMessage()}}</mat-error>
+        <mat-error id="email-err" *ngIf="loginForm.invalid">{{getEmailErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="outline">
         <mat-label>Mot de Passe</mat-label>
         <input matInput type="password" placeholder="Entrer votre mot de passe"  formControlName="password" required>
-        <mat-error *ngIf="loginForm.invalid">{{getPasswordErrMessage()}}</mat-error>
+        <mat-error id="password-err" *ngIf="loginForm.invalid">{{getPasswordErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
@@ -26,13 +26,13 @@
           <mat-option value="patient">Patient</mat-option>
           <mat-option value="doctor">Médecin</mat-option>
         </mat-select>
-        <mat-error *ngIf="loginForm.invalid">{{getProfileErrMessage()}}</mat-error>
+        <mat-error id="profile-err" *ngIf="loginForm.invalid">{{getProfileErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
       <div class="ml-2 mt-4">
         <button mat-raised-button color="primary" type="submit" style="color: white; font-weight: bold; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;">Se connecter</button>
-        <mat-error *ngIf="loginFailed !== ''">{{loginFailed}}</mat-error>
+        <mat-error id="login-err" *ngIf="loginFailed !== ''">{{loginFailed}}</mat-error>
       </div>
 
     </form>

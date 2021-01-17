@@ -37,12 +37,54 @@ describe('StayHealthy Login Page Test', () => {
 
     browser.getCurrentUrl().then(url => expect(url).toContain('doctor'));
   });
-});
 
-afterEach(async () => {
-  // Assert that there are no errors emitted from the browser
-  const logs = await browser.manage().logs().get(logging.Type.BROWSER);
-  expect(logs).not.toContain(jasmine.objectContaining({
-    level: logging.Level.SEVERE,
-  } as logging.Entry));
+  it('Should notify for invalid email', async () => {
+    await page.navigateTo();
+    await page.putEmail('tést@email.com');
+    await browser.sleep(500);
+
+    await page.clickLoginButton();
+    await browser.sleep(500);
+
+    expect(await page.getEmailError()).toBeTruthy();
+    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+  });
+
+  it('Should notify required fields', async () => {
+    await page.navigateTo();
+
+    await page.clickLoginButton();
+    await browser.sleep(500);
+
+    expect(await page.getEmailError()).toBeTruthy();
+    expect(await page.getPasswordError()).toBeTruthy();
+    expect(await page.getProfileError()).toBeTruthy();
+    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+  });
+
+  it('Should notify for failed connection v1', async () => {
+    await page.navigateTo();
+    await page.putEmail('t@email.com');
+    await page.putPassword('mdp');
+    await page.selectProfile('patient');
+
+    await page.clickLoginButton();
+    await browser.sleep(500);
+
+    expect(await page.getLoginError()).toBeTruthy();
+    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+  });
+
+  it('Should notify for failed connection v2', async () => {
+    await page.navigateTo();
+    await page.putEmail('test@email.com');
+    await page.putPassword('m');
+    await page.selectProfile('patient');
+
+    await page.clickLoginButton();
+    await browser.sleep(500);
+
+    expect(await page.getLoginError()).toBeTruthy();
+    browser.getCurrentUrl().then(url => expect(url).toContain('login'));
+  });
 });
