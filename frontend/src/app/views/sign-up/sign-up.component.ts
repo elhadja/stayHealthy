@@ -46,7 +46,6 @@ export class SignUpComponent implements OnInit {
     } else if (profile === 'doctor') {
       this.createUser(this.doctor, data);
     } else {
-      console.error('user unspecified from sign-up form!!');
       this.signupFailed = 'profil non renseigné';
     }
   }
@@ -55,11 +54,9 @@ export class SignUpComponent implements OnInit {
     user.create(data)
       .subscribe(response => {
           this.tools.openSnackBar('Inscription réussie');
-          console.log(response);
           this.router.navigate(['/login']);
         },
-        error => {
-          console.error(error);
+        () => {
           this.signupFailed = 'Inscription échouée';
         });
   }

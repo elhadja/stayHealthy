@@ -108,7 +108,6 @@ export class DoctorComponent implements OnInit {
       );
     } else {
       this.router.navigate(['/']);
-      console.log('you don\'t have profile to access to this page');
     }
   }
 
@@ -209,8 +208,7 @@ export class DoctorComponent implements OnInit {
           this.slotFormError = 'Créneau existant!';
         }
       },
-      error => {
-        console.error(error);
+      () => {
         this.tools.openSnackBar('Une erreur est survenu lors de la création!');
         this.slotFormError = 'Impossible de créer le créneau!';
       }

@@ -17,12 +17,11 @@ export class HomepageComponent implements OnInit {
     this.tools.profile.subscribe(profile => this.profile = profile);
     if (this.profile === 'patient') {
       this.router.navigate(['/patient']);
-      console.log('redirected to patient page');
-    } else if (this.profile === 'doctor') {
+      return;
+    }
+    if (this.profile === 'doctor') {
       this.router.navigate(['/doctor']);
-      console.log('redirected to doctor page');
-    } else {
-      console.log('disconnected');
+      return;
     }
   }
 

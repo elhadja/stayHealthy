@@ -66,7 +66,6 @@ export class ProfileComponent implements OnInit {
       this.fillForm(this.doctor);
     } else {
       this.router.navigate(['/']);
-      console.log('unauthorized user cannot access to this page');
     }
   }
 
@@ -134,7 +133,6 @@ export class ProfileComponent implements OnInit {
       data = Object.assign(data, {meansOfPayment: this.meansOfPayment});
       this.updateUser(this.doctor, data);
     } else {
-      console.error('user profile unspecified!');
       this.updateFailed = 'profil utilisateur inconnu';
     }
   }
@@ -145,8 +143,7 @@ export class ProfileComponent implements OnInit {
           this.tools.openSnackBar('Modification prise en compte');
           this.router.navigate(['/']);
         },
-        error => {
-          console.error(error);
+        () => {
           this.updateFailed = 'Modification échouée';
         });
   }
@@ -218,9 +215,8 @@ export class ProfileComponent implements OnInit {
         this.tools.reset();
         this.router.navigate(['/']);
       },
-      error => {
+      () => {
         this.tools.openSnackBar('Erreur lors de la suppression!');
-        console.log(error);
       }
     );
   }

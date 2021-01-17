@@ -54,7 +54,6 @@ export class LogInComponent implements OnInit {
   loginUser(user: DoctorService|PatientService, data: object, profile: string): void {
     user.login(data)
       .subscribe(response => {
-          console.log('connected');
           this.tools.setAuthorization(response.token);
           this.tools.setUserId(response.id);
           if (profile === this.tools.DOCTOR) {
@@ -67,8 +66,7 @@ export class LogInComponent implements OnInit {
             this.router.navigate(['/unknown']);
           }
         },
-        error => {
-          console.error(error);
+        () => {
           this.loginFailed = 'mot de passe ou email incorrect';
         });
   }

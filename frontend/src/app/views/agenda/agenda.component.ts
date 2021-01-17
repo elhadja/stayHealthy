@@ -33,7 +33,6 @@ export class AgendaComponent implements OnInit {
         results => this.extractData(results, this.doctor));
     } else {
       this.router.navigate(['/']);
-      console.log('unauthorized user cannot access to this page');
     }
   }
 

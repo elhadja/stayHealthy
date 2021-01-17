@@ -30,7 +30,6 @@ export class PatientComponent implements OnInit {
     this.tools.profile.subscribe(profile => this.profile = profile);
     if (this.profile !== 'patient') {
       this.router.navigate(['/']);
-      console.log('unauthorized user cannot access to this page');
     }
 
     this.patient.initMap();
