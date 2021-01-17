@@ -6,27 +6,27 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Nom</mat-label>
-        <input class="firstName-input" matInput formControlName="firstName" placeholder="Entrer votre nom"  required>
+        <input id="firstName-input" matInput formControlName="firstName" placeholder="Entrer votre nom"  required>
         <mat-error *ngIf="signupForm.invalid">{{getNameErrMessage('firstName')}}</mat-error>
       </mat-form-field>
 
       <mat-form-field appearance="outline" class="ml-2">
         <mat-label>Prénom</mat-label>
-        <input class="lastName-input" matInput formControlName="lastName" placeholder="Entrer votre prénom"  required>
+        <input id="lastName-input" matInput formControlName="lastName" placeholder="Entrer votre prénom"  required>
         <mat-error *ngIf="signupForm.invalid">{{getNameErrMessage('lastName')}}</mat-error>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="outline">
         <mat-label>Email</mat-label>
-        <input class="email-input" matInput formControlName="email" placeholder="Entrer votre email" type="email"  required>
+        <input id="email-input" matInput formControlName="email" placeholder="Entrer votre email" type="email"  required>
         <mat-error *ngIf="signupForm.invalid">{{getEmailErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
 
       <mat-form-field appearance="outline">
         <mat-label>Mot de Passe</mat-label>
-        <input class="password-input" matInput [type]="hide1 ? 'password' : 'text'"matInput formControlName="password" placeholder="Entrer votre mot de passe"  required>
+        <input id="password-input" matInput [type]="hide1 ? 'password' : 'text'"matInput formControlName="password" placeholder="Entrer votre mot de passe"  required>
         <mat-error *ngIf="signupForm.invalid">{{getPasswordErrMessage()}}</mat-error>
         <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide1">
           <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -35,7 +35,7 @@
 
       <mat-form-field appearance="outline" class="ml-2">
         <mat-label>Retaper Mot de Passe</mat-label>
-        <input class="check-password-input" matInput [type]="hide2 ? 'password' : 'text'"matInput formControlName="password2" placeholder="Retaper votre mot de passe"  required>
+        <input id="check-password-input" matInput [type]="hide2 ? 'password' : 'text'"matInput formControlName="password2" placeholder="Retaper votre mot de passe"  required>
         <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('password2')}}</mat-error>
         <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide2">
           <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -45,7 +45,7 @@
 
       <mat-form-field appearance="outline">
         <mat-label>Téléphone</mat-label>
-        <input class="phone-number-input" matInput formControlName="tel" placeholder="Entrer votre numéro de téléphone"  required>
+        <input id="phone-number-input" matInput formControlName="tel" placeholder="Entrer votre numéro de téléphone"  required>
         <mat-error *ngIf="signupForm.invalid">{{getPhoneErrMessage()}}</mat-error>
       </mat-form-field>
       <br>
@@ -53,37 +53,37 @@
       <div formGroupName="address">
         <mat-form-field appearance="outline">
           <mat-label>Numéro et rue</mat-label>
-          <textarea class="street-number-input" matInput formControlName="road" placeholder="Entrer votre Adresse"  required></textarea>
+          <textarea id="street-number-input" matInput formControlName="road" placeholder="Entrer votre Adresse"  required></textarea>
           <mat-error *ngIf="addressForm.invalid">{{getRoadErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
 
         <mat-form-field appearance="outline" class="ml-2">
           <mat-label>Code Postal</mat-label>
-          <input class="post-code-input" matInput formControlName="postalCode" placeholder="Entrer votre code postal"  required>
+          <input id="post-code-input" matInput formControlName="postalCode" placeholder="Entrer votre code postal"  required>
           <mat-error *ngIf="addressForm.invalid">{{getPostalCodeErrMessage()}}</mat-error>
         </mat-form-field>
 
         <mat-form-field appearance="outline" class="ml-2">
           <mat-label>Commune</mat-label>
-          <input class="city-input" matInput formControlName="city" placeholder="Entrer le nom de votre ville"  required>
+          <input id="city-input" matInput formControlName="city" placeholder="Entrer le nom de votre ville"  required>
           <mat-error *ngIf="addressForm.invalid">{{getCityErrMessage()}}</mat-error>
         </mat-form-field>
         <br>
       </div>
 
-      <mat-form-field appearance="outline">
+      <mat-form-field id="profil-form" appearance="outline">
         <mat-label>Profil</mat-label>
         <mat-select formControlName="profile"  required>
-          <mat-option class="patient-profil-input" value="patient">Patient</mat-option>
-          <mat-option class="doctor-profil-input" value="doctor">Médecin</mat-option>
+          <mat-option id="patient-profil" value="patient">Patient</mat-option>
+          <mat-option id="doctor-profil" value="doctor">Médecin</mat-option>
         </mat-select>
         <mat-error *ngIf="signupForm.invalid">{{getFieldErrMessage('profile')}}</mat-error>
       </mat-form-field>
       <br>
 
       <div class="m-2 text-center">
-        <button mat-raised-button color="primary" type="submit">Enregistrer</button>
+        <button class="register-btn" mat-raised-button color="primary" type="submit">Enregistrer</button>
         <mat-error *ngIf="signupFailed !== ''">{{signupFailed}}</mat-error>
       </div>
     </form>
