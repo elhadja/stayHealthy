@@ -2,6 +2,9 @@
   <div *ngIf="doctor" class="username">
     <ngx-avatar name={{doctor.firstName}}></ngx-avatar>
     <p><strong>Bienvenue Dr {{doctor.firstName}}</strong></p>
+    <p class="text-danger" *ngIf="!doctor.speciality">
+      Mettez à jour votre profil pour être mieux référencé!
+    </p>
   </div>
   <div class="calendar">
     <div class="row text-center">
@@ -42,21 +45,21 @@
       <div class="col-md-4">
         <div class="btn-group">
           <div
-            class="btn btn-success"
+            class="btn btn-success month"
             (click)="setView(CalendarView.Month)"
             [class.active]="view === CalendarView.Month"
           >
             Mois
           </div>
           <div
-            class="btn btn-success"
+            class="btn btn-success week"
             (click)="setView(CalendarView.Week)"
             [class.active]="view === CalendarView.Week"
           >
             Semaine
           </div>
           <div
-            class="btn btn-success"
+            class="btn btn-success day"
             (click)="setView(CalendarView.Day)"
             [class.active]="view === CalendarView.Day"
           >
@@ -114,7 +117,7 @@
              [matDatepicker]="picker" required>
       <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
-      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('date')}}</mat-error>
+      <mat-error id="date-error" *ngIf="slotForm.invalid">{{getFieldErrMessage('date')}}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="time" appearance="outline">
@@ -122,7 +125,7 @@
       <mat-select formControlName="hour" required>
         <mat-option *ngFor="let h of hours" value="{{h}}">{{h}} h</mat-option>
       </mat-select>
-      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('hour')}}</mat-error>
+      <mat-error id="hour-error" *ngIf="slotForm.invalid">{{getFieldErrMessage('hour')}}</mat-error>
     </mat-form-field> :
 
     <mat-form-field class="time mr-4" appearance="outline">
@@ -130,10 +133,10 @@
       <mat-select formControlName="minute" required>
         <mat-option *ngFor="let m of minutes" value="{{m}}">{{m}} mn</mat-option>
       </mat-select>
-      <mat-error *ngIf="slotForm.invalid">{{getFieldErrMessage('minute')}}</mat-error>
+      <mat-error id="minute-error" *ngIf="slotForm.invalid">{{getFieldErrMessage('minute')}}</mat-error>
     </mat-form-field>
 
     <button mat-raised-button color="primary" type="submit">Ajouter un créneau</button>
-    <mat-error *ngIf="slotFormError !== ''">{{slotFormError}}</mat-error>
+    <mat-error id="save-error">{{slotFormError}}</mat-error>
   </form>
 </div>

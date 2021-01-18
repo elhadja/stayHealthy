@@ -84,7 +84,7 @@ export class InteractionsService {
    */
   openSnackBar(message: string): void{
     this.snackBar.open(message, '', {
-      duration: 2000,
+      duration: 20000,
       verticalPosition: 'top'
     });
   }
@@ -137,80 +137,25 @@ export class InteractionsService {
   }
 
   /**
-   * Convert from date in day of a week
-   * @param date to convert
-   */
-  getDay(date: Date): string {
-    const day = date.getDay();
-    if (day === 0) {
-      return 'Dimanche';
-    } else if (day === 1) {
-      return 'Lundi';
-    } else if (day === 2) {
-      return 'Mardi';
-    } else if (day === 3) {
-      return 'Mercredi';
-    } else if (day === 4) {
-      return 'Jeudi';
-    } else if (day === 5) {
-      return 'Vendredi';
-    } else if (day === 6) {
-      return 'Samedi';
-    } else {
-      return 'Erreur';
-    }
-  }
-
-  /**
-   * Convert from date in day of a week
-   * @param date to convert
-   */
-  getMonth(date: Date): string {
-    const month = date.getMonth();
-    if (month === 0) {
-      return 'Janvier';
-    } else if (month === 1) {
-      return 'Février';
-    } else if (month === 2) {
-      return 'Mars';
-    } else if (month === 3) {
-      return 'Avril';
-    } else if (month === 4) {
-      return 'Mai';
-    } else if (month === 5) {
-      return 'Juin';
-    } else if (month === 6) {
-      return 'Juillet';
-    } else if (month === 7) {
-      return 'Août';
-    } else if (month === 8) {
-      return 'Septembre';
-    } else if (month === 9) {
-      return 'Octobre';
-    } else if (month === 10) {
-      return 'Novembre';
-    } else if (month === 11) {
-      return 'Décembre';
-    } else {
-      return 'Erreur';
-    }
-  }
-
-  /**
    * Parse slot date and hour in string
    * @param slot from which to extract date and hour
    */
   displayDateHour(slot: Slot): string {
+    // Extract date from slot
     let dateHour = '';
     const date = new Date();
     date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
     date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
-    dateHour = `${this.getDay(date)} Le ${date.getDate()} ${this.getMonth(date)} ${date.getFullYear()} à ${date.getHours()}h`;
-    if (date.getMinutes() !== 0) {
-      dateHour += '' +  date.getMinutes();
-    } else {
-      dateHour += '00';
-    }
+    // conversion to string
+    const format = {
+      weekday: 'long',
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric'
+    };
+    dateHour = date.toLocaleDateString('fr-FR', format);
     return dateHour;
   }
 }

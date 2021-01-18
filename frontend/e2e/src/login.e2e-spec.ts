@@ -20,7 +20,6 @@ describe('StayHealthy Login Page Test', () => {
   });
 
   it('Should disconnect the user', async () => {
-
     await page.clickDisconnectButton();
     await browser.sleep(500);
 
