@@ -12,11 +12,11 @@ export class InteractionsService {
   DOCTOR = 'doctor';
 
   // user Observables
-  private tokenSubject = new BehaviorSubject<string>('undefined');
+  private tokenSubject = new BehaviorSubject<string>(this.getFromLocal('token'));
   token = this.tokenSubject.asObservable();
-  private profileSubject = new BehaviorSubject<string>('undefined');
+  private profileSubject = new BehaviorSubject<string>(this.getFromLocal('profile'));
   profile = this.profileSubject.asObservable();
-  private userIdSubject = new BehaviorSubject<string>('undefined');
+  private userIdSubject = new BehaviorSubject<string>(this.getFromLocal('userId'));
   userId = this.userIdSubject.asObservable();
 
   // search Observables
@@ -32,11 +32,21 @@ export class InteractionsService {
   constructor(private snackBar: MatSnackBar) { }
 
   /**
+   * Get a value by key from local storage
+   * @param key the key to search for
+   */
+  getFromLocal(key: string): string {
+    return localStorage.getItem(key) || 'undefined';
+  }
+
+  /**
    * Set authorization token
    * @param newToken the token to set
    */
   setAuthorization(newToken: string): void {
-    this.tokenSubject.next('Bearer ' + newToken);
+    const token = 'Bearer ' + newToken;
+    this.tokenSubject.next(token);
+    localStorage.setItem('token', token);
   }
 
   /**
@@ -45,6 +55,7 @@ export class InteractionsService {
    */
   setUserId(id: string): void {
     this.userIdSubject.next(id);
+    localStorage.setItem('userId', id);
   }
 
   /**
@@ -53,6 +64,7 @@ export class InteractionsService {
    */
   setProfile(newProfile: string): void {
     this.profileSubject.next(newProfile);
+    localStorage.setItem('profile', newProfile);
   }
 
   /**
@@ -84,7 +96,7 @@ export class InteractionsService {
    */
   openSnackBar(message: string): void{
     this.snackBar.open(message, '', {
-      duration: 20000,
+      duration: 2000,
       verticalPosition: 'top'
     });
   }
@@ -142,10 +154,10 @@ export class InteractionsService {
    */
   displayDateHour(slot: Slot): string {
     // Extract date from slot
-    let dateHour = '';
     const date = new Date();
     date.setFullYear(slot.date.yy, slot.date.mm, slot.date.jj);
     date.setHours(slot.startHour.hh, slot.startHour.mn, 0);
+
     // conversion to string
     const format = {
       weekday: 'long',
@@ -155,7 +167,6 @@ export class InteractionsService {
       hour: 'numeric',
       minute: 'numeric'
     };
-    dateHour = date.toLocaleDateString('fr-FR', format);
-    return dateHour;
+    return date.toLocaleDateString('fr-FR', format);
   }
 }
