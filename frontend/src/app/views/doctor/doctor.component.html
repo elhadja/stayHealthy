@@ -81,6 +81,7 @@
         [weekendDays]="weekendDays"
         [activeDayIsOpen]="activeDayIsOpen"
         (dayClicked)="dayClicked($event.day)"
+        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-month-view>
       <mwl-calendar-week-view
@@ -93,6 +94,7 @@
         [locale]="locale"
         [weekStartsOn]="weekStartsOn"
         [weekendDays]="weekendDays"
+        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-week-view>
       <mwl-calendar-day-view
@@ -103,6 +105,7 @@
         [events]="events"
         [refresh]="refresh"
         [locale]="locale"
+        (eventClicked)="eventClicked($event)"
       >
       </mwl-calendar-day-view>
     </div>
@@ -139,4 +142,19 @@
     <button mat-raised-button color="primary" type="submit">Ajouter un créneau</button>
     <mat-error id="save-error">{{slotFormError}}</mat-error>
   </form>
+
+  <ng-template #modalContent let-close="close">
+    <div class="modal-header container">
+      <h2 class="modal-title col-9">Détails du patient</h2>
+      <button type="button" class="close col-3 text-danger" (click)="close()">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+        <p><b>Nom:</b> {{ modalData?.firstName }}</p>
+        <p><b>Prénom:</b> {{ modalData?.lastName }}</p>
+        <p><b>Email:</b> {{ modalData?.email }}</p>
+        <p><b>Téléphone:</b> {{ modalData?.tel }}</p>
+    </div>
+  </ng-template>
 </div>

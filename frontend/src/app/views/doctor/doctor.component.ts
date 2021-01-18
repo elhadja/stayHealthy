@@ -1,4 +1,4 @@
-import {Component, OnInit, ChangeDetectionStrategy} from '@angular/core';
+import {Component, OnInit, ChangeDetectionStrategy, TemplateRef, ViewChild} from '@angular/core';
 import { InteractionsService } from '../../services/interactions.service';
 import { Router } from '@angular/router';
 import {Subject} from 'rxjs';
@@ -9,8 +9,8 @@ import {AppointmentService} from '../../services/appointment.service';
 import {SlotService} from '../../services/slot.service';
 import {DialogComponent} from '../../components/dialog/dialog.component';
 import {MatDialog} from '@angular/material/dialog';
-import {colors, Doctor, Slot} from '../../services/models.service';
-import {addMinutes, isSameDay, isSameMonth, isValid, isAfter, isSameHour} from 'date-fns';
+import {colors, Doctor, Patient, Slot} from '../../services/models.service';
+import {addMinutes, isSameDay, isSameMonth, isValid, isAfter, isSameHour, isSameMinute} from 'date-fns';
 import {CustomEventTitleFormatter, DateFormatterService} from '../../services/date-formatter.service';
 import {
   CalendarEvent,
@@ -20,6 +20,7 @@ import {
   CalendarEventTitleFormatter,
   CalendarEventAction
 } from 'angular-calendar';
+import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-doctor',
@@ -39,13 +40,14 @@ import {
 })
 
 export class DoctorComponent implements OnInit {
-
+  @ViewChild('modalContent', { static: true }) modalContent!: TemplateRef<any>;
 
   private profile = 'undefined';
   private userId = 'undefined';
   doctor!: Doctor;
   slotForm!: FormGroup;
   slotFormError = '';
+  modalData!: Patient;
 
   hours: number[] = [];
   minutes: number[] = [];
@@ -68,7 +70,7 @@ export class DoctorComponent implements OnInit {
 
   constructor(private doctorService: DoctorService, private patientService: PatientService,
               private slotService: SlotService, private tools: InteractionsService,
-              private router: Router, private fb: FormBuilder,
+              private router: Router, private fb: FormBuilder, private modal: NgbModal,
               private appointment: AppointmentService, private dialog: MatDialog) {
     // Init hours and minutes values for the form
     for (let h = 8; h < 20; h++) {
@@ -132,15 +134,12 @@ export class DoctorComponent implements OnInit {
           }
         }
       ];
+    const customMeta = {id: slot._id, patientId: ''};
 
 
     // customize appointment event
     if (slot.patientId !== undefined) {
       customTitle = 'réservé';
-      // this.patientService.get(slot.patientId).subscribe(
-      //   user => {
-      //     customTitle = this.tools.getFullName(user);
-      //   });
       customColor = colors.red;
       customActions.push({
         label: '<i class="fas fa-fw fa-pencil-alt"></i>',
@@ -149,6 +148,7 @@ export class DoctorComponent implements OnInit {
           this.onCancel(event);
         },
       });
+      customMeta.patientId = slot.patientId;
     }
 
     // Create the event and add it to the list
@@ -159,7 +159,7 @@ export class DoctorComponent implements OnInit {
           start: date,
           end: addMinutes(date, 30),
           actions: customActions,
-          meta: {id: slot._id}
+          meta: customMeta
         };
     this.events.push(customEvent);
   }
@@ -177,7 +177,7 @@ export class DoctorComponent implements OnInit {
     }
     // Check for event duplication
     for (const event of this.events) {
-      if (isSameDay(event.start, date) && isSameHour(event.start, date) && isSameHour(event.start, date)) {
+      if (isSameDay(event.start, date) && isSameHour(event.start, date) && isSameMinute(event.start, date)) {
         this.slotFormError = 'créneau déjà existant';
         return;
       }
@@ -217,21 +217,31 @@ export class DoctorComponent implements OnInit {
 
   onCancel(event: CalendarEvent): void {
     const dialogRef = this.dialog.open(DialogComponent,
-      {width: '270px', data: 'Annulez ce Rendez-vous?'});
+      {width: '270px', data: 'Annulez ce Rendez-vous? Avez-vous contacter le patient?'});
     dialogRef.afterClosed().subscribe(
       confirm => {
         if (confirm) {
           this.appointment.update(event.meta.id).subscribe(
-            response => {
+            () => {
               this.tools.openSnackBar('Rendez-vous annulé!');
               this.slots = [];
               this.events = [];
               this.ngOnInit();
             },
-            error => this.tools.openSnackBar('Erreur lors de l\'annulation!')
+            () => this.tools.openSnackBar('Erreur lors de l\'annulation!')
           );
         }
       });
+  }
+
+  eventClicked({ event }: { event: CalendarEvent }): void {
+    if (event.meta.patientId !== ''){
+      this.patientService.get(event.meta.patientId).subscribe(
+        user => {
+          this.modalData = user;
+          this.modal.open(this.modalContent, {size: 'sm'});
+        });
+    }
   }
 
   onDelete(event: CalendarEvent): void {
