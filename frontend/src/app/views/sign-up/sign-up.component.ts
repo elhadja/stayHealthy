@@ -83,7 +83,7 @@ export class SignUpComponent implements OnInit {
   }
 
   getPasswordErrMessage(): string {
-    return this.signupForm.getError('required', ['password']) ? 'Saisissez votre numéro de tél.' :
+    return this.signupForm.getError('required', ['password']) ? 'Saisissez votre mot de passe.' :
       this.signupForm.getError('minlength', ['password']) ? '8 caractères au minimum. ' :
       this.signupForm.getError('maxlength', ['password']) ? '32 caractères au maximum. ' :
         '';

@@ -16,12 +16,14 @@ import {MatDialog} from '@angular/material/dialog';
   styleUrls: ['./profile.component.css']
 })
 export class ProfileComponent implements OnInit {
-  hide1 = true;
-  hide2 = true;
   readonly separatorKeysCodes: number[] = [ENTER, COMMA];
   updateFailed = '';
   profile = 'undefined';
   private userId = 'undefined';
+  private userEmail = '';
+
+  hide1 = true;
+  hide2 = true;
   updateForm!: FormGroup;
   addressForm!: FormGroup;
 
@@ -41,16 +43,16 @@ export class ProfileComponent implements OnInit {
       road: ['', Validators.required],
       postalCode: ['', [Validators.required, Validators.pattern('[0-9]*'),
         Validators.minLength(5), Validators.maxLength(5)]],
-      city: ['', [Validators.required, Validators.pattern('[a-zA-Z]*')]],
+      city: ['', [Validators.required, Validators.pattern('[a-zA-Z ]*')]],
     });
 
     this.updateForm =  this.fb.group({
-      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z]*')]],
-      lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z]*')]],
+      firstName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z ]*')]],
+      lastName: ['', [Validators.required, Validators.minLength(2), Validators.pattern('[a-zA-Z ]*')]],
       email: ['', [Validators.required, Validators.email]],
       tel: ['', [Validators.required, Validators.pattern('[0-9]*'),
         Validators.minLength(10), Validators.maxLength(10)]],
-      password: [''],
+      password: ['', [Validators.minLength(8), Validators.maxLength(32)]],
       password2: [''],
       address: this.addressForm,
     });
@@ -85,6 +87,8 @@ export class ProfileComponent implements OnInit {
             postalCode: response.address.postalCode,
           },
         };
+        this.userEmail = data.email;
+        // Add specific fields for the doctor
         if (this.profile === 'doctor') {
           const speciality = {speciality : response.speciality};
           if (speciality.speciality === undefined) {
@@ -109,7 +113,6 @@ export class ProfileComponent implements OnInit {
     let data = {
       firstName: dataSubmitted.firstName,
       lastName: dataSubmitted.lastName,
-      email: dataSubmitted.email,
       tel: dataSubmitted.tel,
       address: {
         road: dataSubmitted.address.road,
@@ -117,8 +120,12 @@ export class ProfileComponent implements OnInit {
         postalCode: dataSubmitted.address.postalCode,
       },
     };
+    // add email field if the user want to set a new one
+    if (dataSubmitted.email !== this.userEmail) {
+      data = Object.assign(data, {email: dataSubmitted.email});
+    }
     // add password field if the user want to set a new one
-    if (dataSubmitted.password !== '') {
+    if (dataSubmitted.password !== '' && this.isEqualPwd()) {
       data = Object.assign(data, {password: dataSubmitted.password});
     }
     // Persist the data
@@ -208,6 +215,7 @@ export class ProfileComponent implements OnInit {
         }
       });
   }
+
   deleteUser(user: DoctorService|PatientService): void {
     user.delete(this.userId).subscribe(
       () => {
@@ -243,8 +251,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getPasswordErrMessage(): string {
-    return this.updateForm.getError('required', ['password']) ? 'Saisissez votre numéro de tél.' :
-      this.updateForm.getError('minlength', ['password']) ? '8 caractères au minimum. ' :
+    return this.updateForm.getError('minlength', ['password']) ? '8 caractères au minimum. ' :
         this.updateForm.getError('maxlength', ['password']) ? '32 caractères au maximum. ' :
           '';
   }
@@ -258,7 +265,7 @@ export class ProfileComponent implements OnInit {
   }
 
   getCityErrMessage(): string {
-    return this.addressForm.getError('required', ['city']) ? 'Saisissez votre code postal.' :
+    return this.addressForm.getError('required', ['city']) ? 'Saisissez votre ville.' :
       this.addressForm.getError('pattern', ['city']) ? 'une ville est composé de lettres uniquement. ' :
         '';
   }

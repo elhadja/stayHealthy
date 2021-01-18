@@ -28,7 +28,7 @@
       <mat-form-field appearance="outline">
         <mat-label>Nouveau Mot de Passe</mat-label>
         <input matInput [type]="hide1 ? 'password' : 'text'"matInput formControlName="password" placeholder="Entrer votre mot de passe">
-        <mat-error *ngIf="updateForm.invalid">{{getFieldErrMessage('password1')}}</mat-error>
+        <mat-error *ngIf="updateForm.invalid">{{getPasswordErrMessage()}}</mat-error>
         <button mat-icon-button matSuffix (click)="hide1 = !hide1" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide1">
           <mat-icon>{{hide1 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
