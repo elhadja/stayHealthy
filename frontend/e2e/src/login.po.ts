@@ -23,8 +23,8 @@ export class LogInPage {
   }
 
   async fillForm(profile: string): Promise<void> {
-    await this.putEmail('test@email.com');
-    await this.putPassword('mdp');
+    await this.putEmail('login@email.com');
+    await this.putPassword('motdepasse');
     await this.selectProfile(profile);
   }
 

@@ -5,9 +5,9 @@ export class DoctorPage {
 
   async init(): Promise<void> {
     await browser.get('/login');
-    const email = 'test@email.com';
+    const email = 'login@email.com';
     await element(by.css('input[formControlName="email"]')).sendKeys(email);
-    const password = 'mdp';
+    const password = 'motdepasse';
     await element(by.css('input[formControlName="password"]')).sendKeys(password);
     element(by.tagName('mat-select')).click().then( () => {
       browser.waitForAngular();
