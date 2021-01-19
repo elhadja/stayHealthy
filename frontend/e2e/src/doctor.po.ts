@@ -50,7 +50,6 @@ export class DoctorPage {
     } else {
       date = addDays(date, 1);
     }
-    date.setHours(8, 0, 0);
     // Convert date to string
     const dateStr = date.toLocaleDateString('fr-FR',
       {day: 'numeric', month: 'long', year: 'numeric'});

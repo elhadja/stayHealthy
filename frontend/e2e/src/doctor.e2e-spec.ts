@@ -28,11 +28,7 @@ describe('StayHealthy Doctor Page Test', () => {
     await page.clickSaveButton();
     await browser.sleep(1000);
 
-    expect(await page.checkForCreation()).toEqual('Le créneau a été crée!');
-  });
-
-  it('Should notify slot duplication', async () => {
-    await page.fillForm();
+    // slot created now try to duplicate it
     await page.clickSaveButton();
     await browser.sleep(500);
 
