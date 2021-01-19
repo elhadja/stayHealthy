@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { DoctorService } from '../../services/doctor.service';
 import { PatientService } from '../../services/patient.service';
-import { Router } from '@angular/router';
 import { InteractionsService } from '../../services/interactions.service';
 import {FormBuilder, Validators} from '@angular/forms';
 
@@ -11,17 +10,22 @@ import {FormBuilder, Validators} from '@angular/forms';
   styleUrls: ['./log-in.component.css']
 })
 export class LogInComponent implements OnInit {
+  private profile = 'undefined';
 
-  constructor(private tools: InteractionsService, private patient: PatientService,
-              private doctor: DoctorService, private router: Router, private fb: FormBuilder) {}
-
+  loginFailed = '';
   loginForm =  this.fb.group({
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
     profile: ['', Validators.required],
   });
 
-  loginFailed = '';
+  constructor(private tools: InteractionsService, private patient: PatientService,
+              private doctor: DoctorService, private fb: FormBuilder) {}
+
+  ngOnInit(): void {
+    // Check the user profile to grant access
+    this.tools.redirectToHomePage();
+  }
 
   onSubmit(): void {
     this.loginFailed = '';
@@ -56,22 +60,11 @@ export class LogInComponent implements OnInit {
       .subscribe(response => {
           this.tools.setAuthorization(response.token);
           this.tools.setUserId(response.id);
-          if (profile === this.tools.DOCTOR) {
-            this.tools.setProfile(profile);
-            this.router.navigate(['/doctor']);
-          } else if (profile === this.tools.PATIENT) {
-            this.tools.setProfile(profile);
-            this.router.navigate(['/patient']);
-          } else {
-            this.router.navigate(['/unknown']);
-          }
+          this.tools.setProfile(profile);
+          this.tools.redirectToHomePage();
         },
         () => {
           this.loginFailed = 'mot de passe ou email incorrect';
         });
   }
-
-  ngOnInit(): void {
-  }
-
 }

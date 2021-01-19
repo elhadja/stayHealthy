@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import {Doctor, Patient, Slot} from './models.service';
+import {Router} from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
@@ -29,7 +30,7 @@ export class InteractionsService {
   private doctorInfoStatus = new BehaviorSubject<boolean>(true);
   doctorInfoStatusObs = this.doctorInfoStatus.asObservable();
 
-  constructor(private snackBar: MatSnackBar) { }
+  constructor(private snackBar: MatSnackBar, private router: Router) { }
 
   /**
    * Get a value by key from local storage
@@ -74,6 +75,20 @@ export class InteractionsService {
     this.setAuthorization('undefined');
     this.setUserId('undefined');
     this.setProfile('undefined');
+  }
+
+  /**
+   * Redirect to the right homepage
+   */
+  redirectToHomePage(): void {
+    if (this.profileSubject.value === 'patient') {
+      this.router.navigate(['/patient']);
+      return;
+    }
+    if (this.profileSubject.value === 'doctor') {
+      this.router.navigate(['/doctor']);
+      return;
+    }
   }
 
   /**

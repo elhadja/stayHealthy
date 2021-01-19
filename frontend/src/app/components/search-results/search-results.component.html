@@ -3,8 +3,8 @@
   <mat-icon>arrow_back</mat-icon>
 </button>
 
-<div class="resultList" *ngIf="showDoctorList" >
-  <div class="results" *ngFor="let doctor of doctors">
+<div class="results" *ngIf="showDoctorList" >
+  <div *ngFor="let doctor of doctors">
     <app-doctor-card [doctor]="doctor" (click)="getDoctorInfo(doctor)"></app-doctor-card>
   </div>
   <div class="no-result" *ngIf="doctors.length <= 0">
