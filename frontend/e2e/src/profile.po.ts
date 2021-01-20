@@ -31,15 +31,15 @@ export class ProfilePage {
   }
 
   async sendRegisterStreetNumber(): Promise<void> {
-    element(by.id('street-number-input')).sendKeys('3');
+    element(by.id('street-number-input')).sendKeys('3 Rue Louis Jouvet');
   }
 
   async sendRegisterPostCode(): Promise<void> {
-    element(by.id('post-code-input')).sendKeys('33000');
+    element(by.id('post-code-input')).sendKeys('36000');
   }
 
   async sendRegisterCity(): Promise<void> {
-    element(by.id('city-input')).sendKeys('Bordeaux');
+    element(by.id('city-input')).sendKeys('Pessac');
   }
 
   async generatePatientProfil(): Promise<boolean> {
@@ -122,16 +122,16 @@ export class ProfilePage {
 
   async updateStreetNumber(): Promise<void> {
     await element(by.css('textarea')).clear();
-    await element(by.css('textarea')).sendKeys('3');
+    await element(by.css('textarea')).sendKeys('3 rue louis jouvet');
   }
 
   async updatePostCode(): Promise<void> {
     await element(by.css('input[formControlName="postalCode"]')).clear();
-    await element(by.css('input[formControlName="postalCode"]')).sendKeys('34000');
+    await element(by.css('input[formControlName="postalCode"]')).sendKeys('33600');
   }
   async updateCity(): Promise<void> {
     await element(by.css('input[formControlName="city"]')).clear();
-    await element(by.css('input[formControlName="city"]')).sendKeys('toulouse');
+    await element(by.css('input[formControlName="city"]')).sendKeys('pessac');
   }
 
   async updateProfil(): Promise<void> {

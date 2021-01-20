@@ -37,6 +37,11 @@ export class SignUpComponent implements OnInit {
   constructor(private patient: PatientService, private doctor: DoctorService,
               private tools: InteractionsService, private router: Router, private fb: FormBuilder) {}
 
+  ngOnInit(): void {
+    // Check the user profile to grant access
+    this.tools.redirectToHomePage();
+  }
+
   onSubmit(): void {
     this.signupFailed = '';
     const data = this.signupForm.value;
@@ -52,7 +57,7 @@ export class SignUpComponent implements OnInit {
 
   createUser(user: DoctorService|PatientService, data: object): void {
     user.create(data)
-      .subscribe(response => {
+      .subscribe(() => {
           this.tools.openSnackBar('Inscription réussie');
           this.router.navigate(['/login']);
         },
@@ -118,8 +123,5 @@ export class SignUpComponent implements OnInit {
     }
     this.signupFailed = 'mot de passe incohérents';
     return false;
-  }
-
-  ngOnInit(): void {
   }
 }
