@@ -28,7 +28,7 @@
     <mat-form-field appearance="outline" class="mx-2">
       <mat-label>Localité</mat-label>
       <input matInput placeholder="Bordeaux, Talence, ..."
-             [formControl]="location" [matAutocomplete]="auto">
+             [formControl]="location" [matAutocomplete]="auto" id="location" >
       <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
         <mat-option *ngFor="let city of cities | async" [value]="city">
           {{city.name}} | {{city.code}}
@@ -36,7 +36,7 @@
       </mat-autocomplete>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" type="submit">Chercher</button>
+    <button class="search-btn" mat-raised-button color="primary" type="submit">Chercher</button>
     <mat-error *ngIf="searchFailed !== ''">{{searchFailed}}</mat-error>
   </form>
 </div>
