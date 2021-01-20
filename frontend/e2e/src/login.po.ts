@@ -7,6 +7,7 @@ export class LogInPage {
 
   async putEmail(email: string): Promise<void> {
     await element(by.css('input[formControlName="email"]')).sendKeys(email);
+    await browser.sleep(500);
   }
 
   async putPassword(password: string): Promise<void> {
@@ -29,7 +30,7 @@ export class LogInPage {
   }
 
   async clickLoginButton(): Promise<void> {
-    browser.driver.findElement(by.css('button[type="submit"]')).click().then( () => {
+    browser.driver.findElement(by.css('button[type="submit"]')).submit().then( () => {
       browser.waitForAngular();
     });
   }
@@ -37,9 +38,10 @@ export class LogInPage {
   async clickDisconnectButton(): Promise<void> {
     browser.driver.findElement(by.css('button[aria-label="Toggle sidenav"]')).click().then(() => {
       browser.waitForAngular();
-      element(by.css(`a[routerLink="/"]`)).click().then(() => {
-        browser.waitForAngular();
-      });
+    });
+    await browser.sleep(500);
+    element(by.className('disconnect')).click().then( () => {
+      browser.waitForAngular();
     });
   }
 

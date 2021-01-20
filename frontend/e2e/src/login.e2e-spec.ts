@@ -35,6 +35,8 @@ describe('StayHealthy Login Page Test', () => {
     await browser.sleep(500);
 
     await browser.getCurrentUrl().then(url => expect(url).toContain('doctor'));
+    await page.clickDisconnectButton();
+    await browser.sleep(1000);
   });
 
   it('Should notify for invalid email', async () => {

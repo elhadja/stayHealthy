@@ -125,7 +125,7 @@ export class DoctorComponent implements OnInit {
 
     let customTitle = 'libre';
     let customColor = colors.green;
-    const customActions: CalendarEventAction[] = [
+    let customActions: CalendarEventAction[] = [
         {
           label: '<i class="fas fa-fw fa-trash-alt"></i>',
           a11yLabel: 'Delete',
@@ -141,13 +141,15 @@ export class DoctorComponent implements OnInit {
     if (slot.patientId !== undefined) {
       customTitle = 'réservé';
       customColor = colors.red;
-      customActions.push({
-        label: '<i class="fas fa-fw fa-pencil-alt"></i>',
-        a11yLabel: 'Cancel',
-        onClick: ({ event }: { event: CalendarEvent }): void => {
-          this.onCancel(event);
-        },
-      });
+      customActions = [
+        {
+          label: '<i class="fas fa-fw fa-pencil-alt"></i>',
+          a11yLabel: 'Cancel',
+          onClick: ({ event }: { event: CalendarEvent }): void => {
+            this.onCancel(event);
+          },
+        }
+      ];
       customMeta.patientId = slot.patientId;
     }
 
@@ -246,7 +248,7 @@ export class DoctorComponent implements OnInit {
 
   onDelete(event: CalendarEvent): void {
     const dialogRef = this.dialog.open(DialogComponent,
-      {width: '270px', data: 'Annulez ce Rendez-vous?'});
+      {width: '270px', data: 'Supprimer ce Créneau?'});
     dialogRef.afterClosed().subscribe(
       confirm => {
         if (confirm) {
@@ -258,7 +260,7 @@ export class DoctorComponent implements OnInit {
               this.tools.openSnackBar('Créneau supprimé!');
               this.refresh.next();
             },
-            error => this.tools.openSnackBar('Erreur lors de la suppression!')
+            () => this.tools.openSnackBar('Erreur lors de la suppression!')
           );
         }
       });
