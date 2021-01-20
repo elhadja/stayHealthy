@@ -7,7 +7,17 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "for f in e2e/src/*.e2e-spec.ts; do node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs $f ; done\n"
+    "e2e-agenda": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/agenda.e2e-spec.ts",
+    "e2e-app": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/app.e2e-spec.ts",
+    "e2e-doctor": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/doctor.e2e-spec.ts",
+    "e2e-homepage": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/homepage.e2e-spec.ts",
+    "e2e-login": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/login.e2e-spec.ts",
+    "e2e-profile": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/profile.e2e-spec.ts",
+    "e2e-signup": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/signup.e2e-spec.ts",
+    "e2e-user-story1": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/user-story1.e2e-spec.ts",
+    "e2e-user-story2": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/user-story2.e2e-spec.ts",
+    "e2e-user-story3": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/user-story3.e2e-spec.ts",
+    "e2e-user-story4": "node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs e2e/src/user-story4.e2e-spec.ts"
   },
   "private": true,
   "dependencies": {

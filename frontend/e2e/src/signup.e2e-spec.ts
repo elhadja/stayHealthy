@@ -26,7 +26,7 @@ describe('Sign In Test', () => {
 
   it('should check if the fake patient registration succeed ', async () => {
 
-    expect(await page.checkRegistration()).toEqual('Inscription réussie');
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
 
   });
 
@@ -48,7 +48,7 @@ describe('Sign In Test', () => {
 
   it('should check if the fake doctor registration succeed ', async () => {
 
-    expect(await page.checkRegistration()).toEqual('Inscription réussie');
+    await browser.getCurrentUrl().then(url => expect(url).toContain('login'));
 
   });
 
