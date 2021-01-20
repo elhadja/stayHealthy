@@ -1,4 +1,4 @@
-import {browser, element, by, protractor} from 'protractor';
+import {browser, element, by} from 'protractor';
 import {addDays} from 'date-fns';
 
 export class DoctorPage {
@@ -31,7 +31,7 @@ export class DoctorPage {
     return element(by.tagName(`mwl-calendar-${format}-view`)).isPresent();
   }
 
-  async selectTime(model: string, value: string|number): Promise<void> {
+  async selectTime(model: string, value: number): Promise<void> {
     await element(by.css(`mat-select[formControlName="${model}"] .mat-select-arrow`)).click().then(async () => {
       browser.waitForAngular();
       await browser.sleep(500);
@@ -42,7 +42,7 @@ export class DoctorPage {
     });
   }
 
-  async fillForm(): Promise<void> {
+  async fillForm(hour: number, minute: number): Promise<void> {
     // Select date
     let date = new Date();
     if (date.getDay() === 6) {
@@ -63,27 +63,14 @@ export class DoctorPage {
     await browser.sleep(1000);
 
     // select time
-    await this.selectTime('hour', 8);
-    await this.selectTime('minute', 0);
+    await this.selectTime('hour', hour);
+    await this.selectTime('minute', minute);
   }
 
   async clickSaveButton(): Promise<void> {
     browser.driver.findElement(by.css('button[type="submit"]')).submit().then( () => {
       browser.waitForAngular();
     });
-  }
-
-  async selectDateInCalendar(): Promise<void> {
-    await browser.sleep(500);
-    element(by.css('.cal-cell-top aria-label=" mardi janvier 19, One event, click to expand "')).click().then( () => {
-      browser.waitForAngular();
-    });
-  }
-  async checkForCreation(): Promise<string> {
-    const EC = protractor.ExpectedConditions;
-    const snackBar = element(by.css('simple-snack-bar'));
-    await browser.wait(EC.visibilityOf(snackBar), 1000);
-    return element(by.css('simple-snack-bar')).getText();
   }
 
   async getReqFieldError(id: string): Promise<boolean> {

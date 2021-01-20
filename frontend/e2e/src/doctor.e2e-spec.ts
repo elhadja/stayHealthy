@@ -1,5 +1,6 @@
 import {browser, logging} from 'protractor';
 import { DoctorPage } from './doctor.po';
+import {LogInPage} from './login.po';
 
 describe('StayHealthy Doctor Page Test', () => {
   let page: DoctorPage;
@@ -24,7 +25,8 @@ describe('StayHealthy Doctor Page Test', () => {
   });
 
   it('Should create a slot', async () => {
-    await page.fillForm();
+
+    await page.fillForm(8, 0);
     await page.clickSaveButton();
     await browser.sleep(1000);
 
@@ -46,6 +48,10 @@ describe('StayHealthy Doctor Page Test', () => {
 });
 
 afterEach(async () => {
+  // Disconnect the user
+  const loginPage = new LogInPage();
+  await loginPage.clickDisconnectButton();
+  await browser.sleep(500);
   // Assert that there are no errors emitted from the browser
   const logs = await browser.manage().logs().get(logging.Type.BROWSER);
   expect(logs).not.toContain(jasmine.objectContaining({

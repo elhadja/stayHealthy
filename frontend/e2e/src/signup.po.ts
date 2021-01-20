@@ -31,15 +31,15 @@ export class SignUpPage {
   }
 
   async sendRegisterStreetNumber(): Promise<void> {
-    element(by.id('street-number-input')).sendKeys('3');
+    element(by.id('street-number-input')).sendKeys('3 Rue Louis Jouvet');
   }
 
   async sendRegisterPostCode(): Promise<void> {
-    element(by.id('post-code-input')).sendKeys('33000');
+    element(by.id('post-code-input')).sendKeys('33600');
   }
 
   async sendRegisterCity(): Promise<void> {
-    element(by.id('city-input')).sendKeys('Bordeaux');
+    element(by.id('city-input')).sendKeys('Pessac');
   }
 
   async generatePatientProfil(): Promise<boolean> {
