@@ -18,11 +18,12 @@ L'application proposera à l'utilisateur la possibilité de s'authentifier afin 
 
 # Installer
 ## Utiliser docker
+Il se peut que si vous lancer l'application en utilisant docker vous rencontriez des problèmes lorsque vous actualiser explicitement une page. Par ailleurs un membre de l'équipe de développement a remonté qu'il n'arivait pas lancer l'application avec docker sous windows. Si vous rencontrez ce problème, nous vous récommendons de build manuellement le code source (voir la section Build le code source).
 ### Prérequis
 - docker
 ### Execute
     - sudo docker-compose up 
-    - sudo docker-compose up --build --force-recreate --renew-anon-volume (seulement après modification du code)
+    - sudo docker-compose up --build --force-recreate --renew-anon-volume (seulement si le code source a été modifié)
 ## Build le code source
 ### Prérequis
 - nodeJs
