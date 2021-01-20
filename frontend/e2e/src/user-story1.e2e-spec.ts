@@ -1,13 +1,10 @@
-import { UserStory1Po } from './user-story1.po';
 import { LogInPage } from './login.po';
 import {browser, by, element} from 'protractor';
 
 describe('Use case 1', () => {
-  let page: UserStory1Po;
   let login: LogInPage;
 
   beforeEach(() => {
-    page = new UserStory1Po();
     login = new LogInPage();
   });
 
