@@ -15,8 +15,12 @@ Run `ng generate component component-name` to generate a new component. You can 
 Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
 
 ## Running end-to-end tests
+- Chrome web browser required to run e2e test
 
-Run `npm run e2e-'testfilename'` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+- First update chrome webdriver `node node_modules/protractor/bin/webdriver-manager update`
+
+- Run `npm run e2e-'testfilename'` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+Available tests : `e2e-app|e2e-agenda|e2e-doctor|e2e-homepage|e2e-login|e2e-profile|e2e-signup|e2e-user-story(1 to 4)`
 
 ## Further help
 
