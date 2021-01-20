@@ -7,7 +7,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "for f in e2e/src/*.e2e-spec.ts; do node node_modules/protractor/bin/protractor e2e/protractor.conf.js --disableChecks --specs $f ; done\n"
   },
   "private": true,
   "dependencies": {
