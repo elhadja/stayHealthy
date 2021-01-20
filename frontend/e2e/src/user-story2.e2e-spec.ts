@@ -22,7 +22,7 @@ describe('Use case 2', () => {
     browser.getCurrentUrl().then(url => expect(url).toContain('patient'));
   });
 
-  it('I should search for one health professional', async () => {
+  it('I should search for a health professional', async () => {
     await element.all(by.css('mat-option')).count().then(async () => {
       for (let i = 5; i < 6 ; i++){
         browser.driver.findElement(by.className('mx-2')).click().then(() => {
@@ -41,12 +41,12 @@ describe('Use case 2', () => {
     });
   });
 
-  it('Results should appears as part of the page as a card tile', async () => {
+  it('Results should appears as part of the page as many cards tile', async () => {
     await browser.sleep(500);
     expect(element.all(by.className('mat-card-subtitle')).count()).toBeGreaterThanOrEqual(0);
   });
 
-  it('Each card tile, if it found a doctor, should have detailed information about him', async () => {
+  it('A card tile, if it found a doctor, should have detailed information about him', async () => {
     await browser.sleep(500);
     const doctorFoundList = expect(element.all(by.className('mat-card-subtitle')).count()).toBeGreaterThan(0);
     await browser.findElement(by.tagName('app-doctor-card')).click();
