@@ -17,6 +17,7 @@ L'application proposera à l'utilisateur la possibilité de s'authentifier afin 
     - [Leaflet](https://leafletjs.com/) avec [Nominatim](https://nominatim.org/) pour interagir avec la map
 
 # Installer
+Une connection à internet est nécessaire pour pouvoir exécuter l'application car nous utilisons la version gratuite de mongodb en ligne pour stocker nos données.
 ## Utiliser docker
 Il se peut que si vous lancer l'application en utilisant docker vous rencontriez des problèmes lorsque vous actualiser explicitement une page. Par ailleurs un membre de l'équipe de développement a remonté qu'il n'arivait pas lancer l'application avec docker sous windows. Si vous rencontrez ce problème, nous vous récommendons de build manuellement le code source (voir la section Build le code source).
 ### Prérequis
