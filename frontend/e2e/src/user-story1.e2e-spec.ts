@@ -41,6 +41,7 @@ describe('Use case 1', () => {
           await browser.driver.findElement(by.css(`mat-option:nth-of-type(${i + 1})>span`)).click().then(async () => {
             await browser.findElement(by.id('location')).clear().then(async () => {
               await browser.findElement(by.id('location')).sendKeys('Pessac').then(async () => {
+                await browser.sleep((500));
                 await browser.findElement(by.className('search-btn')).click().then(async () => {
                   await browser.waitForAngular();
                   await browser.sleep(500);
