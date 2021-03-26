@@ -5,9 +5,10 @@ Les résultats de la recherche seront représentés en deux parties :
 - la deuxième partie présentera une carte contenant des markers qui permettront à l'utilisateur d'identifier sur une carte géographique la localisation des différents profesionnelles et établissements.
 
 L'application proposera à l'utilisateur la possibilité de s'authentifier afin de gérer ses rendez-vous.L'API back fournira une API REST pour accéder à toutes ces informations. L'utilisateur non authentifié ne pourra pas avoir accès à toutes les informations. Par exemple, le calendrier et l'historique des rendez-vous ne seront pas disponible. L'utilisateur authentifié pourra gérer les évenements de son calendrier
+
 # Technologies utilisées
 - Backend:
-    - nodeJs pour l'API REST
+    - nodeJs pour l'[API REST](https://app.swaggerhub.com/apis-docs/grp12/stayHealthy/1.0.0#/)
     - Jasmine pour les tests unitaires
 - Front-end: 
     - Angular CLI
@@ -25,11 +26,13 @@ Il se peut que si vous lancer l'application en utilisant docker vous rencontriez
 ### Execute
     - sudo docker-compose up 
     - sudo docker-compose up --build --force-recreate --renew-anon-volume (seulement si le code source a été modifié)
-## Build le code source
+
+## Lancer depuis le code source
 ### Prérequis
 - nodeJs
 - angular
-### build
+
+### Lancer
 1. lancer le backend (depuis le repertoire backend)
     - npm install
     - node index.js
